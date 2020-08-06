@@ -1,0 +1,247 @@
+openapi: "3.0.3"
+info:
+  version: 1.0.0
+  title: Insin00ri API
+  description: Insinöörinkadun taloAPI
+servers:
+  - url: http://insinoori.local/api/v1
+  - url: http://localhost:3000/api/v1
+paths:
+  /users:
+    get:
+      summary: Return all user data
+      responses:
+        '200':
+          description: Array of users
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Users'
+      tags:
+        - Users
+
+  /expenses:
+    get:
+      summary: List all expenses
+      operationId: getExpenses
+      tags:
+        - Expenses
+      parameters:
+        - name: month
+          in: query
+          description: Filter expenses to given month
+          required: false
+          schema:
+            type: integer
+            format: int8
+        - name: year
+          in: query
+          description: Filter expenses to given year
+          required: false
+          schema:
+            type: integer
+            format: int16
+      responses:
+        '200':
+          description: Array of expenses
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Expenses'
+
+    post:
+      summary: Create an expense
+      operationId: createExpense
+      tags:
+        - Expenses
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Expense'
+      responses:
+        '201':
+          description: Successfully created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Expense'
+
+  /expenses/{id}:
+    parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+    put:
+      summary: Modify an expense
+      operationId: modifyExpense
+      tags:
+        - Expenses
+      requestBody:
+        description: Full expense object to replace with
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Expense'
+      responses:
+        '200':
+          description: Successfully modified
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Expense'
+    delete:
+      summary: Delete an expense
+      operationId: deleteExpense
+      tags:
+        - Expenses
+      responses:
+        '204':
+          description: Deleted successfully
+
+  /expenses/{Category}:
+    get:
+      parameters:
+        - in: path
+          name: Category
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+      tags:
+        - Expenses
+      summary: Get all expenses of a spesified category
+      operationId: getCategories
+
+  /expenses/categories:
+    get:
+      summary: Return all available categories
+      operationId: getCategory
+      tags:
+        - Expenses
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Categories'
+    post:
+      summary: Add a new category
+      responses:
+        '201':
+          description: Successfully created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Category'
+      tags:
+        - Expenses
+
+  /expenses/categories/{id}:
+    parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+    put:
+      summary: Modify an existing category
+      operationId: modifyCategory
+      responses:
+        '200':
+          description: Successfully updated
+      tags:
+        - Expenses
+    delete:
+      summary: Delete an existing category
+      operationId: deleteCategory
+      responses:
+        '204':
+          description: Successfully deleted
+      tags:
+        - Expenses
+
+components:
+  schemas:
+    Expense:
+      type: object
+      required:
+        - title
+        - amount
+        - payee
+        - category
+      properties:
+        id:
+          type: integer
+          format: int64
+        date:
+          type: string
+          format: iso8601
+        title:
+          type: string
+        description:
+          type: string
+        amount:
+          type: number
+          format: float
+        payee:
+          $ref: '#/components/schemas/User'
+        category:
+          $ref: '#/components/schemas/Category'
+
+    Expenses:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/Expense'
+
+    Category:
+      type: object
+      required:
+       - name
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+
+    Categories:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/Category'
+
+    User:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        username:
+          type: string
+
+    Users:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/User'
+
+    Error:
+      type: object
+      properties:
+        code:
+          type: integer
+          format: int32
+        message:
+          type: string
