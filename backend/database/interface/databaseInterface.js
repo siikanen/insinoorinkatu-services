@@ -1,7 +1,10 @@
 const { Sequelize, Op, Model, DataTypes } = require("sequelize");
 
-
-const connectDatabase = async()=>{
+/**
+ * Establish a connection to the database
+ * Returns a connection object
+ */
+async function connectDatabase(){
     const sequelize = new Sequelize('sqlite::memory:') //TODO: Set custom logger here!
     try {
       await sequelize.authenticate();
@@ -12,7 +15,11 @@ const connectDatabase = async()=>{
     return sequelize
 
 }
-const disconnectDatabase = async(database) =>{
+/**
+ * Closes a database connection
+ * @param {*} database   - the database connection to close
+ */
+async function disconnectDatabase(database){
     try{
         console.log("disconnected")
         database.close()

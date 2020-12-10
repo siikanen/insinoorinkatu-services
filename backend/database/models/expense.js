@@ -1,6 +1,9 @@
 const { Sequelize, DataTypes } = require('sequelize');
 const sequelize = new Sequelize('sqlite::memory:');
 //TODO: Replace date with created at timestamp?
+/**
+ * Model for the expense data
+ */
 const Expense = sequelize.define('Expense', {
   // Model attributes are defined here
   id:{
@@ -25,12 +28,12 @@ const Expense = sequelize.define('Expense', {
     type: DataTypes.FLOAT()
   },
   payee:{
-
+    //TODO: link a user here
     type: DataTypes.STRING,
     defaultValue :"test"
   },
   category:{
-
+    //TODO: link a category here
     type: DataTypes.STRING,
     defaultValue :"test"
   }
