@@ -2,9 +2,8 @@
 const {
   Model
 } = require('sequelize');
-const { validate } = require('webpack');
 module.exports = (sequelize, DataTypes) => {
-  class expense extends Model {
+  class User extends Model {
     /**
      * Helper method for defining associations.
      * This method is not a part of Sequelize lifecycle.
@@ -14,20 +13,23 @@ module.exports = (sequelize, DataTypes) => {
       // define association here
     }
   };
-  expense.init({
+  User.init({
     id:{
       primaryKey:true,
       allowNull: false,
-      type:DataTypes.UUIDV4,
+      type:DataTypes.UUID,
       validate:{
         notNull: true
-      }
+      },
+     defaultValue: DataTypes.UUIDV4,
+     autoIncrement: false 
     },
-    title: DataTypes.STRING,
-    amount: DataTypes.INTEGER
+    username: DataTypes.STRING,
+    passwordhash: DataTypes.STRING,
+    salt: DataTypes.STRING
   }, {
     sequelize,
-    modelName: 'expense',
+    modelName: 'User',
   });
-  return expense;
+  return User;
 };

@@ -1,5 +1,6 @@
 //TODO: methods such as delete and update should return the expense, rather than return nothing
-const Expense = require("../models/expense")
+const models = require("../models")
+const Expense = models.Expense
 /**
  * Fetch all expenses as json
  * 
