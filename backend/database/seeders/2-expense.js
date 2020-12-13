@@ -1,21 +1,26 @@
-'use strict';
-const { v4: uuidv4 } = require('uuid');
-const models = require("../models") 
+"use strict";
+const { v4: uuidv4 } = require("uuid");
+const models = require("../models");
+const faker = require("faker");
 module.exports = {
   up: async (queryInterface, Sequelize) => {
-    const userModel = models.User
-    const user = await userModel.findOne()
-    return queryInterface.bulkInsert('Expenses', [{
-      id: uuidv4(),
-      title: "test",
-      amount: 2,
-      userID: user.id,
-      createdAt: new Date(),
-      updatedAt: new Date()
-    }]);
+    let expenses = [];
+    const userModel = models.User;
+    const user = await userModel.findOne();
+    for (let i = 0; i < 5; i++) {
+      expenses.push({
+        id: uuidv4(),
+        title: faker.commerce.productName(),
+        amount: faker.random.number(),
+        userID: user.id,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      });
+    }
+    return queryInterface.bulkInsert("Expenses", expenses);
   },
-  
+
   down: (queryInterface, Sequelize) => {
-    return queryInterface.bulkDelete('Expenses', null, {});
-  }
+    return queryInterface.bulkDelete("Expenses", null, {});
+  },
 };
