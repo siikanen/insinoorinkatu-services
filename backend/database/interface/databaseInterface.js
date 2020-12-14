@@ -11,7 +11,7 @@ async function connectDatabase() {
         case "dev":
           return config.development;
         case "staging":
-          return config.test;
+          return config.staging;
         case "production":
           return config.production;
         default:

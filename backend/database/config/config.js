@@ -1,21 +1,21 @@
 module.exports = {
-  "development": {
-    "database": "database_development",
-    "dialect": "sqlite",
-    "storage":"develop.sqlite"
+  development: {
+    database: "database_development",
+    dialect: "sqlite",
+    storage:"develop.sqlite"
   },
-  "test": {
-    "username": "root",
-    "password": null,
-    "database": "database_test",
-    "host": "127.0.0.1",
-    "dialect": "mysql"
+    staging: {
+    username: process.env.CI_DB_USERNAME,
+    password: process.env.CI_DB_PASSWORD,
+    database: process.env.CI_DB_NAME,
+    host: process.env.CI_DB_HOSTNAME,
+    dialect: 'mysql'
   },
-  "production": {
-    "username": "root",
-    "password": null,
-    "database": "database_production",
-    "host": "127.0.0.1",
-    "dialect": "mysql"
+  production: {
+    username: process.env.PROD_DB_USERNAME,
+    password: process.env.PROD_DB_PASSWORD,
+    database: process.env.PROD_DB_NAME,
+    host: process.env.PROD_DB_HOSTNAME,
+    dialect: 'mysql'
   }
 }
