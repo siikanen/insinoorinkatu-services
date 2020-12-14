@@ -1,6 +1,7 @@
 "use strict";
 const crypto = require("crypto");
 const { Model } = require("sequelize");
+const { get } = require("../../routes/v1/api");
 module.exports = (sequelize, DataTypes) => {
   class User extends Model {
     /**
@@ -39,19 +40,26 @@ module.exports = (sequelize, DataTypes) => {
           //TODO: Throw error, You are not supposed to modify salt directly
         },
       },
+      password: {
+        type: DataTypes.VIRTUAL,
+        set(password) {
+          const newSalt = crypto.randomBytes(32).toString("hex");
+          const newpasswordHash = crypto
+            .scryptSync(password, newSalt, 64)
+            .toString("hex");
+          this.salt = newSalt;
+          this.passwordHash = newpasswordHash;
+        },
+        get(){
+          return this.passwordHash
+        },
+      },
     },
     {
       sequelize,
       modelName: "User",
     }
   );
-  User.prototype.setPassword = (password) => {
-    const newSalt = crypto.randomBytes(32).toString("hex");
-    const newpasswordHash = crypto
-      .scryptSync(password, newSalt, 64)
-      .toString("hex");
-    this.salt = newSalt;
-    this.passwordHash = newpasswordHash;
-  };
+
   return User;
 };
