@@ -1,7 +1,6 @@
 "use strict";
 const crypto = require("crypto");
 const { Model } = require("sequelize");
-const { get } = require("../../routes/v1/api");
 module.exports = (sequelize, DataTypes) => {
   class User extends Model {
     /**
