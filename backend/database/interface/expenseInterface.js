@@ -1,60 +1,53 @@
 //TODO: methods such as delete and update should return the expense, rather than return nothing
-const models = require("../models")
-const Expense = models.Expense
+const models = require("../models");
+const Expense = models.Expense;
 /**
- * Fetch all expenses as json
- * 
+ * Fetch all expenses matching filter as json
+ *
  */
-async function getAllExpenses(){
-    const allExpenses = await Expense.findAll()
-    return JSON.stringify(allExpenses)
+async function getExpenses(filter = {}) {
+  return await Expense.findAll(filter);
 }
-async function getExpense(id){
-    const expense = await Expense.findAll({
-        where:{
-            id:id
-        }})
-        return JSON.stringify(expense)
-}
+
 /**
- * Add a new expense to database
- * @param {JSON} data - Data of the expense to be added 
+ * Add expenses to database
+ * @param {Array} data - Data of the expense to be added
  */
-const addExpense=async(data)=>{
-//TODO: Validate the data before creating
-const testExpense =await  Expense.create(data)
-return testExpense
+async function addExpenses(data) {
+  return await Expense.bulkCreate(data);
 }
 /**
- * Delete an expense from database
- * @param {*} id - Id of the expense to be deleted 
+ * Delete expenses matching filter
+ * @param {Object} filter - Filter expenses
  */
-async function deleteExpense(id){
-    try{
-        await Expense.destroy({
-            where:{
-                id:id
-            }
-        })
-    }
-    catch(err){
-        console.log(err)
-    }
+async function deleteExpenses(filter) {
+  try {
+    await Expense.destroy({
+      where: filter,
+    });
+  } catch (err) {
+    console.log(err);
+    throw err
+  }
 }
 /**
- * Updates an expense in the database
- * @param {} data 
- * @param {*} id 
+ * Updates expenses matching filter in the database
+ * @param {Object} data - Fields to update
+ * @param {Object} filter - Filter expenses
  */
-async function updateExpense(data,id){
-    try{
-      await Expense.update(data,{
-           where:{
-               id:id
-           }
-       }) 
-    }catch(err){
-        console.log(err)
-    }
+async function updateExpenses(data, filter) {
+  try {
+    await Expense.update(data, {
+      where: filter,
+    });
+  } catch (err) {
+    console.log(err);
+    throw err
+  }
 }
-module.exports = {getAllExpenses,addExpense,getExpense,deleteExpense,updateExpense}
+module.exports = {
+  getExpenses,
+  addExpenses,
+  deleteExpenses,
+  updateExpenses 
+};
