@@ -1,7 +1,6 @@
-'use strict';
-const {
-  Model
-} = require('sequelize');
+"use strict";
+const crypto = require("crypto");
+const { Model } = require("sequelize");
 module.exports = (sequelize, DataTypes) => {
   class User extends Model {
     /**
@@ -12,24 +11,47 @@ module.exports = (sequelize, DataTypes) => {
     static associate(models) {
       // define association here
     }
-  };
-  User.init({
-    id:{
-      primaryKey:true,
-      allowNull: false,
-      type:DataTypes.UUID,
-      validate:{
-        notNull: true
+  }
+  User.init(
+    {
+      id: {
+        primaryKey: true,
+        allowNull: false,
+        type: DataTypes.UUID,
+        validate: {
+          notNull: true,
+        },
+        defaultValue: DataTypes.UUIDV4,
+        autoIncrement: false,
       },
-     defaultValue: DataTypes.UUIDV4,
-     autoIncrement: false 
+      username: DataTypes.STRING,
+      passwordhash: {
+        type: DataTypes.STRING,
+        set(value) {
+          //Do nothing
+          //TODO: Throw error, You are not supposed to modify hash directly
+        },
+      },
+      salt: {
+        type: DataTypes.STRING,
+        set(value) {
+          //Do nothing
+          //TODO: Throw error, You are not supposed to modify salt directly
+        },
+      },
     },
-    username: DataTypes.STRING,
-    passwordhash: DataTypes.STRING,
-    salt: DataTypes.STRING
-  }, {
-    sequelize,
-    modelName: 'User',
-  });
+    {
+      sequelize,
+      modelName: "User",
+    }
+  );
+  User.prototype.setPassword = (password) => {
+    const newSalt = crypto.randomBytes(32).toString("hex");
+    const newpasswordHash = crypto
+      .scryptSync(password, newSalt, 64)
+      .toString("hex");
+    this.salt = newSalt;
+    this.passwordHash = newpasswordHash;
+  };
   return User;
 };
