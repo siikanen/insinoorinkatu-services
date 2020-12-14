@@ -18,16 +18,18 @@ module.exports = (sequelize, DataTypes) => {
     id:{
       primaryKey:true,
       allowNull: false,
-      type:DataTypes.UUIDV4,
+      type:DataTypes.UUID,
       validate:{
         notNull: true
-      }
+      },
+     defaultValue: DataTypes.UUIDV4,
+     autoIncrement: false 
     },
     title: DataTypes.STRING,
     amount: DataTypes.INTEGER
   }, {
     sequelize,
-    modelName: 'expense',
+    modelName: 'Expense',
   });
   return expense;
 };

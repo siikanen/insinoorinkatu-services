@@ -2,6 +2,7 @@
 const { v4: uuidv4 } = require("uuid");
 const models = require("../models");
 const faker = require("faker");
+//TODO: remove random data from seeds, replace with static test data
 module.exports = {
   up: async (queryInterface, Sequelize) => {
     let expenses = [];
