@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "start": "node ./bin/www",
-    "dev": "DEBUG=backend:* node ./node_modules/nodemon/bin/nodemon.js",
+    "dev": "node --trace-warnings ./node_modules/nodemon/bin/nodemon.js ./bin/www",
     "dev-doc": "webpack-dev-server --open",
     "build-doc": "webpack",
     "nodemonServer": "nodemon ./bin/www",
