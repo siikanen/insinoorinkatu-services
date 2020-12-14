@@ -7,11 +7,9 @@
     "dev": "node --trace-warnings ./node_modules/nodemon/bin/nodemon.js ./bin/www",
     "dev-doc": "webpack-dev-server --open",
     "build-doc": "webpack",
-    "nodemonServer": "nodemon ./bin/www",
     "test": "mocha"
   },
   "dependencies": {
-    "chai-http": "^4.3.0",
     "css-loader": "^2.1.0",
     "debug": "~2.6.9",
     "express": "~4.16.1",
@@ -23,10 +21,11 @@
     "sequelize-cli": "^6.2.0",
     "sqlite3": "^5.0.0",
     "style-loader": "^0.23.1",
-    "swagger-ui": "^3.20.7",
     "yaml-loader": "^0.5.0"
   },
   "devDependencies": {
+    "swagger-ui": "^3.20.7",
+    "chai-http": "^4.3.0",
     "chai": "^4.2.0",
     "clean-webpack-plugin": "^1.0.1",
     "copy-webpack-plugin": "^4.6.0",
