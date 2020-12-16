@@ -12,9 +12,12 @@ const chaiHttp = require("chai-http");
 const faker = require("faker");
 chai.use(chaiHttp);
 
+const randomCategoryAmount = 2;
+const randomUserAmount = 2;
 const randomExpenseAmount = 5;
-// TODO: genereate a real JVT token here for testing
+// TODO: Genereate a real JVT token here for testing
 const testToken = "TODO";
+
 async function generateRandomExpenses(amount) {
   // TODO: Generate expenses for other users aswell
   let users = await User.findAll({});
@@ -60,10 +63,9 @@ describe("Routes", () => {
       where: {},
       truncate: true,
     });
-    await generateRandomUsers(1);
-    await generRandomCategories(1);
-    await generateRandomExpenses(randomExpenseAmount);
-  });
+      await generateRandomUsers(randomUserAmount);
+      await generRandomCategories(randomCategoryAmount);
+      await generateRandomExpenses(randomExpenseAmount);
   describe("Viewing expenses: GET /api/v1/expenses", () => {
     it("should respond with JSON", async () => {
       const response = await api
