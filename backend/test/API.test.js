@@ -121,7 +121,7 @@ describe("Routes", () => {
       expect(response).to.have.status(404);
       expect(response.body).to.equal(undefined);
     });
-    it("Should return 404 when request body is not valid", async () => {
+    it("Should return 400 when request body is not valid", async () => {
       const expenses = await Expense.findAll({});
       const expenseID = expenses[0].dataValues.id;
       const response = await api
@@ -130,7 +130,7 @@ describe("Routes", () => {
         .send({
           thisFieldDoesNotExist: expenseID,
         });
-      expect(response).to.have.status(404);
+      expect(response).to.have.status(400);
       expect(response.body).to.equal(undefined);
     });
     it("Should respond with 401 unauthorized when Authorization header is missing", async () => {
@@ -142,7 +142,10 @@ describe("Routes", () => {
       const response = await api
         .get(expenseURL)
         .set("Authorization", "Bearer notARealToken");
-      expect(response).to.have.status(404);
+      expect(response).to.have.status(401);
+      expect(response.body).to.equal(undefined);
+    });
+  });
       expect(response.body).to.equal(undefined);
     });
   });
