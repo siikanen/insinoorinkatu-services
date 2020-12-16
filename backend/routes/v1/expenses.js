@@ -22,7 +22,7 @@ router
   .post(async (req, res) => {
     console.log(req.body);
     await addExpenses(req.body);
-    res.status(201);
+    res.status(201).send();
   });
   // TODO: add update and delete methods
 module.exports = router;
