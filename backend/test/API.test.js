@@ -48,25 +48,26 @@ async function generRandomCategories(amount) {
 }
 
 describe("Routes", () => {
-  // Get should not have side effects,
-  // thus setup data only once
-  before(async () => {
-    await Expense.destroy({
-      where: {},
-      truncate: true,
-    });
-    await User.destroy({
-      where: {},
-      truncate: true,
-    });
-    await Category.destroy({
-      where: {},
-      truncate: true,
-    });
+  describe("Viewing expenses: GET /api/v1/expenses", () => {
+    // Get should not have side effects,
+    // thus setup data only once
+    before(async () => {
+      await Expense.destroy({
+        where: {},
+        truncate: true,
+      });
+      await User.destroy({
+        where: {},
+        truncate: true,
+      });
+      await Category.destroy({
+        where: {},
+        truncate: true,
+      });
       await generateRandomUsers(randomUserAmount);
       await generRandomCategories(randomCategoryAmount);
       await generateRandomExpenses(randomExpenseAmount);
-  describe("Viewing expenses: GET /api/v1/expenses", () => {
+    });
     it("should respond with JSON", async () => {
       const response = await api
         .get(expenseURL)
