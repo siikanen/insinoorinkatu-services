@@ -105,6 +105,29 @@ describe("Routes", () => {
         .set("Authorization", `Bearer ${testToken}`)
         .send(JSON.stringify(expenseIDs));
       expect(response).to.have.status(200);
+    it("Should return 404 when ID does not exist", async () => {
+      const fakeID = "FakeID";
+      const response = await api
+        .get(expenseURL)
+        .set("Authorization", `Bearer ${testToken}`)
+        .send({
+          id: fakeID,
+        });
+      expect(response).to.have.status(404);
+      expect(response.body).to.equal(undefined);
+    });
+    it("Should return 404 when request body is not valid", async () => {
+      const expenses = await Expense.findAll({});
+      const expenseID = expenses[0].dataValues.id;
+      const response = await api
+        .get(expenseURL)
+        .set("Authorization", `Bearer ${testToken}`)
+        .send({
+          thisFieldDoesNotExist: expenseID,
+        });
+      expect(response).to.have.status(404);
+      expect(response.body).to.equal(undefined);
+    });
     it("Should respond with 401 unauthorized when Authorization header is missing", async () => {
       const response = await api.get(expenseURL);
       expect(response).to.have.status(401);
