@@ -1,11 +1,15 @@
-const chai = require('chai');
+const chai = require("chai");
 const expect = chai.expect;
-const supertest = require("supertest")
-const app = require("../app")
-const api = supertest(app)
-const expenseURL = '/api/v1/expenses';
-const Expense = require("../database/models/expense")
-const chaiHttp = require('chai-http');
+const supertest = require("supertest");
+const app = require("../app");
+const api = supertest(app);
+const expenseURL = "/api/v1/expenses";
+const models = require("../database/models");
+const Expense = models.Expense;
+const User = models.User;
+const Category = models.Category;
+const chaiHttp = require("chai-http");
+const faker = require("faker");
 chai.use(chaiHttp);
 
 // helper function for authorization headers
