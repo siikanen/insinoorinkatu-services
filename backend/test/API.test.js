@@ -108,6 +108,8 @@ describe("Routes", () => {
         .set("Authorization", `Bearer ${testToken}`)
         .send(JSON.stringify(expenseIDs));
       expect(response).to.have.status(200);
+      expect(response.body).to.have.length(expenses.length - 1);
+    });
     it("Should return 404 when ID does not exist", async () => {
       const fakeID = "FakeID";
       const response = await api
