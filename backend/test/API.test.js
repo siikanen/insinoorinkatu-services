@@ -13,8 +13,8 @@ const faker = require("faker");
 chai.use(chaiHttp);
 
 const randomExpenseAmount = 5;
-// helper function for authorization headers
-
+// TODO: genereate a real JVT token here for testing
+const testToken = "TODO";
 async function generateRandomExpenses(amount) {
   // TODO: Generate expenses for other users aswell
   let users = await User.findAll({});
@@ -66,22 +66,29 @@ describe("Routes", () => {
   });
   describe("Viewing expenses: GET /api/v1/expenses", () => {
     it("should respond with JSON", async () => {
-      const response = await api.get(expenseURL);
+      const response = await api
+        .get(expenseURL)
+        .set("Authorization", `Bearer ${testToken}`);
       expect(response).to.have.status(200);
       expect(response).to.be.json;
       expect(response.body).to.be.an("array");
     });
-    it("Should return all expenses when no filter", async () => {
-      const response = await api.get(expenseURL);
+    it("Should return all expenses when no filter is provided", async () => {
+      const response = await api
+        .get(expenseURL)
+        .set("Authorization", `Bearer ${testToken}`);
       expect(response).to.have.status(200);
       expect(response.body).to.have.length(5);
     });
     it("Should return single expense when ID provided", async () => {
-      const expenses = await Expense.findAll({})
-      const expenseID = expenses[0].dataValues.id
-      const response = await api.get(expenseURL).send({
-        id: expenseID,
-      });
+      const expenses = await Expense.findAll({});
+      const expenseID = expenses[0].dataValues.id;
+      const response = await api
+        .get(expenseURL)
+        .set("Authorization", `Bearer ${testToken}`)
+        .send({
+          id: expenseID,
+        });
       expect(response).to.have.status(200);
       expect(response.body[0].id).to.equal(expenseID);
       expect(response.body).to.have.length(1);
@@ -95,9 +102,20 @@ describe("Routes", () => {
       }
       const response = await api
         .get(expenseURL)
+        .set("Authorization", `Bearer ${testToken}`)
         .send(JSON.stringify(expenseIDs));
       expect(response).to.have.status(200);
-      expect(response.body).to.have.length(expenses.length-1);
+    it("Should respond with 401 unauthorized when Authorization header is missing", async () => {
+      const response = await api.get(expenseURL);
+      expect(response).to.have.status(401);
+      expect(response.body).to.equal(undefined);
+    });
+    it("Should respond with 401 unauthorized when JVT token is incorrect", async () => {
+      const response = await api
+        .get(expenseURL)
+        .set("Authorization", "Bearer notARealToken");
+      expect(response).to.have.status(404);
+      expect(response.body).to.equal(undefined);
     });
   });
 });
