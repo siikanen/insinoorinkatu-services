@@ -146,7 +146,91 @@ describe("Routes", () => {
       expect(response.body).to.equal(undefined);
     });
   });
+  describe("Viewing expenses: POST /api/expenses", () => {
+    //Initiate a test expense
+    let testExpense;
+
+    before(async () => {
+      await Expense.destroy({
+        where: {},
+        truncate: true,
+      });
+      await User.destroy({
+        where: {},
+        truncate: true,
+      });
+      await Category.destroy({
+        where: {},
+        truncate: true,
+      });
+      await generateRandomUsers(randomUserAmount);
+      //Set test expense fields
+      let users = await User.findAll({});
+      let userID = users[0].id;
+      testExpense = {
+        title: "testTitle",
+        amount: 1,
+        userID: userID,
+      };
+      await generRandomCategories(randomCategoryAmount);
+    });
+    beforeEach(async () => {
+      // No need to clear anything else than expenses between tests
+      await Expense.destroy({
+        where: {},
+        truncate: true,
+      });
+    });
+    it("Should return 400 when request body is not valid", async () => {
+      const expenses = await Expense.findAll({});
+      const response = await api
+        .post(expenseURL)
+        .set("Authorization", `Bearer ${testToken}`)
+        .send({
+          notRealField: 2,
+        });
+      expect(response).to.have.status(400);
       expect(response.body).to.equal(undefined);
+      const expensesInDB = await Expense.findAll();
+      expect(expensesInDB).to.have.length(0);
+    });
+    it("Should respond with 401 unauthorized when Authorization header is missing", async () => {
+      const response = await api.post(expenseURL).send(testExpense);
+      expect(response).to.have.status(401);
+      expect(response.body).to.equal(undefined);
+      const expensesInDB = await Expense.findAll();
+      expect(expensesInDB).to.have.length(0);
+    });
+    it("Should respond with 401 unauthorized when JVT token is incorrect", async () => {
+      const response = await api
+        .post(expenseURL)
+        .set("Authorization", "Bearer notARealToken")
+        .send(testExpense);
+      expect(response).to.have.status(401);
+      expect(response.body).to.equal(undefined);
+      const expensesInDB = await Expense.findAll();
+      expect(expensesInDB).to.have.length(0);
+    });
+    it("Should add a new expense, when a single expense is provided", async () => {
+      const response = await api
+        .post(expenseURL)
+        .set("Authorization", `Bearer ${testToken}`)
+        .send(testExpense);
+      const expensesInDB = await Expense.findAll();
+      expect(response).to.have.status(201);
+      expect(expensesInDB).to.have.length(1);
+      expect(expensesInDB[0].title).to.be.equal("testTitle");
+    });
+    it("Should add multiple new expenses, when multiple expenses are provided", async () => {
+      const testExpense2 = { ...testExpense };
+      testExpense2.title = "TitleIsChanged";
+      const response = await api
+        .post(expenseURL)
+        .set("Authorization", `Bearer ${testToken}`)
+        .send([testExpense, testExpense2]);
+      const expensesInDB = await Expense.findAll();
+      expect(response).to.have.status(201);
+      expect(expensesInDB).to.have.length(2);
     });
   });
 });
