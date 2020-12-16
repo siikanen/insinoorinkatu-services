@@ -64,25 +64,40 @@ describe("Routes", () => {
     await generRandomCategories(1);
     await generateRandomExpenses(randomExpenseAmount);
   });
-        expect(response).to.have.status(406);
-      });
-
-      it('should respond with "406 Not Acceptable" when client does not accept JSON', async () => {
-        const response = await api.get(expenseURL)
-          .request(handleRequest)
-          .get(usersUrl)
-          .set('Accept', 'text/html');
-
-        expect(response).to.have.status(406);
-      });
-
-      it('should respond with JSON', async () => {
-        const response = await api.get(expenseURL)
-        console.log(response.status)
-        expect(response).to.have.status(200)
-        expect(response).to.be.json;
-        console.log(response.body)
-        expect(JSON.parse(response.body)).to.be.an('array');
-      });
+  describe("Viewing expenses: GET /api/v1/expenses", () => {
+    it("should respond with JSON", async () => {
+      const response = await api.get(expenseURL);
+      expect(response).to.have.status(200);
+      expect(response).to.be.json;
+      expect(response.body).to.be.an("array");
     });
-})
+    it("Should return all expenses when no filter", async () => {
+      const response = await api.get(expenseURL);
+      expect(response).to.have.status(200);
+      expect(response.body).to.have.length(5);
+    });
+    it("Should return single expense when ID provided", async () => {
+      const expenses = await Expense.findAll({})
+      const expenseID = expenses[0].dataValues.id
+      const response = await api.get(expenseURL).send({
+        id: expenseID,
+      });
+      expect(response).to.have.status(200);
+      expect(response.body[0].id).to.equal(expenseID);
+      expect(response.body).to.have.length(1);
+    });
+    it("Should return multiple expenses when multiple IDs provided", async () => {
+      const expenses = await Expense.findAll({});
+      let expenseIDs = [];
+      //length-1 since we dont want ALL the expenses
+      for (i = 0; i < expenses.length-1; i++) {
+        expenseIDs.push(expenses[i].id);
+      }
+      const response = await api
+        .get(expenseURL)
+        .send(JSON.stringify(expenseIDs));
+      expect(response).to.have.status(200);
+      expect(response.body).to.have.length(expenses.length-1);
+    });
+  });
+});
