@@ -2,7 +2,6 @@
 const {
   Model
 } = require('sequelize');
-const { validate } = require('webpack');
 module.exports = (sequelize, DataTypes) => {
   class expense extends Model {
     /**
@@ -23,7 +22,7 @@ module.exports = (sequelize, DataTypes) => {
         notNull: true
       },
      defaultValue: DataTypes.UUIDV4,
-     autoIncrement: false 
+     autoIncrement: false
     },
     title: DataTypes.STRING,
     amount: DataTypes.INTEGER
