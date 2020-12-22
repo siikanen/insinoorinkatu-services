@@ -5,8 +5,6 @@
   "scripts": {
     "start": "node ./bin/server",
     "dev": "node --trace-warnings ./node_modules/nodemon/bin/nodemon.js ./bin/server",
-    "dev-doc": "webpack-dev-server --open",
-    "build-doc": "webpack",
     "test": "mocha",
     "migration": "npx sequelize-cli db:migrate",
     "seed": "npx sequelize-cli db:seed:all"
@@ -30,8 +28,8 @@
     "mysql2": "^2.2.5",
     "sequelize": "^6.3.5",
     "sequelize-cli": "^6.2.0",
-    "style-loader": "^0.23.1",
-    "yaml-loader": "^0.5.0"
+    "swagger-ui-express": "^4.1.5",
+    "yamljs": "^0.3.0"
   },
   "devDependencies": {
     "chai": "^4.2.0",
