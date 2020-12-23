@@ -226,6 +226,68 @@ describe("Routes", () => {
       const expensesInDB = await Expense.findAll({});
       expect(response).to.have.status(201);
       expect(expensesInDB).to.have.length(2);
+      expect(response.body.data).to.have.length(2)
+    });
+  });
+  describe("Expenses: GET /api/expenses/{id}", () => {
+    let testExpense;
+    let testExpenseID;
+    let singleExpenseURL;
+    before(async () => {
+      await Expense.destroy({
+        where: {},
+        truncate: true,
+      });
+      await User.destroy({
+        where: {},
+        truncate: true,
+      });
+
+      await generateRandomUsers(randomUserAmount);
+      await generateRandomExpenses(randomExpenseAmount);
+      //Some overhead here, assining array[0] directly from findall does not seem to work
+      testExpense = await Expense.findAll({});
+      testExpense = testExpense[0]
+      testExpenseID = testExpense.id
+      singleExpenseURL = expenseURL + `/${testExpenseID}`
+    })
+    describe("Authorization tests", () => {
+      it("Should respond with 401 unauthorized when Authorization header is missing", async () => {
+        const response = await api.get(singleExpenseURL);
+        expect(response).to.have.status(401);
+        expect(response.body.error).to.exist();
+      });
+      it("Should respond with 401 unauthorized when JVT token is incorrect", async () => {
+        const response = await api
+          .get(singleExpenseURL)
+          .set("Authorization", "Bearer notARealToken");
+        expect(response).to.have.status(401);
+        expect(response.body.error).to.exist();
+      });
+    })
+    it("Should respond with 404 when ID is wrong", async () => {
+      const response = await api
+        .get(singleExpenseURL + "somethingExtra")
+        .set("Authorization", `Bearer ${testToken}`);
+      expect(response).to.have.status(404);
+      expect(response.body.error).to.exist()
+    })
+    it("Should respond with 200", async () => {
+      const response = await api
+        .get(singleExpenseURL)
+        .set("Authorization", `Bearer ${testToken}`);
+      expect(response).to.have.status(200);
+    })
+    it("Should return the correct expense", async () => {
+      const response = await api
+        .get(singleExpenseURL)
+        .set("Authorization", `Bearer ${testToken}`);
+      expect(response).to.have.status(200);
+      expect(response.body.data.id).to.equal(testExpenseID)
+      expect(response.body.data).to.have.all.keys(
+        "id", "created", "updated", "title", "description", "amount", "date", "payee", "tags")
+    })
+  })
     });
   });
 });
