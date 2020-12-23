@@ -366,4 +366,64 @@ describe("Routes", () => {
       expect(expenseInDB.amount).to.equal(1337)
     })
   })
+  describe("Expenses: DELETE /api/expenses/{id}", () => {
+    let testExpense;
+    let testExpenseID;
+    let singleExpenseURL;
+    before(async () => {
+      await Expense.destroy({
+        where: {},
+        truncate: true,
+      });
+      await User.destroy({
+        where: {},
+        truncate: true,
+      });
+
+      await generateRandomUsers(randomUserAmount);
+    })
+    beforeEach(async () => {
+      // No need to clear anything else than expenses between tests
+      await Expense.destroy({
+        where: {},
+        truncate: true,
+      });
+      // TODO: Change the amount of expenses generated
+      // In theory, it is enough to test with a singe expense when deleting
+      await generateRandomExpenses(randomExpenseAmount);
+      //Some overhead here, assining array[0] directly from findall does not seem to work
+      testExpense = await Expense.findAll({});
+      testExpense = testExpense[0]
+      testExpenseID = testExpense.id
+      singleExpenseURL = expenseURL + `/${testExpenseID}`
+    })
+
+    describe("Authorization tests", () => {
+      it("Should respond with 401 unauthorized when Authorization header is missing", async () => {
+        const response = await api.delete(singleExpenseURL);
+        expect(response).to.have.status(401);
+        expect(response.body.error).to.exist();
+      });
+      it("Should respond with 401 unauthorized when JVT token is incorrect", async () => {
+        const response = await api
+          .delete(singleExpenseURL)
+          .set("Authorization", "Bearer notARealToken")
+        expect(response).to.have.status(401);
+        expect(response.body.error).to.exist();
+      });
+    })
+    it("Should respond with 404 when ID is wrong", async () => {
+      const response = await api
+        .delete(singleExpenseURL + "somethingExtra")
+        .set("Authorization", `Bearer ${testToken}`);
+      expect(response).to.have.status(404);
+      expect(response.body.error).to.exist()
+    })
+    it("Should respond with 204", async () => {
+      const response = await api
+        .delete(singleExpenseURL)
+        .set("Authorization", `Bearer ${testToken}`);
+      expect(response).to.have.status(204);
+    })
+  })
 });
