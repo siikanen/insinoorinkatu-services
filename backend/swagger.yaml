@@ -4,8 +4,7 @@ info:
   title: Insin00ri API
   description: Insinöörinkadun taloAPI
 servers:
-  - url: 'http://localhost:3000/api/v1'
-  - url: 'http://insinoori.lan/api/v1'
+  - url: '/api/v1'
 tags:
   - name: Users
     description: 'Provides methods of creating, updating and authenticating users.'
