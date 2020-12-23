@@ -288,6 +288,82 @@ describe("Routes", () => {
         "id", "created", "updated", "title", "description", "amount", "date", "payee", "tags")
     })
   })
+  describe("Expenses: PUT /api/expenses/{id}", () => {
+    let testExpense;
+    let testExpenseID;
+    let modifiedTestExpense;
+    let singleExpenseURL;
+    before(async () => {
+      await Expense.destroy({
+        where: {},
+        truncate: true,
+      });
+      await User.destroy({
+        where: {},
+        truncate: true,
     });
+
+      await generateRandomUsers(randomUserAmount);
+    })
+    beforeEach(async () => {
+      // No need to clear anything else than expenses between tests
+      await Expense.destroy({
+        where: {},
+        truncate: true,
+      });
+      // TODO: Change the amount of expenses generated
+      // In theory, it is enough to test with a singe expense when deleting
+      // Clearing the expenses causes the ID to change, so it needs te be re-aquired
+      await generateRandomExpenses(randomExpenseAmount);
+      //Some overhead here, assining array[0] directly from findall does not seem to work
+      testExpense = await Expense.findAll({});
+      testExpense = testExpense[0]
+      modifiedTestExpense = { ...testExpense }
+      modifiedTestExpense.title = "Modified"
+      modifiedTestExpense.amount = 1337
+      testExpenseID = testExpense.id
+      singleExpenseURL = expenseURL + `/${testExpenseID}`
   });
+    describe("Authorization tests", () => {
+      it("Should respond with 401 unauthorized when Authorization header is missing", async () => {
+        const response = await api.put(singleExpenseURL).send(testExpense);
+        expect(response).to.have.status(401);
+        expect(response.body.error).to.exist();
+      });
+      it("Should respond with 401 unauthorized when JVT token is incorrect", async () => {
+        const response = await api
+          .put(singleExpenseURL)
+          .set("Authorization", "Bearer notARealToken")
+          .send(testExpense);
+        expect(response).to.have.status(401);
+        expect(response.body.error).to.exist();
+      });
+    })
+    it("Should respond with 404 when ID is wrong", async () => {
+      const response = await api
+        .put(singleExpenseURL + "somethingExtra")
+        .set("Authorization", `Bearer ${testToken}`);
+      expect(response).to.have.status(404);
+      expect(response.body.error).to.exist()
+    })
+    it("Should respond with 200", async () => {
+      const response = await api
+        .get(singleExpenseURL)
+        .set("Authorization", `Bearer ${testToken}`)
+        .send(modifiedTestExpense)
+      expect(response).to.have.status(200);
+    })
+    it("Should modify the expense", async () => {
+      const response = await api
+        .get(singleExpenseURL)
+        .set("Authorization", `Bearer ${testToken}`)
+        .send(modifiedTestExpense)
+      expect(response).to.have.status(200);
+      let expenseInDB = await Expense.findOne({ where: { id: testExpenseID } })
+      expect(expenseInDB).to.have.all.keys(
+        "id", "created", "updated", "title", "description", "amount", "date", "payee", "tags")
+      expect(expenseInDB.title).to.equal("Modified")
+      expect(expenseInDB.amount).to.equal(1337)
+    })
+  })
 });
