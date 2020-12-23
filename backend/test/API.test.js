@@ -7,12 +7,10 @@ const expenseURL = "/api/v1/expenses";
 const models = require("../database/models");
 const Expense = models.Expense;
 const User = models.User;
-const Category = models.Category;
 const chaiHttp = require("chai-http");
 const faker = require("faker");
 chai.use(chaiHttp);
 
-const randomCategoryAmount = 2;
 const randomUserAmount = 2;
 const randomExpenseAmount = 5;
 // TODO: Genereate a real JVT token here for testing
@@ -39,13 +37,7 @@ async function generateRandomUsers(amount) {
     });
   }
 }
-async function generRandomCategories(amount) {
-  for (i = 0; i < amount; i++) {
-    await Category.create({
-      name: faker.commerce.department(),
-    });
-  }
-}
+
 
 describe("Routes", () => {
   describe("Viewing expenses: GET /api/v1/expenses", () => {
@@ -60,12 +52,8 @@ describe("Routes", () => {
         where: {},
         truncate: true,
       });
-      await Category.destroy({
-        where: {},
-        truncate: true,
-      });
+
       await generateRandomUsers(randomUserAmount);
-      await generRandomCategories(randomCategoryAmount);
       await generateRandomExpenses(randomExpenseAmount);
     });
     it("should respond with JSON", async () => {
