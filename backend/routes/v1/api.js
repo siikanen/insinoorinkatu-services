@@ -16,13 +16,18 @@ router.route("/").get((req, res) => {
   res.json({ monni: "test" });
 });
 
-router.route('/')
-    .get( ( req, res ) => {
-        res.json({"monni":"test"})
-    })
+router.use(
+  jwt({ secret: process.env.JWT_SECRET, algorithms: ["HS256"] }).unless({
+    path: [
+      // NOTE: that these require the full path because the check is made against req.path
+      { url: "/api/v1/users/login", methods: ["POST"] },
+      { url: "/api/v1/users", methods: ["POST"] },
+    ],
+  })
+);
 
-router.use('/expenses', expensesRouter)
-router.use('/users', usersRouter)
+
+router.use("/users", usersRouter);
+router.use("/expenses", expensesRouter);
 
 module.exports = router;
-
