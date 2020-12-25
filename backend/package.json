@@ -14,7 +14,9 @@
     "ignore": [
       "*.test.js",
       ".git",
-      "node_modules/**/node_modules"
+      "node_modules/**/node_modules",
+      "*-journal",
+      "*.sqlite"
     ],
     "NODE_ENV": "development",
     "ext": "js,yaml"
