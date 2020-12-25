@@ -42,8 +42,7 @@ module.exports = (sequelize, DataTypes) => {
       password: {
         type: DataTypes.VIRTUAL,
         set(password) {
-          const newSalt = crypto.randomBytes(32).toString("hex");
-          const newpasswordHash = crypto
+          const newSalt = crypto.randomBytes(64).toString('hex');
             .scryptSync(password, newSalt, 64)
             .toString("hex");
           this.salt = newSalt;

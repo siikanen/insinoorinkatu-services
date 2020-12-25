@@ -9,8 +9,8 @@ module.exports = {
         id: uuidv4(),
         username: "test",
         //password = test
-        passwordhash: "2182202d89add441ac1918e775874e16f4a49bf2b42ffd2c191288d8007020187d16cf3187174c78631fab4af85951d0b50f1fb51f08b0600dcca4d7e029308e",
-        salt: "a75af2320cd2147b9b300e077abd6022d3ebe3937ace8c41cd319946d5d30f31",
+        passwordhash: "bf9eb29a3ff189db9cd001821fb1a6ee934600a2a8d961a05438edba0ea1672bac0030117c66d2b6d29fd7c622ea576e959ef539eb2ca1a62afe122a90df425b",
+        salt: "643e8caa59b0dc9f8cb1e3eb1429fabeb24b472593a0fa4d2c4bf1f8c69c3957c44c8940960d00144eabf72d9b8c732cca264c7a4cc0d40ccdbddbd8eba2a0e5",
         createdAt: new Date(),
         updatedAt: new Date(),
       })
