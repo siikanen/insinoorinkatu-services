@@ -7,6 +7,10 @@ const User = models.User;
 usersRouter
   .route("/")
 
+  .get(async (req, res) => {
+    const users = await User.findAll();
+    return res.json({"data": users});
+  })
 
   .post(async (req, res) => {
     const newUser = await User.create({
