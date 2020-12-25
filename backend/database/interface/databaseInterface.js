@@ -4,7 +4,7 @@ const config = require("../config/config");
  * Establish a connection to the database
  * Returns a connection object
  */
-async function connectDatabase() {
+function connect() {
   const sequelize = new Sequelize(
     (() => {
       switch (process.env.NODE_ENV) {
@@ -20,7 +20,7 @@ async function connectDatabase() {
     })()
   ); //TODO: Set custom logger here!
   try {
-    await sequelize.authenticate();
+    sequelize.authenticate();
     console.log("Connection has been established successfully.");
   } catch (error) {
     console.error("Unable to connect to the database:", error);
@@ -31,7 +31,7 @@ async function connectDatabase() {
  * Closes a database connection
  * @param {*} database   - the database connection to close
  */
-async function disconnectDatabase(database) {
+function disconnect(database) {
   try {
     console.log("disconnected");
     database.close();
@@ -40,4 +40,4 @@ async function disconnectDatabase(database) {
   }
 }
 
-module.exports = { connectDatabase, disconnectDatabase };
+module.exports = { connect, disconnect};
