@@ -1,10 +1,10 @@
 module.exports = {
   development: {
-    database: "database_development",
-    dialect: "sqlite",
-    storage:"develop.sqlite"
+    database: 'database_development',
+    dialect: 'sqlite',
+    storage:'develop.sqlite'
   },
-    staging: {
+  staging: {
     username: process.env.CI_DB_USERNAME,
     password: process.env.CI_DB_PASSWORD,
     database: process.env.CI_DB_NAME,

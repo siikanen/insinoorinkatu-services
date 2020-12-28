@@ -1,6 +1,6 @@
-'use strict';
-const crypto = require('crypto');
-const { Model } = require('sequelize');
+'use strict'
+const crypto = require('crypto')
+const { Model } = require('sequelize')
 module.exports = (sequelize, DataTypes) => {
   class User extends Model {
     /**
@@ -46,12 +46,12 @@ module.exports = (sequelize, DataTypes) => {
       password: {
         type: DataTypes.VIRTUAL,
         set(password) {
-          const newSalt = crypto.randomBytes(64).toString('hex');
+          const newSalt = crypto.randomBytes(64).toString('hex')
           const newPasswordHash = crypto
             .scryptSync(password, newSalt, 64)
-            .toString('hex');
-          this.setDataValue('salt', newSalt);
-          this.setDataValue('passwordHash', newPasswordHash);
+            .toString('hex')
+          this.setDataValue('salt', newSalt)
+          this.setDataValue('passwordHash', newPasswordHash)
         },
         get() {
           // You are supposed to check the hash using checkPassword()
@@ -62,13 +62,13 @@ module.exports = (sequelize, DataTypes) => {
       sequelize,
       modelName: 'User',
     }
-  );
+  )
 
   // TODO: Change this to input only the password to be checked.
   // Get other parameters internally
   User.prototype.checkPassword = (password, hash, salt) => {
     return crypto.scryptSync(password, salt, 64).toString('hex') === hash
-  };
+  }
 
-  return User;
-};
+  return User
+}

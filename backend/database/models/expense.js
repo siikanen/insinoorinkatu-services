@@ -1,7 +1,7 @@
-'use strict';
+'use strict'
 const {
   Model
-} = require('sequelize');
+} = require('sequelize')
 module.exports = (sequelize, DataTypes) => {
   class expense extends Model {
     /**
@@ -21,14 +21,14 @@ module.exports = (sequelize, DataTypes) => {
       validate:{
         notNull: true
       },
-     defaultValue: DataTypes.UUIDV4,
-     autoIncrement: false
+      defaultValue: DataTypes.UUIDV4,
+      autoIncrement: false
     },
     title: DataTypes.STRING,
     amount: DataTypes.INTEGER
   }, {
     sequelize,
     modelName: 'Expense',
-  });
-  return expense;
-};
+  })
+  return expense
+}

@@ -8,14 +8,14 @@ const beforeAll = async () => {
   databaseconnection=await connectDatabase()
 
 
-};
+}
 
 /**
  * Run after all tests
  */
 const afterAll = done => {
-     disconnectDatabase(databaseconnection)
-  done();
-};
+  disconnectDatabase(databaseconnection)
+  done()
+}
 
-module.exports.mochaHooks = { beforeAll, afterAll };
+module.exports.mochaHooks = { beforeAll, afterAll }
