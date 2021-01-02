@@ -4,6 +4,7 @@ const supertest = require('supertest')
 const app = require('../app')
 const api = supertest(app)
 const expenseURL = '/api/v1/expenses'
+const usersURL = '/api/v1/users'
 const models = require('../database/models')
 const Expense = models.Expense
 const User = models.User
@@ -27,7 +28,7 @@ async function generateRandomExpenses(amount) {
     })
   }
 }
-// TODO: password hash and salt not working
+
 async function generateRandomUsers(amount) {
   for (let i = 0; i < amount; i++) {
     await User.create({
@@ -37,11 +38,20 @@ async function generateRandomUsers(amount) {
   }
 }
 
+describe('Expenses', async () => {
+  //Initialize tables and JWT token
+  before(async () => {
+    await User.sync({ force: true })
+    console.log('The table for the User model was just (re)created!')
+    await Expense.sync({ force: true })
+    console.log('The table for the Expense model was just (re)created!')
+    await generateRandomUsers(randomUserAmount)
     let loginResponse = await api.post(`${usersURL}/login`).send({
       username: 'test0',
       password: 'test',
     })
     testToken = loginResponse.body.token
+  })
   describe('Expenses: GET /api/v1/expenses', () => {
     // Get should not have side effects,
     // thus setup data only once
