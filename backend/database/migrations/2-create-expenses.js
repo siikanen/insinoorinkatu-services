@@ -13,19 +13,15 @@ module.exports = {
       amount: {
         type: Sequelize.INTEGER,
       },
-      userID: {
+      UserId: {
         type: Sequelize.DataTypes.UUID,
         references: {
           model: 'Users',
           key: 'id',
+          as: 'payee'
         },
-      },
-      categoryID: {
-        type: Sequelize.DataTypes.UUID,
-        references: {
-          model: 'Categories',
-          key: 'id',
-        },
+        onUpdate: 'CASCADE',
+        onDelete: 'SET NULL',
       },
       createdAt: {
         allowNull: false,
