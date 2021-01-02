@@ -64,5 +64,7 @@ typings/
 .next
 # database
 *.sqlite
+*.sqlite-journal
 # No excecutables
 *.exe
+
