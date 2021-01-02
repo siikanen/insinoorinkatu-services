@@ -13,8 +13,7 @@ chai.use(chaiHttp)
 
 const randomUserAmount = 2
 const randomExpenseAmount = 5
-// TODO: Genereate a real JVT token here for testing
-const testToken = 'TODO'
+let testToken = 'NotYetInitalized'
 
 async function generateRandomExpenses(amount) {
   // TODO: Generate expenses for other users aswell
@@ -38,7 +37,11 @@ async function generateRandomUsers(amount) {
   }
 }
 
-describe('Routes', () => {
+    let loginResponse = await api.post(`${usersURL}/login`).send({
+      username: 'test0',
+      password: 'test',
+    })
+    testToken = loginResponse.body.token
   describe('Expenses: GET /api/v1/expenses', () => {
     // Get should not have side effects,
     // thus setup data only once
