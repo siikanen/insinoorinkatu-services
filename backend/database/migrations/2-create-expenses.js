@@ -10,15 +10,20 @@ module.exports = {
       title: {
         type: Sequelize.STRING,
       },
+      description: {
+        type: Sequelize.STRING,
+      },
       amount: {
         type: Sequelize.INTEGER,
+      },
+      date: {
+        type: Sequelize.DATE,
       },
       UserId: {
         type: Sequelize.DataTypes.UUID,
         references: {
           model: 'Users',
           key: 'id',
-          as: 'payee'
         },
         onUpdate: 'CASCADE',
         onDelete: 'SET NULL',

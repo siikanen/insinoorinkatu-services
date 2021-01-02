@@ -1,7 +1,5 @@
 'use strict'
-const {
-  Model
-} = require('sequelize')
+const { Model } = require('sequelize')
 module.exports = (sequelize, DataTypes) => {
   class expense extends Model {
     /**
@@ -11,26 +9,31 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
-      this.belongsTo(models.User,{as:'payee',foreignKey:'UserId'})
-      this.belongsToMany(models.Tag, { as:'tags',through: 'ExpenseTags'})
+      this.belongsTo(models.User, { as: 'payee', foreignKey: 'UserId' })
+      this.belongsToMany(models.Tag, { as: 'tags', through: 'ExpenseTags' })
     }
-  };
-  expense.init({
-    id:{
-      primaryKey:true,
-      allowNull: false,
-      type:DataTypes.UUID,
-      validate:{
-        notNull: true
+  }
+  expense.init(
+    {
+      id: {
+        primaryKey: true,
+        allowNull: false,
+        type: DataTypes.UUID,
+        validate: {
+          notNull: true,
+        },
+        defaultValue: DataTypes.UUIDV4,
+        autoIncrement: false,
       },
-      defaultValue: DataTypes.UUIDV4,
-      autoIncrement: false
+      title: DataTypes.STRING,
+      description: DataTypes.STRING,
+      date: DataTypes.DATE,
+      amount: DataTypes.INTEGER,
     },
-    title: DataTypes.STRING,
-    amount: DataTypes.INTEGER
-  }, {
-    sequelize,
-    modelName: 'Expense',
-  })
+    {
+      sequelize,
+      modelName: 'Expense',
+    }
+  )
   return expense
 }
