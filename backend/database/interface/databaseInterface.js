@@ -14,6 +14,8 @@ function connect() {
         return config.staging
       case 'production':
         return config.production
+      case 'test' : 
+       return config.test
       default:
         return config.development
       }

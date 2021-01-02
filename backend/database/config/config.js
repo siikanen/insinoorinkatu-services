@@ -9,7 +9,13 @@ module.exports = {
     password: process.env.CI_DB_PASSWORD,
     database: process.env.CI_DB_NAME,
     host: process.env.CI_DB_HOSTNAME,
-    dialect: 'mysql'
+    dialect: 'mysql',
+  },
+  test: {
+    dialect: 'sqlite',
+    storage: ':memory:',
+    //Disable logging to make it easier to read test results
+    logging: false,
   },
   production: {
     username: process.env.PROD_DB_USERNAME,
