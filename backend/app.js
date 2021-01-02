@@ -3,9 +3,6 @@ const path = require('path')
 const logger = require('morgan')
 
 const apiRouterv1 = require('./routes/v1/api')
-const dbInterface = require('./database/interface/databaseInterface')
-
-const sequelize = dbInterface.connect()
 
 const app = express()
 
@@ -17,4 +14,3 @@ app.use(express.static(path.join(__dirname, 'public')))
 app.use('/api/v1', apiRouterv1)
 
 module.exports = app
-
