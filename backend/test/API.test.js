@@ -60,12 +60,7 @@ describe('Expenses', async () => {
         where: {},
         truncate: true,
       })
-      await User.destroy({
-        where: {},
-        truncate: true,
-      })
 
-      await generateRandomUsers(randomUserAmount)
       await generateRandomExpenses(randomExpenseAmount)
     })
     describe('Authorization tests', () => {
@@ -138,12 +133,7 @@ describe('Expenses', async () => {
         where: {},
         truncate: true,
       })
-      await User.destroy({
-        where: {},
-        truncate: true,
-      })
 
-      await generateRandomUsers(randomUserAmount)
       //Set test expense fields
       let users = await User.findAll({})
       let userID = users[0].id
@@ -253,12 +243,7 @@ describe('Expenses', async () => {
         where: {},
         truncate: true,
       })
-      await User.destroy({
-        where: {},
-        truncate: true,
-      })
 
-      await generateRandomUsers(randomUserAmount)
       await generateRandomExpenses(randomExpenseAmount)
       //Some overhead here, assining array[0] directly from findall does not seem to work
       testExpense = await Expense.findAll({})
@@ -322,12 +307,6 @@ describe('Expenses', async () => {
         where: {},
         truncate: true,
       })
-      await User.destroy({
-        where: {},
-        truncate: true,
-      })
-
-      await generateRandomUsers(randomUserAmount)
     })
     beforeEach(async () => {
       // No need to clear anything else than expenses between tests
@@ -408,12 +387,6 @@ describe('Expenses', async () => {
         where: {},
         truncate: true,
       })
-      await User.destroy({
-        where: {},
-        truncate: true,
-      })
-
-      await generateRandomUsers(randomUserAmount)
     })
     beforeEach(async () => {
       // No need to clear anything else than expenses between tests
