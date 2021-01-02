@@ -20,9 +20,9 @@ router
     }
   })
   .post(async (req, res) => {
-    console.log(req.body)
-    await addExpenses(req.body)
-    res.status(201).send()
+    const expensePromises = req.body.data.map(expense => addExpenses(expense))
+    const newExpenses = await Promise.all(expensePromises)
+    res.status(201).json({data:newExpenses})
   })
 // TODO: add update and delete methods
 module.exports = router

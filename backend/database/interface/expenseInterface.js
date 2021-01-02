@@ -1,6 +1,6 @@
 //TODO: methods such as delete and update should return the expense, rather than return nothing
-const models = require('../models')
-const Expense = models.Expense
+
+const {User, Expense, Tag} = require('../models')
 /**
  * Fetch all expenses matching filter as json
  *
@@ -8,13 +8,58 @@ const Expense = models.Expense
 async function getExpenses(filter = {}) {
   return await Expense.findAll(filter)
 }
-
 /**
  * Add expenses to database
- * @param {Array} data - Data of the expense to be added
+ * @param {Object} data - Data of the expense to be added
  */
 async function addExpenses(data) {
-  return await Expense.bulkCreate(data)
+  let payee = await User.findOne({ where: { id: data.payee.id } })
+  if (!payee) throw new Error('Invalid UserId')
+
+  let newExpense = await Expense.create({
+    title: data.title,
+    description: data.description || undefined,
+    amount: data.amount,
+  })
+
+  // Tag instances may or may not exists
+  let tagPromises = data.tags.map((tag) => {
+    return Tag.findOrCreate({
+      where: {
+        name: tag,
+      },
+    })
+  })
+  let tags = await Promise.all(tagPromises)
+  //tag[0] is the object, tag[1] is boolean, see findOrCreate 
+  tags = tags.map((tag) => tag[0])
+  await newExpense.addTags(tags)
+  await payee.addExpense(newExpense)
+  await newExpense.reload({
+    attributes: {
+      exclude: ['UserId'],
+    },
+    include: [
+      {
+        model: Tag,
+        as: 'tags',
+        attributes: ['name'],
+        through: {
+          attributes: [],
+        },
+      },
+      {
+        model: User,
+        as: 'payee',
+        attributes: ['id', 'username'],
+      },
+    ],
+  })
+  // Transform to object
+  newExpense = newExpense.get()
+  // Remap tag objects to strings
+  newExpense.tags = newExpense.tags.map((tag) => tag.name)
+  return newExpense
 }
 /**
  * Delete expenses matching filter
@@ -45,9 +90,10 @@ async function updateExpenses(data, filter) {
     throw err
   }
 }
+
 module.exports = {
   getExpenses,
   addExpenses,
   deleteExpenses,
-  updateExpenses 
+  updateExpenses,
 }
