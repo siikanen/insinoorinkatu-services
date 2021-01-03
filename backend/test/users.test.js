@@ -217,7 +217,67 @@ describe('Users', () => {
       expect(UserInDB.name).to.equal(modifiedUser.username)
     })
   })
+  describe('User: DELETE /api/users/{id}', () => {
+    let dbtestUser
+    let singleUserURL
+    before(async () => {
+      await User.destroy({
+        where: {}
       })
+    })
+    beforeEach(async () => {
+      // No need to clear anything else than Users between tests
+      await User.destroy({
+        where: {}
+      })
+      // TODO: Change the amount of Users generated
+      // In theory, it is enough to test with a singe User when deleting
+      await generateRandomUsers(randomUserAmount)
+      dbtestUser = await User.findOne({})
+      singleUserURL = usersURL + `/${dbtestUser.id}`
+    })
+
+    describe('Authorization tests', () => {
+      it('Should respond with 401 unauthorized when Authorization header is missing', async () => {
+        const response = await api.delete(singleUserURL)
+        expect(response).to.have.status(401)
+        expect(response.body.error).to.exist()
+      })
+      it('Should respond with 401 unauthorized when JWT token is incorrect', async () => {
+        const response = await api
+          .delete(singleUserURL)
+          .set('Authorization', 'Bearer notARealToken')
+        expect(response).to.have.status(401)
+        expect(response.body.error).to.exist()
+      })
+    })
+    it('Should respond with 404 when ID is wrong', async () => {
+      const response = await api
+        .delete(singleUserURL + 'somethingExtra')
+        .set('Authorization', `Bearer ${testToken}`)
+      expect(response).to.have.status(404)
+      expect(response.body.error).to.exist()
+    })
+    it('Should respond with 204', async () => {
+      const response = await api
+        .delete(singleUserURL)
+        .set('Authorization', `Bearer ${testToken}`)
+      expect(response).to.have.status(204)
+    })
+    it('Should delete the user', async () => {
+      await api
+        .delete(singleUserURL)
+        .set('Authorization', `Bearer ${testToken}`)
+      const usersInDb = await User.findAll()
+      expect(usersInDb).to.have.length(randomUserAmount - 1)
+      const deletedUser = await User.findOne({
+        where: {
+          id: dbtestUser.id
+        }
+      })
+      expect(deletedUser).to.be(null)
+    })
+  })
     })
   })
 })
