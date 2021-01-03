@@ -36,11 +36,17 @@ module.exports = (sequelize, DataTypes) => {
         set() {
           // You are not supposed to set this manually, use the password field
         },
+        get() {
+          // Do not reveal passwordHash in the model attributes
+        },
       },
       salt: {
         type: DataTypes.STRING,
         set() {
           // You are not supposed to set this manually, use the password field
+        },
+        get() {
+          // Do not reveal passwordHash in the model attributes
         },
       },
       // NOTE: Password is virtual field for setting the hash and salt, it does not store the plaintext

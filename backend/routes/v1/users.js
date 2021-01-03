@@ -32,13 +32,14 @@ usersRouter
 
     if ( !user ) res.status(401).json({ error: 'Invalid username or password' })
 
-    // TODO: Change this to check token in the model without exposing salt
-    // and passwordhash here
-    const salt = user.salt
-    const hash = user.passwordHash
+    // TODO: Change this to check token in the model instance, currently this seems broken
+    // and this refers to empty object inside the model
+    const salt = user.getDataValue('salt')
+    const hash = user.getDataValue('passwordHash')
     if ( !user.checkPassword(req.body.password, hash, salt)) {
       return res.status(401).json({ error: 'Invalid username or password' })
     }
+    // TODO: Change this to use proper logger
     console.log('User verification successful')
 
     const tokenContent = {
