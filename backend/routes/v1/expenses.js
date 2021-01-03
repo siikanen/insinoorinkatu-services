@@ -31,4 +31,9 @@ expensesRouter
     return res.json({ data: await updateExpense(req.body.data, req.params.id) })
   })
 
+  .delete(async (req, res) => {
+    const numDeleted = await deleteExpenses({ id: req.params.id })
+    if (numDeleted === 0) throw Error('Expense not found')
+    return res.status(204).end()
+  })
 module.exports = expensesRouter

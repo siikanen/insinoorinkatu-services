@@ -1,6 +1,5 @@
-//TODO: methods such as delete and update should return the expense, rather than return nothing
-
 const { User, Expense, Tag } = require('../models')
+
 /**
  * Fetch all expenses matching filter as json
  *
@@ -36,6 +35,7 @@ async function getExpenses(filter = {}) {
   })
   return expenses
 }
+
 /**
  * Add expenses to database
  * @param {Object} data - Data of the expense to be added
@@ -90,20 +90,18 @@ async function addExpenses(data) {
   newExpense.tags = newExpense.tags.map((tag) => tag.name)
   return newExpense
 }
+
 /**
  * Delete expenses matching filter
  * @param {Object} filter - Filter expenses
+ * @returns {int} Number of items deleted
  */
 async function deleteExpenses(filter) {
-  try {
-    await Expense.destroy({
-      where: filter,
-    })
-  } catch (err) {
-    console.log(err)
-    throw err
-  }
+  return await Expense.destroy({
+    where: filter,
+  })
 }
+
 /**
  * Updates single expense matching given id
  * @param {Object} data - Fields to update
