@@ -3,7 +3,7 @@ const expensesRouter = require('express').Router()
 const {
   addExpenses,
   getExpenses,
-  updateExpenses,
+  updateExpense,
   deleteExpenses,
 } = require('../../database/interface/expenseInterface')
 
@@ -24,8 +24,11 @@ expensesRouter
   .route('/:id')
 
   .get(async (req, res) => {
-    return res.json({data: await getExpenses({ id: req.params.id })})
+    return res.json({ data: await getExpenses({ id: req.params.id }) })
   })
 
+  .put(async (req, res) => {
+    return res.json({ data: await updateExpense(req.body.data, req.params.id) })
+  })
 
 module.exports = expensesRouter
