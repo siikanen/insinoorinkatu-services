@@ -278,6 +278,32 @@ describe('Users', () => {
       expect(deletedUser).to.be(null)
     })
   })
+  describe('Login POST /api/v1/users/login', async () => {
+    let loginURL = usersURL + '/login'
+    let UserInDB
+    before(async () => {
+      await User.destroy({
+        where: {}
+      })
+      // random users have password 'test'
+      await generateRandomUsers(1)
+      UserInDB = await User.findOne()
+    })
+    it('Should not allow to login with wrong password', async () => {
+      const response = await api.post(loginURL).send({
+        username: UserInDB.username,
+        password: 'WRONG PASSWORD'
+      })
+      expect(response).to.have.status(401)
+      expect(response.body.error).to.exist()
+    })
+    it('Should return token when correct credentials are provided', async () => {
+      const response = await api.post(loginURL).send({
+        username: UserInDB.username,
+        password: 'test'
+      })
+      expect(response).to.have.status(200)
+      expect(response.body.token).to.be.a('String')
     })
   })
 })
