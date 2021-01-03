@@ -155,6 +155,68 @@ describe('Users', () => {
       })
     })
   })
+  describe('User: PUT /api/users/{id}', () => {
+    let dbtestUser
+    let singleUserURL
+    let modifiedUser = {
+      username: 'modfiedUsername',
+      password: 'modified'
+    }
+    before(async () => {
+      await User.destroy({
+        where: {}
+      })
+    })
+    beforeEach(async () => {
+      await User.destroy({
+        where: {}
+      })
+      await generateRandomUsers(randomUserAmount)
+      dbtestUser = await User.findOne({})
+      singleUserURL = usersURL + `/${dbtestUser.id}`
+    })
+    describe('Authorization tests', () => {
+      it('Should respond with 401 unauthorized when Authorization header is missing', async () => {
+        const response = await api.put(singleUserURL).send(modifiedUser)
+        expect(response).to.have.status(401)
+        expect(response.body.error).to.exist()
+      })
+      it('Should respond with 401 unauthorized when JWT token is incorrect', async () => {
+        const response = await api
+          .put(singleUserURL)
+          .set('Authorization', 'Bearer notARealToken')
+          .send(modifiedUser)
+        expect(response).to.have.status(401)
+        expect(response.body.error).to.exist()
+      })
+    })
+    it('Should respond with 404 when ID is wrong', async () => {
+      const response = await api
+        .put(singleUserURL + 'somethingExtra')
+        .set('Authorization', `Bearer ${testToken}`)
+        .send(modifiedUser)
+      expect(response).to.have.status(404)
+      expect(response.body.error).to.exist()
+    })
+    it('Should respond with 200', async () => {
+      const response = await api
+        .put(singleUserURL)
+        .set('Authorization', `Bearer ${testToken}`)
+        .send(modifiedUser)
+      expect(response).to.have.status(200)
+    })
+    it('Should modify the User', async () => {
+      const response = await api
+        .put(singleUserURL)
+        .set('Authorization', `Bearer ${testToken}`)
+        .send(modifiedUser)
+      expect(response).to.have.status(200)
+      let UserInDB = await User.findOne({
+        where: { id: testUser.id }
+      })
+      expect(UserInDB.name).to.equal(modifiedUser.username)
+    })
+  })
       })
     })
   })
