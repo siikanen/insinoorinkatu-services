@@ -128,7 +128,7 @@ async function updateExpense(data, id) {
     let tags = await Promise.all(tagPromises)
     //tag[0] is the object, tag[1] is boolean, see findOrCreate
     tags = tags.map((tag) => tag[0])
-    await expenseToUpdate.addTags(tags)
+    await expenseToUpdate.setTags(tags)
   }
 
   await expenseToUpdate.update(data, {
