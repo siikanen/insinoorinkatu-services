@@ -6,7 +6,6 @@ const {
   updateExpenses,
   deleteExpenses,
 } = require('../../database/interface/expenseInterface')
-const router = express.Router()
 
 expensesRouter
   .route('/')
@@ -28,5 +27,5 @@ expensesRouter
     return res.json({data: await getExpenses({ id: req.params.id })})
   })
 
-  })
+
 module.exports = expensesRouter
