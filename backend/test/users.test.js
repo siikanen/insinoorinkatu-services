@@ -5,24 +5,27 @@ const app = require('../app')
 const api = supertest(app)
 const usersURL = '/api/v1/users'
 const models = require('../database/models')
-const { User} = models
+const { User } = models
 const chaiHttp = require('chai-http')
 chai.use(chaiHttp)
-const {generateRandomUsers,randomUserAmount } = require('./testHelper')
+const { generateRandomUsers, randomUserAmount } = require('./testHelper')
 let testToken = 'NotYetInitalized'
+let testUser = {
+  username: 'test',
+  password: 'test'
+}
 async function getToken() {
-  console.log(randomUserAmount)
   await generateRandomUsers(randomUserAmount)
   let loginResponse = await api.post(`${usersURL}/login`).send({
     username: 'test0',
-    password: 'test',
+    password: 'test'
   })
 
   return loginResponse.body.token
 }
 before(async () => {
   await models.sequelize.sync({ force: true })
-  testToken=await getToken()
+  testToken = await getToken()
 })
 describe('Users', () => {
   before(async () => {
@@ -33,7 +36,7 @@ describe('Users', () => {
       await generateRandomUsers(2)
       let loginResponse = await api.post(`${usersURL}/login`).send({
         username: 'test0',
-        password: 'test',
+        password: 'test'
       })
       testToken = loginResponse.body.token
     })
@@ -65,8 +68,55 @@ describe('Users', () => {
           'createdAt',
           'updatedAt'
         )
-        expect(user).to.not.have.any.keys('salt', 'passwordHash')
       })
+    })
+  })
+  describe('User: GET /api/v1/user/{id}', async () => {
+    let dbtestUser
+    let singleUserURL
+    before(async () => {
+      await User.destroy({
+        where: {}
+      })
+
+      await generateRandomUsers(randomUserAmount)
+      dbtestUser = await User.findOne()
+      singleUserURL = usersURL + `/${dbtestUser.id}`
+    })
+    describe('Authorization tests', () => {
+      it('Should respond with 401 unauthorized when Authorization header is missing', async () => {
+        const response = await api.get(singleUserURL)
+        expect(response).to.have.status(401)
+        expect(response.body.error).to.exist()
+      })
+      it('Should respond with 401 unauthorized when JWT token is incorrect', async () => {
+        const response = await api
+          .get(singleUserURL)
+          .set('Authorization', 'Bearer notARealToken')
+        expect(response).to.have.status(401)
+        expect(response.body.error).to.exist()
+      })
+    })
+    it('Should respond with 404 when ID is wrong', async () => {
+      const response = await api
+        .get(singleUserURL + 'somethingExtra')
+        .set('Authorization', `Bearer ${testToken}`)
+      expect(response).to.have.status(404)
+      expect(response.body.error).to.exist()
+    })
+    it('Should respond with 200', async () => {
+      const response = await api
+        .get(singleUserURL)
+        .set('Authorization', `Bearer ${testToken}`)
+      expect(response).to.have.status(200)
+    })
+    it('Should return the correct User', async () => {
+      const response = await api
+        .get(singleUserURL)
+        .set('Authorization', `Bearer ${testToken}`)
+      expect(response).to.have.status(200)
+      expect(response.body.data.id).to.equal(dbtestUser.id)
+      expect(response.body.data).to.have.all.keys('id', 'username')
     })
   })
   describe('User: POST /api/v1/users', () => {
