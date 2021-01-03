@@ -1,4 +1,4 @@
-const express = require('express')
+const expensesRouter = require('express').Router()
 
 const {
   addExpenses,
@@ -8,7 +8,7 @@ const {
 } = require('../../database/interface/expenseInterface')
 const router = express.Router()
 
-router
+expensesRouter
   .route('/')
   .get(async (req, res) => {
     // TODO: Validate the request and pass filters from req params to getExpenses()
@@ -21,4 +21,4 @@ router
     res.status(201).json({data:newExpenses})
   })
 // TODO: add update and delete methods
-module.exports = router
+module.exports = expensesRouter
