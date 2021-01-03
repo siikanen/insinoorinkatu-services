@@ -2,7 +2,8 @@ module.exports = {
   development: {
     database: 'database_development',
     dialect: 'sqlite',
-    storage:'develop.sqlite'
+    storage:'develop.sqlite',
+    transactionType: 'IMMEDIATE'
   },
   staging: {
     username: process.env.CI_DB_USERNAME,
