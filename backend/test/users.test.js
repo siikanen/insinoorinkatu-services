@@ -122,7 +122,39 @@ describe('Users', () => {
   describe('User: POST /api/v1/users', () => {
     beforeEach(async () => {
       await User.destroy({
-        where: {},
+        where: {}
+      })
+      it('Should not allow two of the same usernames to exist', async () => {
+        let response = await api.post(usersURL).send(testUser)
+        expect(response).to.have.status(400)
+        expect(response.body.error).to.exist()
+        const usersInDb = await User.findAll()
+        expect(usersInDb).to.have.length(0)
+      })
+      it('Should return 400 when request body is not valid', async () => {
+        const response = await api.post(usersURL).send({
+          notRealField: 2
+        })
+        expect(response).to.have.status(400)
+        expect(response.body.error).to.exist()
+        const usersInDb = await User.findAll({})
+        expect(usersInDb).to.have.length(0)
+      })
+      it('Should add a new user', async () => {
+        const response = await api.post(usersURL).send(testUser)
+        expect(response).to.have.status(201)
+        const usersInDb = await User.findAll({})
+        expect(usersInDb).to.have.length(1)
+        expect(usersInDb[0].username).to.be.equal(testUser.username)
+      })
+      it('Should return the added user', async () => {
+        const response = await api.post(usersURL).send(testUser)
+        expect(response).to.have.status(201)
+        expect(response.data).to.have.all.keys('id', 'username')
+        expect(response.data.username).to.equal(testUser.username)
+      })
+    })
+  })
       })
     })
   })
