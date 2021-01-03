@@ -18,7 +18,6 @@ chai.use(chaiHttp)
 
 let testToken = 'notYetInitialized'
 async function getToken() {
-  console.log(randomUserAmount)
   await generateRandomUsers(randomUserAmount)
   let loginResponse = await api.post(`${usersURL}/login`).send({
     username: 'test0',
@@ -264,7 +263,6 @@ describe('Expenses', () => {
   })
   describe('Expenses: GET /api/v1/expenses/{id}', () => {
     let testExpense
-    let testExpenseID
     let singleExpenseURL
     before(async () => {
       await Expense.destroy({
@@ -273,8 +271,7 @@ describe('Expenses', () => {
 
       await generateRandomExpenses(randomExpenseAmount)
       testExpense = await Expense.findOne()
-      testExpenseID = testExpense.id
-      singleExpenseURL = expenseURL + `/${testExpenseID}`
+      singleExpenseURL = expenseURL + `/${testExpense.id}`
     })
     describe('Authorization tests', () => {
       it('Should respond with 401 unauthorized when Authorization header is missing', async () => {
@@ -349,7 +346,6 @@ describe('Expenses', () => {
         where: {}
       })
       // TODO: Change the amount of expenses generated
-      // In theory, it is enough to test with a sinlge expense when deleting
       // Clearing the expenses causes the ID to change, so it needs te be re-aquired
       await generateRandomExpenses(randomExpenseAmount)
       testExpense = await Expense.findOne({})
