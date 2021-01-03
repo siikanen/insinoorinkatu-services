@@ -305,8 +305,8 @@ describe('Expenses', () => {
         .get(singleExpenseURL)
         .set('Authorization', `Bearer ${testToken}`)
       expect(response).to.have.status(200)
-      expect(response.body.data.id).to.equal(testExpenseID)
-      expect(response.body.data).to.have.all.keys(
+      expect(response.body.data[0].id).to.equal(testExpense.id)
+      expect(response.body.data[0]).to.have.all.keys(
         'id',
         'createdAt',
         'updatedAt',
@@ -317,7 +317,7 @@ describe('Expenses', () => {
         'payee',
         'tags'
       )
-      expect(response.body.data.payee).to.not.have.any.keys(
+      expect(response.body.data[0].payee).to.not.have.any.keys(
         'salt',
         'passwordHash'
       )
@@ -325,20 +325,21 @@ describe('Expenses', () => {
   })
   describe('Expenses: PUT /api/expenses/{id}', () => {
     let testExpense
-    let modifiedTestExpense
+    let modifiedTestExpense = { data: {} }
 
     let singleExpenseURL
     before(async () => {
       await models.sequelize.sync({ force: true })
       await generateRandomUsers(randomUserAmount)
       let userFromDb = await User.findOne()
-      modifiedTestExpense = { ...testExpenseTemplate.data[0] }
-      modifiedTestExpense.payee = {
+      modifiedTestExpense.data = { ...testExpenseTemplate.data[0] }
+
+      modifiedTestExpense.data.payee = {
         username: userFromDb.username,
         id: userFromDb.id
       }
-      modifiedTestExpense.title = 'Modified'
-      modifiedTestExpense.amount = 1337
+      modifiedTestExpense.data.title = 'Modified'
+      modifiedTestExpense.data.amount = 1337
     })
     beforeEach(async () => {
       // No need to clear anything else than expenses between tests
@@ -370,6 +371,7 @@ describe('Expenses', () => {
       const response = await api
         .put(singleExpenseURL + 'somethingExtra')
         .set('Authorization', `Bearer ${testToken}`)
+        .send(modifiedTestExpense)
       expect(response).to.have.status(404)
       expect(response.body.error).to.exist()
     })
