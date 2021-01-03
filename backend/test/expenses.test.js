@@ -394,6 +394,18 @@ describe('Expenses', () => {
       expect(expenseInDB.title).to.equal('Modified')
       expect(expenseInDB.amount).to.equal(1337)
     })
+    it('Should remove original tags when new ones are provided', async () => {
+      modifiedTestExpense.data.tags = ['ModifiedTag1', 'ModifiedTag2']
+      const response = await api
+        .put(singleExpenseURL)
+        .set('Authorization', `Bearer ${testToken}`)
+        .send(modifiedTestExpense)
+      expect(response).to.have.status(200)
+      let expenseInDB = await Expense.findOne({
+        where: { id: testExpense.id }
+      })
+      expect(expenseInDB.tags).to.equal(modifiedTestExpense.tags)
+    })
   })
   describe('Expenses: DELETE /api/expenses/{id}', () => {
     let testExpense
