@@ -11,13 +11,9 @@ const router = express.Router()
 router
   .route('/')
   .get(async (req, res) => {
-    try {
-      const allExpenses = await getExpenses()
-      res.json(allExpenses)
-    } catch (err) {
-      console.log(err)
-      res.status(500).send()
-    }
+    // TODO: Validate the request and pass filters from req params to getExpenses()
+    const allExpenses = await getExpenses()
+    res.json({data: allExpenses})
   })
   .post(async (req, res) => {
     const expensePromises = req.body.data.map(expense => addExpenses(expense))

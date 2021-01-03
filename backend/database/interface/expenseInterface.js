@@ -1,12 +1,40 @@
 //TODO: methods such as delete and update should return the expense, rather than return nothing
 
-const {User, Expense, Tag} = require('../models')
+const { User, Expense, Tag } = require('../models')
 /**
  * Fetch all expenses matching filter as json
  *
  */
 async function getExpenses(filter = {}) {
-  return await Expense.findAll(filter)
+  let expenses = await Expense.findAll({
+    where: filter,
+    attributes: {
+      exclude: ['UserId'],
+    },
+    include: [
+      {
+        model: Tag,
+        as: 'tags',
+        attributes: ['name'],
+        through: {
+          attributes: [],
+        },
+      },
+      {
+        model: User,
+        as: 'payee',
+        attributes: ['id', 'username'],
+      },
+    ],
+  })
+  // Transform to objects
+  expenses = expenses.map((expense) => expense.get())
+  // Remap tag objects to strings
+  expenses = expenses.map((expense) => {
+    expense.tags = expense.tags.map((tag) => tag.name)
+    return expense
+  })
+  return expenses
 }
 /**
  * Add expenses to database
@@ -18,7 +46,8 @@ async function addExpenses(data) {
 
   let newExpense = await Expense.create({
     title: data.title,
-    description: data.description || undefined,
+    description: data.description,
+    date: data.date || new Date(),
     amount: data.amount,
   })
 
@@ -31,7 +60,7 @@ async function addExpenses(data) {
     })
   })
   let tags = await Promise.all(tagPromises)
-  //tag[0] is the object, tag[1] is boolean, see findOrCreate 
+  //tag[0] is the object, tag[1] is boolean, see findOrCreate
   tags = tags.map((tag) => tag[0])
   await newExpense.addTags(tags)
   await payee.addExpense(newExpense)
