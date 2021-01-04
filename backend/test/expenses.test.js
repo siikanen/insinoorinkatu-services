@@ -1,6 +1,7 @@
 const chai = require('chai')
 const expect = chai.expect
 const supertest = require('supertest')
+const _ = require('lodash')
 const app = require('../app')
 const api = supertest(app)
 const expenseURL = '/api/v1/expenses'
@@ -240,7 +241,7 @@ describe('Expenses', () => {
     })
 
     it('Should add multiple new expenses, when multiple expenses are provided', async () => {
-      const testExpense2 = { ...testExpenseTemplate.data[0] }
+      const testExpense2 = _.cloneDeep(testExpenseTemplate.data[0])
       testExpense2.title = 'TitleIsChanged'
       const copyTemplate = { ...testExpenseTemplate }
       copyTemplate.data.push(testExpense2)
@@ -332,7 +333,7 @@ describe('Expenses', () => {
       await models.sequelize.sync({ force: true })
       await generateRandomUsers(randomUserAmount)
       let userFromDb = await User.findOne()
-      modifiedTestExpense.data = { ...testExpenseTemplate.data[0] }
+      modifiedTestExpense.data = _.cloneDeep(testExpenseTemplate.data[0])
 
       modifiedTestExpense.data.payee = {
         username: userFromDb.username,
