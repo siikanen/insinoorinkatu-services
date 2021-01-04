@@ -87,14 +87,14 @@ describe('Users', () => {
       it('Should respond with 401 unauthorized when Authorization header is missing', async () => {
         const response = await api.get(singleUserURL)
         expect(response).to.have.status(401)
-        expect(response.body.error).to.exist()
+        expect(response.body.error).to.not.be.undefined
       })
       it('Should respond with 401 unauthorized when JWT token is incorrect', async () => {
         const response = await api
           .get(singleUserURL)
           .set('Authorization', 'Bearer notARealToken')
         expect(response).to.have.status(401)
-        expect(response.body.error).to.exist()
+        expect(response.body.error).to.not.be.undefined
       })
     })
     it('Should respond with 404 when ID is wrong', async () => {
@@ -102,7 +102,7 @@ describe('Users', () => {
         .get(singleUserURL + 'somethingExtra')
         .set('Authorization', `Bearer ${testToken}`)
       expect(response).to.have.status(404)
-      expect(response.body.error).to.exist()
+      expect(response.body.error).to.not.be.undefined
     })
     it('Should respond with 200', async () => {
       const response = await api
@@ -127,7 +127,7 @@ describe('Users', () => {
       it('Should not allow two of the same usernames to exist', async () => {
         let response = await api.post(usersURL).send(testUser)
         expect(response).to.have.status(400)
-        expect(response.body.error).to.exist()
+        expect(response.body.error).to.not.be.undefined
         const usersInDb = await User.findAll()
         expect(usersInDb).to.have.length(0)
       })
@@ -136,7 +136,7 @@ describe('Users', () => {
           notRealField: 2
         })
         expect(response).to.have.status(400)
-        expect(response.body.error).to.exist()
+        expect(response.body.error).to.not.be.undefined
         const usersInDb = await User.findAll({})
         expect(usersInDb).to.have.length(0)
       })
@@ -179,7 +179,7 @@ describe('Users', () => {
       it('Should respond with 401 unauthorized when Authorization header is missing', async () => {
         const response = await api.put(singleUserURL).send(modifiedUser)
         expect(response).to.have.status(401)
-        expect(response.body.error).to.exist()
+        expect(response.body.error).to.not.be.undefined
       })
       it('Should respond with 401 unauthorized when JWT token is incorrect', async () => {
         const response = await api
@@ -187,7 +187,7 @@ describe('Users', () => {
           .set('Authorization', 'Bearer notARealToken')
           .send(modifiedUser)
         expect(response).to.have.status(401)
-        expect(response.body.error).to.exist()
+        expect(response.body.error).to.not.be.undefined
       })
     })
     it('Should respond with 404 when ID is wrong', async () => {
@@ -196,7 +196,7 @@ describe('Users', () => {
         .set('Authorization', `Bearer ${testToken}`)
         .send(modifiedUser)
       expect(response).to.have.status(404)
-      expect(response.body.error).to.exist()
+      expect(response.body.error).to.not.be.undefined
     })
     it('Should respond with 200', async () => {
       const response = await api
@@ -241,14 +241,14 @@ describe('Users', () => {
       it('Should respond with 401 unauthorized when Authorization header is missing', async () => {
         const response = await api.delete(singleUserURL)
         expect(response).to.have.status(401)
-        expect(response.body.error).to.exist()
+        expect(response.body.error).to.not.be.undefined
       })
       it('Should respond with 401 unauthorized when JWT token is incorrect', async () => {
         const response = await api
           .delete(singleUserURL)
           .set('Authorization', 'Bearer notARealToken')
         expect(response).to.have.status(401)
-        expect(response.body.error).to.exist()
+        expect(response.body.error).to.not.be.undefined
       })
     })
     it('Should respond with 404 when ID is wrong', async () => {
@@ -256,7 +256,7 @@ describe('Users', () => {
         .delete(singleUserURL + 'somethingExtra')
         .set('Authorization', `Bearer ${testToken}`)
       expect(response).to.have.status(404)
-      expect(response.body.error).to.exist()
+      expect(response.body.error).to.not.be.undefined
     })
     it('Should respond with 204', async () => {
       const response = await api
@@ -295,7 +295,7 @@ describe('Users', () => {
         password: 'WRONG PASSWORD'
       })
       expect(response).to.have.status(401)
-      expect(response.body.error).to.exist()
+      expect(response.body.error).to.not.be.undefined
     })
     it('Should return token when correct credentials are provided', async () => {
       const response = await api.post(loginURL).send({

@@ -61,14 +61,14 @@ describe('Expenses', () => {
       it('Should respond with 401 unauthorized when Authorization header is missing', async () => {
         const response = await api.get(expenseURL)
         expect(response).to.have.status(401)
-        expect(response.body.error).to.exist()
+        expect(response.body.error).to.not.be.undefined
       })
       it('Should respond with 401 unauthorized when JWT token is incorrect', async () => {
         const response = await api
           .get(expenseURL)
           .set('Authorization', 'Bearer notARealToken')
         expect(response).to.have.status(401)
-        expect(response.body.error).to.exist()
+        expect(response.body.error).to.not.be.undefined
       })
     })
     describe('Filter tests', () => {
@@ -140,7 +140,7 @@ describe('Expenses', () => {
           .get(expenseURL + '?year=NotAnumber')
           .set('Authorization', `Bearer ${testToken}`)
         expect(response).to.have.status(400)
-        expect(response.body.error).to.exist()
+        expect(response.body.error).to.not.be.undefined
       })
     })
   })
@@ -201,7 +201,7 @@ describe('Expenses', () => {
           notRealField: 2
         })
       expect(response).to.have.status(400)
-      expect(response.body.error).to.exist()
+      expect(response.body.error).to.not.be.undefined
       const expensesInDB = await Expense.findAll({})
       expect(expensesInDB).to.have.length(0)
     })
@@ -278,14 +278,14 @@ describe('Expenses', () => {
       it('Should respond with 401 unauthorized when Authorization header is missing', async () => {
         const response = await api.get(singleExpenseURL)
         expect(response).to.have.status(401)
-        expect(response.body.error).to.exist()
+        expect(response.body.error).to.not.be.undefined
       })
       it('Should respond with 401 unauthorized when JWT token is incorrect', async () => {
         const response = await api
           .get(singleExpenseURL)
           .set('Authorization', 'Bearer notARealToken')
         expect(response).to.have.status(401)
-        expect(response.body.error).to.exist()
+        expect(response.body.error).to.not.be.undefined
       })
     })
     it('Should respond with 404 when ID is wrong', async () => {
@@ -293,7 +293,7 @@ describe('Expenses', () => {
         .get(singleExpenseURL + 'somethingExtra')
         .set('Authorization', `Bearer ${testToken}`)
       expect(response).to.have.status(404)
-      expect(response.body.error).to.exist()
+      expect(response.body.error).to.not.be.undefined
     })
     it('Should respond with 200', async () => {
       const response = await api
@@ -357,7 +357,7 @@ describe('Expenses', () => {
       it('Should respond with 401 unauthorized when Authorization header is missing', async () => {
         const response = await api.put(singleExpenseURL).send(testExpense)
         expect(response).to.have.status(401)
-        expect(response.body.error).to.exist()
+        expect(response.body.error).to.not.be.undefined
       })
       it('Should respond with 401 unauthorized when JWT token is incorrect', async () => {
         const response = await api
@@ -365,18 +365,17 @@ describe('Expenses', () => {
           .set('Authorization', 'Bearer notARealToken')
           .send(testExpense)
         expect(response).to.have.status(401)
-        expect(response.body.error).to.exist()
+        expect(response.body.error).to.not.be.undefined
       })
     })
-    it('Should respond with 400 when tags are not provided', async () => {
+    it('Should respond with 200 when tags are not provided', async () => {
       const copyExpense=_.cloneDeep(modifiedTestExpense)
       copyExpense.data.tags=[]
       const response = await api
-        .put(singleExpenseURL + 'somethingExtra')
+        .put(singleExpenseURL)
         .set('Authorization', `Bearer ${testToken}`)
         .send(copyExpense)
-      expect(response).to.have.status(404)
-      expect(response.body.error).to.exist()
+      expect(response).to.have.status(200)
     })
     it('Should respond with 404 when ID is wrong', async () => {
       const response = await api
@@ -384,7 +383,7 @@ describe('Expenses', () => {
         .set('Authorization', `Bearer ${testToken}`)
         .send(modifiedTestExpense)
       expect(response).to.have.status(404)
-      expect(response.body.error).to.exist()
+      expect(response.body.error).to.not.be.undefined
     })
     it('Should respond with 200', async () => {
       const response = await api
@@ -442,14 +441,14 @@ describe('Expenses', () => {
       it('Should respond with 401 unauthorized when Authorization header is missing', async () => {
         const response = await api.delete(singleExpenseURL)
         expect(response).to.have.status(401)
-        expect(response.body.error).to.exist()
+        expect(response.body.error).to.not.be.undefined
       })
       it('Should respond with 401 unauthorized when JWT token is incorrect', async () => {
         const response = await api
           .delete(singleExpenseURL)
           .set('Authorization', 'Bearer notARealToken')
         expect(response).to.have.status(401)
-        expect(response.body.error).to.exist()
+        expect(response.body.error).to.not.be.undefined
       })
     })
     it('Should respond with 404 when ID is wrong', async () => {
@@ -457,7 +456,7 @@ describe('Expenses', () => {
         .delete(singleExpenseURL + 'somethingExtra')
         .set('Authorization', `Bearer ${testToken}`)
       expect(response).to.have.status(404)
-      expect(response.body.error).to.exist()
+      expect(response.body.error).to.not.be.undefined
     })
     it('Should respond with 204', async () => {
       const response = await api
