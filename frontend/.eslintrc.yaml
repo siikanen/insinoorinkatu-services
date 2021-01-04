@@ -1,0 +1,24 @@
+env:
+  node: true
+  commonjs: true
+  es2021: true
+  mocha: true
+extends:
+  - 'eslint:recommended'
+  - 'prettier'
+  - 'react-app'
+parserOptions:
+  ecmaVersion: 12
+rules:
+  indent:
+    - warn
+    - 2
+  linebreak-style:
+    - error
+    - unix
+  quotes:
+    - warn
+    - single
+  semi:
+    - error
+    - never
