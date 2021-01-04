@@ -1,3 +1,4 @@
+const { NotFoundError } = require('../../utils/errors/userfacing')
 const { User, Expense, Tag } = require('../models')
 
 /**
@@ -8,7 +9,7 @@ async function getExpenses(filter = {}) {
   let expenses = await Expense.findAll({
     where: filter,
     attributes: {
-      exclude: ['UserId'],
+      exclude: ['UserId']
     },
     include: [
       {
@@ -16,16 +17,17 @@ async function getExpenses(filter = {}) {
         as: 'tags',
         attributes: ['name'],
         through: {
-          attributes: [],
-        },
+          attributes: []
+        }
       },
       {
         model: User,
         as: 'payee',
-        attributes: ['id', 'username'],
-      },
-    ],
+        attributes: ['id', 'username']
+      }
+    ]
   })
+  if(expenses.length == 0) throw new NotFoundError('Expense not found')
   // Transform to objects
   expenses = expenses.map((expense) => expense.get())
   // Remap tag objects to strings
@@ -48,15 +50,15 @@ async function addExpenses(data) {
     title: data.title,
     description: data.description,
     date: data.date || new Date(),
-    amount: data.amount,
+    amount: data.amount
   })
 
   // Tag instances may or may not exists
   let tagPromises = data.tags.map((tag) => {
     return Tag.findOrCreate({
       where: {
-        name: tag,
-      },
+        name: tag
+      }
     })
   })
   let tags = await Promise.all(tagPromises)
@@ -66,7 +68,7 @@ async function addExpenses(data) {
   await payee.addExpense(newExpense)
   await newExpense.reload({
     attributes: {
-      exclude: ['UserId'],
+      exclude: ['UserId']
     },
     include: [
       {
@@ -74,15 +76,15 @@ async function addExpenses(data) {
         as: 'tags',
         attributes: ['name'],
         through: {
-          attributes: [],
-        },
+          attributes: []
+        }
       },
       {
         model: User,
         as: 'payee',
-        attributes: ['id', 'username'],
-      },
-    ],
+        attributes: ['id', 'username']
+      }
+    ]
   })
   // Transform to object
   newExpense = newExpense.get()
@@ -98,7 +100,7 @@ async function addExpenses(data) {
  */
 async function deleteExpenses(filter) {
   return await Expense.destroy({
-    where: filter,
+    where: filter
   })
 }
 
@@ -111,8 +113,12 @@ async function deleteExpenses(filter) {
 async function updateExpense(data, id) {
   // Check if we need to change the payee
   const expenseToUpdate = await Expense.findByPk(id)
-
-  if (data.payee.id) {
+  if (!expenseToUpdate) {
+    throw new NotFoundError('Expense not found', {
+      message: 'Expense matching query id was not found'
+    })
+  }
+  if (data.payee) {
     const payee = await User.findByPk(data.payee.id)
     if (!payee) throw new Error('Invalid payee id')
     payee.addExpense(expenseToUpdate)
@@ -121,8 +127,8 @@ async function updateExpense(data, id) {
     const tagPromises = data.tags.map((tag) => {
       return Tag.findOrCreate({
         where: {
-          name: tag,
-        },
+          name: tag
+        }
       })
     })
     let tags = await Promise.all(tagPromises)
@@ -132,13 +138,13 @@ async function updateExpense(data, id) {
   }
 
   await expenseToUpdate.update(data, {
-    fields: ['title', 'description', 'amount', 'date'],
+    fields: ['title', 'description', 'amount', 'date']
   })
 
   await expenseToUpdate.save()
   await expenseToUpdate.reload({
     attributes: {
-      exclude: ['UserId'],
+      exclude: ['UserId']
     },
     include: [
       {
@@ -146,15 +152,15 @@ async function updateExpense(data, id) {
         as: 'tags',
         attributes: ['name'],
         through: {
-          attributes: [],
-        },
+          attributes: []
+        }
       },
       {
         model: User,
         as: 'payee',
-        attributes: ['id', 'username'],
-      },
-    ],
+        attributes: ['id', 'username']
+      }
+    ]
   })
   // Transform to object
   let expenseToUpdateObj = expenseToUpdate.get()
@@ -167,5 +173,5 @@ module.exports = {
   getExpenses,
   addExpenses,
   deleteExpenses,
-  updateExpense,
+  updateExpense
 }
