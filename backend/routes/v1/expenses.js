@@ -4,8 +4,9 @@ const {
   addExpenses,
   getExpenses,
   updateExpense,
-  deleteExpenses,
+  deleteExpenses
 } = require('../../database/interface/expenseInterface')
+const { NotFoundError } = require('../../utils/errors/userfacing')
 
 expensesRouter
   .route('/')
@@ -19,7 +20,6 @@ expensesRouter
     const newExpenses = await Promise.all(expensePromises)
     res.status(201).json({ data: newExpenses })
   })
-// TODO: add update and delete methods
 expensesRouter
   .route('/:id')
 
@@ -28,12 +28,14 @@ expensesRouter
   })
 
   .put(async (req, res) => {
-    return res.json({ data: await updateExpense(req.body.data, req.params.id) })
+    return res.json({
+      data: await updateExpense(req.body.data, req.params.id)
+    })
   })
 
   .delete(async (req, res) => {
     const numDeleted = await deleteExpenses({ id: req.params.id })
-    if (numDeleted === 0) throw Error('Expense not found')
+    if (numDeleted === 0) throw new NotFoundError('Expense not found')
     return res.status(204).end()
   })
 module.exports = expensesRouter
