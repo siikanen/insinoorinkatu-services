@@ -368,6 +368,16 @@ describe('Expenses', () => {
         expect(response.body.error).to.exist()
       })
     })
+    it('Should respond with 400 when tags are not provided', async () => {
+      const copyExpense=_.cloneDeep(modifiedTestExpense)
+      copyExpense.data.tags=[]
+      const response = await api
+        .put(singleExpenseURL + 'somethingExtra')
+        .set('Authorization', `Bearer ${testToken}`)
+        .send(copyExpense)
+      expect(response).to.have.status(404)
+      expect(response.body.error).to.exist()
+    })
     it('Should respond with 404 when ID is wrong', async () => {
       const response = await api
         .put(singleExpenseURL + 'somethingExtra')
