@@ -4,7 +4,6 @@ import PropTypes from 'prop-types'
 import {
   Avatar,
   Box,
-  Button,
   Divider,
   Drawer,
   Hidden,
@@ -13,13 +12,9 @@ import {
   makeStyles
 } from '@material-ui/core'
 import {
-  AlertCircle as AlertCircleIcon,
-  BarChart as BarChartIcon,
-  Lock as LockIcon,
   Settings as SettingsIcon,
   ShoppingBag as ShoppingBagIcon,
   User as UserIcon,
-  UserPlus as UserPlusIcon,
   Users as UsersIcon,
   Home as HomeIcon
 } from 'react-feather'
@@ -33,7 +28,7 @@ const user = {
 
 const items = [
   {
-    href: '/app',
+    href: '/app/dashboard',
     icon: HomeIcon,
     title: 'Home'
   },

@@ -1,17 +1,14 @@
-import React, { useEffect } from 'react'
+import React from 'react'
 import clsx from 'clsx'
-import moment from 'moment'
-import { useDispatch, useSelector } from 'react-redux'
-import { getAllExpenses } from '../../reducers/expensesReducer'
+import { NavLink as RouterLink } from 'react-router-dom'
 import PerfectScrollbar from 'react-perfect-scrollbar'
 import PropTypes from 'prop-types'
-import { useNavigate } from 'react-router-dom'
+import { Typography } from '@material-ui/core'
 import {
   Box,
   Button,
   Card,
   CardHeader,
-  Chip,
   Divider,
   Table,
   TableBody,
@@ -31,13 +28,9 @@ const useStyles = makeStyles(() => ({
   }
 }))
 
-const LatestExpenses = ({ className,expenses=[], ...rest }) => {
+const LatestExpenses = ({ className, expenses = [], ...rest }) => {
   // TODO: replace with last X amount of expenses
 
-  console.log('-->',expenses)
-  console.log(expenses.map((expense)=>{
-    console.log("!")
-  }))
   const classes = useStyles()
 
   return (
@@ -63,12 +56,16 @@ const LatestExpenses = ({ className,expenses=[], ...rest }) => {
             <TableBody>
               {expenses.map((expense) => (
                 <TableRow hover key={expense.id}>
-                  <TableCell>{expense.title}</TableCell>
-                  <TableCell>{expense.payee.username}</TableCell>
                   <TableCell>
-                    {expense.amount}
+                    <Typography
+                      component={RouterLink}
+                      to={`/app/expenses/${expense.id}`}
+                    >
+                      {expense.title}
+                    </Typography>
                   </TableCell>
-
+                  <TableCell>{expense.payee.username}</TableCell>
+                  <TableCell>{expense.amount}</TableCell>
                 </TableRow>
               ))}
             </TableBody>

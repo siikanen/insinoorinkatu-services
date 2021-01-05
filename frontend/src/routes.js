@@ -1,8 +1,7 @@
 import React from 'react'
-import { Navigate } from 'react-router-dom'
 import DashboardLayout from './layouts/DashboardLayout'
 import MainLayout from './layouts/MainLayout'
-
+import Expense from './view/Expenses/Expense'
 import DashboardView from './view/dashboard'
 import LoginForm from './components/login/LoginForm'
 
@@ -16,7 +15,8 @@ const routes = [
       { path: 'dashboard', element: <DashboardView /> },
       // { path: 'products', element: <ProductListView /> },
       // { path: 'settings', element: <SettingsView /> },
-      { path: '*', element: <Navigate to="/404" /> }
+      {path: 'expenses/:id',element: <Expense></Expense>},
+      //{ path: '*', element: <Navigate to="/404" /> }
     ]
   },
   {

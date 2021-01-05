@@ -27,7 +27,6 @@ const LoginForm = (props) => {
         password
       })
     ).then(() => {
-
       navigate('../app/dashboard')
     }).catch((err)=>{
       console.error(err)

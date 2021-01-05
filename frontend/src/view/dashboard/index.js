@@ -1,9 +1,7 @@
-import React, { useState, useEffect } from 'react'
-
+import React, {  useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { Container, Grid, makeStyles } from '@material-ui/core'
 import Page from '../../components/Page'
-
 import LatestExpenses from './LatestExpenses'
 import { getAllExpenses } from '../../reducers/expensesReducer'
 
@@ -21,12 +19,11 @@ const Dashboard = () => {
   const dispatch = useDispatch()
   useEffect(() => {
     dispatch(getAllExpenses(token))
-  }, [])
+  }, [dispatch,token])
   const expenses = useSelector(({ expenses }) => {
     return expenses
   })
 
-  console.log('Expenses here ->', expenses)
 
   const classes = useStyles()
 

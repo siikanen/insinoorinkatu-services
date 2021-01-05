@@ -3,7 +3,6 @@ import usersService from '../services/users'
 export const logIn = (user) => {
   return async (dispatch) => {
     let response = await usersService.logIn(user)
-    console.log(response.data)
     window.localStorage.setItem('token', response.data.token)
 
     dispatch({
