@@ -1,7 +1,7 @@
 import React from 'react'
-import { connect } from 'react-redux'
+import { useDispatch } from 'react-redux'
 import { logIn } from '../../reducers/usersReducer'
-
+import { useNavigate } from 'react-router-dom'
 import Avatar from '@material-ui/core/Avatar'
 import Button from '@material-ui/core/Button'
 import CssBaseline from '@material-ui/core/CssBaseline'
@@ -13,18 +13,25 @@ import { makeStyles } from '@material-ui/core/styles'
 import Container from '@material-ui/core/Container'
 
 const LoginForm = (props) => {
-  const handleSubmit = async (event) => {
+  let navigate = useNavigate()
+  const dispatch = useDispatch()
+
+  const handleSubmit = (event) => {
     event.preventDefault()
     const username = event.target.username.value
     const password = event.target.password.value
-    try {
-      await props.logIn({
+
+    dispatch(
+      logIn({
         username,
         password
       })
-    } catch (err) {
+    ).then(() => {
+
+      navigate('../app/dashboard')
+    }).catch((err)=>{
       console.error(err)
-    }
+    })
   }
   const useStyles = makeStyles((theme) => ({
     paper: {
@@ -94,12 +101,8 @@ const LoginForm = (props) => {
           </Button>
         </form>
       </div>
-
     </Container>
   )
 }
 
-const mapStateToProps = (state) => {
-  return { token: state.users }
-}
-export default connect(mapStateToProps, { logIn })(LoginForm)
+export default LoginForm
