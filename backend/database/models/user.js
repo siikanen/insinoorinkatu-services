@@ -12,6 +12,19 @@ module.exports = (sequelize, DataTypes) => {
       // define association here
       this.hasMany(models.Expense)
     }
+
+    /**
+     * Use for validating the user password, for ex. logging in
+     * @param {string} password to test against
+     * @returns {boolean} wheter password was correct or not
+     */
+    checkPassword(password) {
+      return (
+        crypto
+          .scryptSync(password, this.getDataValue('salt'), 64)
+          .toString('hex') === this.getDataValue('passwordHash')
+      )
+    }
   }
   User.init(
     {
@@ -21,15 +34,15 @@ module.exports = (sequelize, DataTypes) => {
         unique: true,
         type: DataTypes.UUID,
         validate: {
-          notNull: true,
+          notNull: true
         },
         defaultValue: DataTypes.UUIDV4,
-        autoIncrement: false,
+        autoIncrement: false
       },
       username: {
         type: DataTypes.STRING,
         unique: true,
-        allowNull: false,
+        allowNull: false
       },
       passwordHash: {
         type: DataTypes.STRING,
@@ -38,7 +51,7 @@ module.exports = (sequelize, DataTypes) => {
         },
         get() {
           // Do not reveal passwordHash in the model attributes
-        },
+        }
       },
       salt: {
         type: DataTypes.STRING,
@@ -47,7 +60,7 @@ module.exports = (sequelize, DataTypes) => {
         },
         get() {
           // Do not reveal passwordHash in the model attributes
-        },
+        }
       },
       // NOTE: Password is virtual field for setting the hash and salt, it does not store the plaintext
       password: {
@@ -62,20 +75,13 @@ module.exports = (sequelize, DataTypes) => {
         },
         get() {
           // You are supposed to check the hash using checkPassword()
-        },
-      },
+        }
+      }
     },
     {
       sequelize,
-      modelName: 'User',
+      modelName: 'User'
     }
   )
-
-  // TODO: Change this to input only the password to be checked.
-  // Get other parameters internally
-  User.prototype.checkPassword = (password, hash, salt) => {
-    return crypto.scryptSync(password, salt, 64).toString('hex') === hash
-  }
-
   return User
 }

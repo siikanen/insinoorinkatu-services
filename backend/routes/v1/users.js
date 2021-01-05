@@ -1,6 +1,7 @@
 const jwt = require('jsonwebtoken')
 const usersRouter = require('express').Router()
 const models = require('../../database/models')
+const { UserValidationError } = require('../../utils/errors/userfacing')
 
 const User = models.User
 
@@ -9,7 +10,7 @@ usersRouter
 
   .get(async (req, res) => {
     const users = await User.findAll()
-    return res.json({'data': users})
+    return res.json({ data: users })
   })
 
   .post(async (req, res) => {
@@ -30,15 +31,13 @@ usersRouter
       },
     })
 
-    if ( !user ) res.status(401).json({ error: 'Invalid username or password' })
+    if (
+      !user ||
+      typeof req.body.password !== "string" ||
+      !user.checkPassword(req.body.password)
+    )
+      throw new UserValidationError('Invalid username or password')
 
-    // TODO: Change this to check token in the model instance, currently this seems broken
-    // and this refers to empty object inside the model
-    const salt = user.getDataValue('salt')
-    const hash = user.getDataValue('passwordHash')
-    if ( !user.checkPassword(req.body.password, hash, salt)) {
-      return res.status(401).json({ error: 'Invalid username or password' })
-    }
     // TODO: Change this to use proper logger
     console.log('User verification successful')
 
