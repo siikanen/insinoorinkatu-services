@@ -1,4 +1,3 @@
-
 module.exports = async (err, req, res, next) => {
   switch (err.name) {
     case 'ApplicationError':
@@ -28,12 +27,20 @@ module.exports = async (err, req, res, next) => {
       })
       break
     }
-    case 'UnauthorizedError':{
+    case 'UnauthorizedError': {
       res.status(401).json({
-        error:{
+        error: {
           message: err.message
         }
       })
+    }
+    case 'UserValidationError': {
+      res.status(err.statusCode).json({
+        error: {
+          message: err.message
+        }
+      })
+      break
     }
     default:
       break
