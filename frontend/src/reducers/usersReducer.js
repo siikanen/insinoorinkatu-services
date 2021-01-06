@@ -1,13 +1,12 @@
 import usersService from '../services/users'
-
 export const logIn = (user) => {
   return async (dispatch) => {
-    let response = await usersService.logIn(user)
-    window.localStorage.setItem('token', response.data.token)
+    let loggedInUser = await usersService.logIn(user)
+    window.localStorage.setItem('loggedUser',JSON.stringify(loggedInUser))
 
     dispatch({
       type: 'SET_LOGGED_USER',
-      data: { username: user.username, token: response.data.token }
+      data: {user}
     })
   }
 }
