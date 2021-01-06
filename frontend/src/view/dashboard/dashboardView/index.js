@@ -1,9 +1,9 @@
 import React, {  useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { Container, Grid, makeStyles } from '@material-ui/core'
-import Page from '../../components/Page'
+import Page from '../../../components/Page'
 import LatestExpenses from './LatestExpenses'
-import { getAllExpenses } from '../../reducers/expensesReducer'
+import { getAllExpenses } from '../../../reducers/expensesReducer'
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -15,7 +15,8 @@ const useStyles = makeStyles((theme) => ({
 }))
 
 const Dashboard = () => {
-  let token = window.localStorage.getItem('token')
+  let user = JSON.parse(window.localStorage.getItem('loggedUser'))
+  let token = user.token
   const dispatch = useDispatch()
   useEffect(() => {
     dispatch(getAllExpenses(token))

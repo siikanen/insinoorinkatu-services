@@ -74,6 +74,16 @@ const LatestExpenses = ({ className, expenses = [], ...rest }) => {
       </PerfectScrollbar>
       <Box display="flex" justifyContent="flex-end" p={2}>
         <Button
+          component={RouterLink}
+          to={'../expenses/create'}
+          color="primary"
+          endIcon={<ArrowRightIcon />}
+          size="small"
+          variant="text"
+        >
+          Create new
+        </Button>
+        <Button
           color="primary"
           endIcon={<ArrowRightIcon />}
           size="small"
