@@ -1,6 +1,6 @@
 import React from 'react'
 import clsx from 'clsx'
-import { NavLink as RouterLink } from 'react-router-dom'
+import { NavLink as RouterLink ,useNavigate} from 'react-router-dom'
 import PerfectScrollbar from 'react-perfect-scrollbar'
 import PropTypes from 'prop-types'
 import { Typography } from '@material-ui/core'
@@ -31,6 +31,14 @@ const useStyles = makeStyles(() => ({
 const LatestExpenses = ({ className, expenses = [], ...rest }) => {
 
   const classes = useStyles()
+let navigate = useNavigate()
+  // Workaround to making a row a link.
+  // You cant add <a> to a <tr> in order to make the whole row a link
+  // Believe me, i've tried
+  const handleRowClick = (event, id) => {
+    event.preventDefault()
+    navigate(`/app/expenses/${id}`)
+  }
 
   return (
     <Card className={clsx(classes.root, className)} {...rest}>
@@ -56,12 +64,7 @@ const LatestExpenses = ({ className, expenses = [], ...rest }) => {
               {expenses.map((expense) => (
                 <TableRow hover key={expense.id}>
                   <TableCell>
-                    <Typography
-                      component={RouterLink}
-                      to={`/app/expenses/${expense.id}`}
-                    >
-                      {expense.title}
-                    </Typography>
+                    <Typography>{expense.title}</Typography>
                   </TableCell>
                   <TableCell>{expense.payee.username}</TableCell>
                   <TableCell>{expense.amount}</TableCell>
@@ -83,6 +86,8 @@ const LatestExpenses = ({ className, expenses = [], ...rest }) => {
           Create new
         </Button>
         <Button
+          component={RouterLink}
+          to={'../expenses'}
           color="primary"
           endIcon={<ArrowRightIcon />}
           size="small"
