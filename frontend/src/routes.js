@@ -8,6 +8,7 @@ import UpdateExpenseView from './view/Expenses/UpdateExpenseView/UpdateExpenseVi
 import CreateExpenseView from './view/Expenses/CreateExpenseView/CreateExpenseView'
 import NotFoundView from './view/errors/NotFoundView'
 import { Navigate } from 'react-router'
+import AllExpensesView from './view/Expenses/AllExpenseView/AllExpensesView'
 
 const routes = [
   {
@@ -15,6 +16,10 @@ const routes = [
     element: <DashboardLayout />,
     children: [
       { path: 'dashboard', element: <DashboardView /> },
+      {
+        path: 'expenses',
+        element: <AllExpensesView></AllExpensesView>
+      },
       {
         path: 'expenses/update/:id',
         element: <UpdateExpenseView></UpdateExpenseView>
