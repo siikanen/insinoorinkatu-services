@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { useParams,useNavigate, NavLink as RouterLink} from 'react-router-dom'
+import { useParams, useNavigate, NavLink as RouterLink } from 'react-router-dom'
 import expensesService from '../../../services/expenses'
 import {
   Box,
@@ -26,20 +26,21 @@ const useStyles = makeStyles((theme) => ({
   }
 }))
 const Expense = (props) => {
-  const [expense,setExpense] = useState()
+  const [expense, setExpense] = useState()
   let navigate = useNavigate()
   const classes = useStyles()
   const { id } = useParams()
   const loggedInUser = JSON.parse(window.localStorage.getItem('loggedUser'))
-  useEffect(()=>{
-    expensesService.getExpenseById(loggedInUser.token, id).then((value) => {
-      setExpense(value.data[0])
-    }).catch(err=>
-      navigate('/app/404')
-      )
-  },[])
+  useEffect(() => {
+    expensesService
+      .getExpenseById(loggedInUser.token, id)
+      .then((value) => {
+        setExpense(value.data[0])
+      })
+      .catch((err) => navigate('/app/404'))
+  }, [])
   if (!expense) {
-    return (<div></div>)
+    return <div></div>
   }
   return (
     <Card className={classes.root} title="CreateExpense">
@@ -62,11 +63,25 @@ const Expense = (props) => {
                   </TableCell>
                   <TableCell>{expense.title}</TableCell>
                 </TableRow>
+
                 <TableRow>
                   <TableCell>
-                    <Typography variant="h4">Amount:</Typography>
+                    <Typography variant="h4">Price:</Typography>
                   </TableCell>
                   <TableCell>{expense.amount}</TableCell>
+                </TableRow>
+                <TableRow>
+                  <TableCell>
+                    <Typography variant="h4">Date:</Typography>
+                  </TableCell>
+                  <TableCell>{expense.date}</TableCell>
+                </TableRow>
+
+                <TableRow>
+                  <TableCell>
+                    <Typography variant="h4">Payee:</Typography>
+                  </TableCell>
+                  <TableCell>{expense.payee.username}</TableCell>
                 </TableRow>
                 <TableRow>
                   <TableCell>
@@ -76,9 +91,13 @@ const Expense = (props) => {
                 </TableRow>
                 <TableRow>
                   <TableCell>
-                    <Typography variant="h4">Payee:</Typography>
+                    <Typography variant="h4">Tags:</Typography>
                   </TableCell>
-                  <TableCell>{expense.payee.username}</TableCell>
+                  <TableCell>
+                    {expense.tags.map((tag) => (
+                      <Typography key = {tag}>tag</Typography>
+                    ))}
+                  </TableCell>
                 </TableRow>
               </TableBody>
             </Table>
