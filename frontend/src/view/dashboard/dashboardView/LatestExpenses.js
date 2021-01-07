@@ -28,9 +28,10 @@ const useStyles = makeStyles(() => ({
   }
 }))
 
-const LatestExpenses = ({ className, expenses = [], ...rest }) => {
+const LatestExpenses = (props) => {
 
   const classes = useStyles()
+  // Copy props array
 let navigate = useNavigate()
   // Workaround to making a row a link.
   // You cant add <a> to a <tr> in order to make the whole row a link
@@ -40,8 +41,9 @@ let navigate = useNavigate()
     navigate(`/app/expenses/${id}`)
   }
 
+
   return (
-    <Card className={clsx(classes.root, className)} {...rest}>
+    <Card className={clsx(classes.root, props.className)} {...props.rest}>
       <CardHeader title="Latest expenses" />
       <Divider />
       <PerfectScrollbar>
@@ -53,7 +55,8 @@ let navigate = useNavigate()
                 <TableCell>Payee</TableCell>
                 <TableCell sortDirection="desc">
                   <Tooltip enterDelay={300} title="Sort">
-                    <TableSortLabel active direction="desc">
+                    <TableSortLabel
+                    active direction="desc">
                       Amount
                     </TableSortLabel>
                   </Tooltip>
@@ -61,8 +64,12 @@ let navigate = useNavigate()
               </TableRow>
             </TableHead>
             <TableBody>
-              {expenses.map((expense) => (
-                <TableRow hover key={expense.id}>
+              {props.expenses.map((expense) => (
+                <TableRow
+                  hover
+                  key={expense.id}
+                  onClick={(event) => handleRowClick(event, expense.id)}
+                >
                   <TableCell>
                     <Typography>{expense.title}</Typography>
                   </TableCell>
