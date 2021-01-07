@@ -1,6 +1,6 @@
-import React from 'react'
-import { useSelector } from 'react-redux'
-import { useParams } from 'react-router-dom'
+import React, { useState, useEffect } from 'react'
+import { useParams,useNavigate, NavLink as RouterLink} from 'react-router-dom'
+import expensesService from '../../../services/expenses'
 import {
   Box,
   Container,
@@ -14,10 +14,9 @@ import {
   Typography,
   Button
 } from '@material-ui/core'
-import Page from '../../../components/Page'
 import ArrowRightIcon from '@material-ui/icons/ArrowRight'
 import { Divider, Card } from '@material-ui/core'
-import NotFoundView from '../../errors/NotFoundView'
+
 const useStyles = makeStyles((theme) => ({
   root: {
     backgroundColor: theme.palette.background.dark,
@@ -27,14 +26,20 @@ const useStyles = makeStyles((theme) => ({
   }
 }))
 const Expense = (props) => {
+  const [expense,setExpense] = useState()
+  let navigate = useNavigate()
   const classes = useStyles()
   const { id } = useParams()
-  const expense = useSelector(({ expenses }) => {
-    return expenses.find((expense) => expense.id === id)
-  })
-  console.log(expense)
+  const loggedInUser = JSON.parse(window.localStorage.getItem('loggedUser'))
+  useEffect(()=>{
+    expensesService.getExpenseById(loggedInUser.token, id).then((value) => {
+      setExpense(value.data[0])
+    }).catch(err=>
+      navigate('/app/404')
+      )
+  },[])
   if (!expense) {
-    return <NotFoundView></NotFoundView>
+    return (<div></div>)
   }
   return (
     <Card className={classes.root} title="CreateExpense">
@@ -81,6 +86,8 @@ const Expense = (props) => {
           <Box display="flex" justifyContent="flex-end" p={2}>
             <Button
               color="primary"
+              component={RouterLink}
+              to={`/app/expenses/update/${expense.id}`}
               endIcon={<ArrowRightIcon />}
               size="small"
               variant="text"
