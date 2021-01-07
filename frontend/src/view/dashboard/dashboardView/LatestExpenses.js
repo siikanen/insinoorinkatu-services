@@ -29,7 +29,6 @@ const useStyles = makeStyles(() => ({
 }))
 
 const LatestExpenses = ({ className, expenses = [], ...rest }) => {
-  // TODO: replace with last X amount of expenses
 
   const classes = useStyles()
 

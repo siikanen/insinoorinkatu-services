@@ -1,6 +1,5 @@
 import React from 'react'
-import {useDispatch} from 'react-redux'
-import { useNavigate } from 'react-router-dom'
+import { useDispatch } from 'react-redux'
 import {
   Box,
   Button,
@@ -10,7 +9,7 @@ import {
   makeStyles
 } from '@material-ui/core'
 import Page from '../../../components/Page'
-import { AddNewExpense } from '../../../reducers/expensesReducer'
+import { addNewExpense } from '../../../reducers/expensesReducer'
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -24,8 +23,7 @@ const useStyles = makeStyles((theme) => ({
 const CreateExpenseView = () => {
   const classes = useStyles()
   const dispatch = useDispatch()
-  const navigate = useNavigate()
-  let loggedInUser = JSON.parse(window.localStorage.getItem('loggedUser'))
+  const loggedInUser = JSON.parse(window.localStorage.getItem('loggedUser'))
   // let loggedInUser = useSelector(({ users }) => {
   //   return users.loggedInUser
   // })
@@ -35,17 +33,17 @@ const CreateExpenseView = () => {
     const amount = event.target.amount.value
     const description = event.target.description.value
     const tags = event.target.tags.value
-     dispatch(
-     AddNewExpense(loggedInUser.token,{
+    dispatch(
+      addNewExpense(loggedInUser.token, {
         title,
         description,
         amount,
-        date:{},
+        date: {},
         payee: {
           id: loggedInUser.id,
           username: loggedInUser.username
         },
-        tags:[tags]
+        tags: [tags]
       })
     )
   }
@@ -65,7 +63,7 @@ const CreateExpenseView = () => {
               </Typography>
             </Box>
             <TextField
-              defaultValue='test'
+              defaultValue="test"
               fullWidth
               label="Title"
               margin="normal"
@@ -73,7 +71,7 @@ const CreateExpenseView = () => {
               variant="outlined"
             />
             <TextField
-              defaultValue='test'
+              defaultValue="test"
               fullWidth
               label="Description"
               margin="normal"
@@ -82,7 +80,7 @@ const CreateExpenseView = () => {
             />
             <TextField
               fullWidth
-              defaultValue='1'
+              defaultValue="1"
               label="Amount"
               type="number"
               margin="normal"
@@ -90,7 +88,7 @@ const CreateExpenseView = () => {
               variant="outlined"
             />
             <TextField
-              defaultValue='test'
+              defaultValue="test"
               fullWidth
               label="Tags"
               margin="normal"
