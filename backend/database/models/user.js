@@ -98,16 +98,28 @@ module.exports = (sequelize, DataTypes) => {
         allowNull: false,
         unique: true,
         type: DataTypes.UUID,
-        validate: {
-          notNull: true
-        },
         defaultValue: DataTypes.UUIDV4,
-        autoIncrement: false
+        validate: {
+          isUUID: 4,
+          notNull: true
+        }
       },
       username: {
         type: DataTypes.STRING,
-        unique: true,
-        allowNull: false
+        unique: {
+          msg: 'Username already taken, please choose different one.'
+        },
+        allowNull: false,
+        validate: {
+          notNull: {
+            msg: 'Please enter username'
+          },
+          len: {
+            args: [3, 50],
+            msg:
+              'Invalid username length. Please choose one between 3-50 characters'
+          }
+        }
       },
 
       /*
