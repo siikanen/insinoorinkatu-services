@@ -10,13 +10,16 @@ module.exports = {
       },
       username: {
         type: Sequelize.STRING,
+        allowNull: false,
         unique: true
       },
       passwordHash: {
-        type: Sequelize.STRING
+        type: Sequelize.STRING,
+        allowNull: false
       },
       salt: {
-        type: Sequelize.STRING
+        type: Sequelize.STRING,
+        allowNull: false
       },
       createdAt: {
         allowNull: false,
@@ -26,7 +29,10 @@ module.exports = {
         allowNull: false,
         type: Sequelize.DATE
       }
-    })
+    },
+      {
+        comment: 'Usernames and password hashes'
+      })
   },
   down: async (queryInterface, Sequelize) => {
     await queryInterface.dropTable('Users')
