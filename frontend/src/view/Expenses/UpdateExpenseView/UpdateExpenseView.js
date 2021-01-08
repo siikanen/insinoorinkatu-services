@@ -36,12 +36,12 @@ const UpdateExpenseView = () => {
   // })
   useEffect(() => {
     expensesService
-      .getExpenseById(loggedInUser.token, id)
+      .getExpenseById( id)
       .then((value) => {
         setExpense(value)
       })
       .catch((err) => navigate('/app/404'))
-  }, [id,loggedInUser.token,navigate])
+  }, [id,navigate])
   if (!expense) {
     return <div></div>
   }
@@ -52,7 +52,7 @@ const UpdateExpenseView = () => {
     const description = event.target.description.value
     const tags = event.target.tags.value
     dispatch(
-      updateExpense(loggedInUser.token, {
+      updateExpense( {
         id,
         title,
         description,

@@ -37,15 +37,14 @@ const Expense = (props) => {
   const navigate = useNavigate()
   const classes = useStyles()
   const { id } = useParams()
-  const loggedInUser = JSON.parse(window.localStorage.getItem('loggedUser'))
   useEffect(() => {
     expensesService
-      .getExpenseById(loggedInUser.token, id)
+      .getExpenseById( id)
       .then((value) => {
         setExpense(value)
       })
       .catch((err) => navigate('/app/404'))
-  }, [loggedInUser.token,id,navigate])
+  }, [id,navigate])
   if (!expense) {
     return <div></div>
   }
@@ -56,8 +55,7 @@ const Expense = (props) => {
     setDialogOpen(false)
   }
   const handleConfirmDelete = () => {
-    console.log("Deleting")
-    dispatch(deleteExpense(loggedInUser.token, id))
+    dispatch(deleteExpense( id))
     setDialogOpen(false)
     setExpense(null)
     navigate("/app/expenses")

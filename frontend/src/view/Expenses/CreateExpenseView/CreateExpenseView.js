@@ -38,7 +38,7 @@ const CreateExpenseView = () => {
     const description = event.target.description.value
     const tags = event.target.tags.value
     dispatch(
-      addNewExpense(loggedInUser.token, {
+      addNewExpense( {
         title,
         description,
         amount,

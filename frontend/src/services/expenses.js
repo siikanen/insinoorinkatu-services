@@ -20,31 +20,33 @@ const formatPrice = function (expense) {
 
   return expense
 }
-
-const getAllExpenses = async (token) => {
-  const config = { headers: { Authorization: `Bearer ${token}` } }
+const getToken = function(){
+  return JSON.parse(window.localStorage.getItem('loggedUser')).token
+}
+const getAllExpenses = async () => {
+  const config = { headers: { Authorization: `Bearer ${getToken()}` } }
   const response = await axios.get(baseUrl, config)
   return response.data.data.map(formatPrice)
 }
-const getExpenseById = async (token, id) => {
-  const config = { headers: { Authorization: `Bearer ${token}` } }
+const getExpenseById = async ( id) => {
+  const config = { headers: { Authorization: `Bearer ${getToken()}` } }
   const response = await axios.get(`${baseUrl}/${id}`, config)
   //TODO: Remove [0] when backend is fixed
   return formatPrice(response.data.data[0])
 }
-const updateExpense = async (token, id, expenseToUpdate) => {
-  const config = { headers: { Authorization: `Bearer ${token}` } }
+const updateExpense = async ( id, expenseToUpdate) => {
+  const config = { headers: { Authorization: `Bearer ${getToken()}` } }
   const data = { data: expenseToUpdate }
 
   await axios.put(`${baseUrl}/${id}`, data, config)
 }
-const deleteExpense = async (token, id) => {
-  const config = { headers: { Authorization: `Bearer ${token}` } }
+const deleteExpense = async ( id) => {
+  const config = { headers: { Authorization: `Bearer ${getToken()}` } }
 
   await axios.delete(`${baseUrl}/${id}`, config)
 }
-const createExpense = async (token, expenseToAdd) => {
-  const config = { headers: { Authorization: `Bearer ${token}` } }
+const createExpense = async ( expenseToAdd) => {
+  const config = { headers: { Authorization: `Bearer ${getToken()}` } }
   const data = { data: [expenseToAdd] }
   const response = await axios.post(baseUrl, data, config)
   return response.data.data.map(formatPrice)

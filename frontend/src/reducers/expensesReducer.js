@@ -1,18 +1,18 @@
 import expensesService from '../services/expenses'
 
-export const getAllExpenses = (token) => {
+export const getAllExpenses = () => {
   return async (dispatch) => {
-    const data = await expensesService.getAllExpenses(token)
+    const data = await expensesService.getAllExpenses()
     dispatch({
       type: 'SET_EXPENSES',
       data
     })
   }
 }
-export const updateExpense = (token, expenseToUpdate) => {
+export const updateExpense = ( expenseToUpdate) => {
   return async (dispatch) => {
     await expensesService.updateExpense(
-      token,
+
       expenseToUpdate.id,
       expenseToUpdate
     )
@@ -22,9 +22,9 @@ export const updateExpense = (token, expenseToUpdate) => {
     })
   }
 }
-export const deleteExpense = (token, id) => {
+export const deleteExpense = ( id) => {
   return async (dispatch) => {
-    await expensesService.deleteExpense(token, id)
+    await expensesService.deleteExpense( id)
     dispatch({
       type: 'DELETE_EXPENSE',
       data: { id }
@@ -32,9 +32,9 @@ export const deleteExpense = (token, id) => {
   }
 }
 
-export const addNewExpense = (token, expenseToAdd) => {
+export const addNewExpense = ( expenseToAdd) => {
   return async (dispatch) => {
-    const response = await expensesService.createExpense(token, expenseToAdd)
+    const response = await expensesService.createExpense( expenseToAdd)
     // TODO replace the line below with error handling
     if (!response) return
     dispatch({

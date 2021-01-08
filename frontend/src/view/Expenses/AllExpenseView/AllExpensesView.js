@@ -38,15 +38,14 @@ const AllExpensesView = () => {
     navigate(`/app/expenses/${id}`)
   }
 
-  const user = JSON.parse(window.localStorage.getItem('loggedUser'))
-  const token = user.token
+
   const dispatch = useDispatch()
    const [alertOpen, setAlertOpen] = useState(false)
   useEffect(() => {
-    dispatch(getAllExpenses(token)).catch((error)=>{
+    dispatch(getAllExpenses()).catch((error)=>{
       setAlertOpen(true)
     })
-  }, [dispatch, token])
+  }, [dispatch])
   const expenses = useSelector(({ expenses }) => {
     return expenses
   })
