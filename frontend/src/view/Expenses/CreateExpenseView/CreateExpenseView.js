@@ -10,8 +10,8 @@ import {
 } from '@material-ui/core'
 import Page from '../../../components/Page'
 import { addNewExpense } from '../../../reducers/expensesReducer'
+import {setAlert} from '../../../reducers/alertReducer'
 import { useNavigate } from 'react-router'
-import GenericAlert from '../../errors/Alerts/index'
 const useStyles = makeStyles((theme) => ({
   root: {
     backgroundColor: theme.palette.background.dark,
@@ -50,8 +50,7 @@ const CreateExpenseView = () => {
         tags: [tags]
       })
     ).catch((error) => {
-      setAlertOpen(true)
-      return
+      dispatch(setAlert('Error','Something went wrong',5000))
     })
 
     navigate(`/app/expenses/`)
@@ -64,15 +63,7 @@ const CreateExpenseView = () => {
         height="100%"
         justifyContent="center"
       >
-        {alertOpen ? (
-          <GenericAlert
-            type="Error"
-            alertOpen={true}
-            message="Error creating expense"
-          ></GenericAlert>
-        ) : (
-          <div></div>
-        )}
+
         <Container maxWidth="sm">
           <form onSubmit={handleSubmit}>
             <Box mb={1}>

@@ -4,7 +4,7 @@ import { Container, Grid, makeStyles } from '@material-ui/core'
 import Page from '../../../components/Page'
 import LatestExpenses from './LatestExpenses'
 import { getAllExpenses } from '../../../reducers/expensesReducer'
-
+import {setAlert} from '../../../reducers/alertReducer'
 const useStyles = makeStyles((theme) => ({
   root: {
     backgroundColor: theme.palette.background.dark,
@@ -16,11 +16,10 @@ const useStyles = makeStyles((theme) => ({
 
 const Dashboard = () => {
 
-  const [alertOpen, setAlertOpen] = useState(false)
   let dispatch = useDispatch()
   useEffect(() => {
     dispatch(getAllExpenses()).catch((error)=>{
-      setAlertOpen(true)
+      dispatch(setAlert('Error',"Something went wrong",5000))
     }
     )
   }, [dispatch])
@@ -35,7 +34,7 @@ const Dashboard = () => {
       <Container maxWidth={false}>
         <Grid container spacing={3}>
           <Grid item lg={8} md={12} xl={9} xs={12}>
-            <LatestExpenses expenses={expenses} alertOpen={alertOpen}></LatestExpenses>
+            <LatestExpenses expenses={expenses} ></LatestExpenses>
           </Grid>
         </Grid>
       </Container>

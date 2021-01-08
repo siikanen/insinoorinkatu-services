@@ -12,7 +12,7 @@ import {
 } from '@material-ui/core'
 import Page from '../../../components/Page'
 import { updateExpense } from '../../../reducers/expensesReducer'
-import GenericAlert from '../../errors/Alerts/index'
+import { setAlert } from '../../../reducers/alertReducer'
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -25,7 +25,6 @@ const useStyles = makeStyles((theme) => ({
 
 const UpdateExpenseView = () => {
   const [expense, setExpense] = useState()
-  const [alertOpen, setAlertOpen] = useState(false)
   const navigate = useNavigate()
   const classes = useStyles()
   const { id } = useParams()
@@ -65,24 +64,12 @@ const UpdateExpenseView = () => {
         tags: [tags]
       })
     ).catch((error)=>{
-      setAlertOpen(true)
+      dispatch(setAlert('Error','Something went wrong',5000))
     })
   }
   return (
     <Page className={classes.root} title="UpdateExpense">
-       {alertOpen ? (
 
-            <GenericAlert
-              type='Error'
-              alertOpen={true}
-              message="Error updating expense"
-            >
-            </GenericAlert>
-          ) : (
-            <div>
-
-            </div>
-          )}
       <Box
         display="flex"
         flexDirection="column"
