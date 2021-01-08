@@ -24,7 +24,7 @@ const useStyles = makeStyles((theme) => ({
 
 const UpdateExpenseView = () => {
   const [expense, setExpense] = useState()
-  let navigate = useNavigate()
+  const navigate = useNavigate()
   const classes = useStyles()
   const { id } = useParams()
   const dispatch = useDispatch()
@@ -36,7 +36,7 @@ const UpdateExpenseView = () => {
     expensesService
       .getExpenseById(loggedInUser.token, id)
       .then((value) => {
-        setExpense(value.data[0])
+        setExpense(value)
       })
       .catch((err) => navigate('/app/404'))
   }, [id,loggedInUser.token,navigate])

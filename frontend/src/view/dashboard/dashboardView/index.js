@@ -15,8 +15,8 @@ const useStyles = makeStyles((theme) => ({
 }))
 
 const Dashboard = () => {
-  let user = JSON.parse(window.localStorage.getItem('loggedUser'))
-  let token = user.token
+  const user = JSON.parse(window.localStorage.getItem('loggedUser'))
+  const token = user.token
   const dispatch = useDispatch()
   useEffect(() => {
     dispatch(getAllExpenses(token))

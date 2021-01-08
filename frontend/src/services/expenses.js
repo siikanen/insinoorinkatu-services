@@ -2,8 +2,8 @@ import axios from 'axios'
 const baseUrl = 'http://localhost:3000/api/v1/expenses'
 // TODO Make a better exception handling
 //Format the price, e.g 1010 = 10,10
-let formatPrice = function (expense) {
-  let len = expense.amount.toString().length
+const formatPrice = function (expense) {
+  const len = expense.amount.toString().length
   switch (len) {
     case 2:
       expense.amount = `0,${expense.amount}`
@@ -35,6 +35,7 @@ const getExpenseById = async (token, id) => {
   const config = { headers: { Authorization: `Bearer ${token}` } }
   try {
     const response = await axios.get(`${baseUrl}/${id}`, config)
+    console.log(response.data.data[0])
     return formatPrice(response.data.data[0])
   } catch (err) {
     console.error(err)
@@ -43,7 +44,7 @@ const getExpenseById = async (token, id) => {
 }
 const updateExpense = async (token, id, expenseToUpdate) => {
   const config = { headers: { Authorization: `Bearer ${token}` } }
-  let data = { data: expenseToUpdate }
+  const data = { data: expenseToUpdate }
 
   try {
     await axios.put(`${baseUrl}/${id}`, data, config)
@@ -66,7 +67,7 @@ const deleteExpense = async (token, id) => {
 }
 const createExpense = async (token, expenseToAdd) => {
   const config = { headers: { Authorization: `Bearer ${token}` } }
-  let data = { data: [expenseToAdd] }
+  const data = { data: [expenseToAdd] }
   try {
     const response = await axios.post(baseUrl, data, config)
     return response.data

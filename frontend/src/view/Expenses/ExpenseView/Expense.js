@@ -34,7 +34,7 @@ const Expense = (props) => {
   const [expense, setExpense] = useState()
   const [dialogOpen, setDialogOpen] = useState(false)
   const dispatch = useDispatch()
-  let navigate = useNavigate()
+  const navigate = useNavigate()
   const classes = useStyles()
   const { id } = useParams()
   const loggedInUser = JSON.parse(window.localStorage.getItem('loggedUser'))

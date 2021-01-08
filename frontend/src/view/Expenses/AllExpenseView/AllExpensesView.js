@@ -28,7 +28,7 @@ const useStyles = makeStyles(() => ({
 
 const AllExpensesView = () => {
   const classes = useStyles()
-  let navigate = useNavigate()
+  const navigate = useNavigate()
   // Workaround to making a row a link.
   // You cant add <a> to a <tr> in order to make the whole row a link
   // Believe me, i've tried
@@ -37,8 +37,8 @@ const AllExpensesView = () => {
     navigate(`/app/expenses/${id}`)
   }
 
-  let user = JSON.parse(window.localStorage.getItem('loggedUser'))
-  let token = user.token
+  const user = JSON.parse(window.localStorage.getItem('loggedUser'))
+  const token = user.token
   const dispatch = useDispatch()
   useEffect(() => {
     dispatch(getAllExpenses(token))

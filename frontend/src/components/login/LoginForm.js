@@ -13,7 +13,7 @@ import { makeStyles } from '@material-ui/core/styles'
 import Container from '@material-ui/core/Container'
 
 const LoginForm = (props) => {
-  let navigate = useNavigate()
+  const navigate = useNavigate()
   const dispatch = useDispatch()
 
   const handleSubmit = (event) => {
