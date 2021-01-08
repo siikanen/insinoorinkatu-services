@@ -14,12 +14,22 @@ module.exports = (sequelize, DataTypes) => {
   }
   Tag.init(
     {
-      name: { type: DataTypes.STRING, primaryKey: true },
+      name: {
+        type: DataTypes.STRING,
+        primaryKey: true,
+        allowNull: false,
+        validate: {
+          len: {
+            args: [1,255],
+            msg: 'Tag name must be between 1 and 255 characters'
+          }
+        }
+      }
     },
     {
       sequelize,
       modelName: 'Tag',
-      timestamps:false
+      timestamps: false
     }
   )
   return Tag
