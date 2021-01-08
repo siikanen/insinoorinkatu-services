@@ -1,10 +1,9 @@
-import React, { useEffect,useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { NavLink as RouterLink, useNavigate } from 'react-router-dom'
 import PerfectScrollbar from 'react-perfect-scrollbar'
 import { Typography } from '@material-ui/core'
 import { getAllExpenses } from '../../../reducers/expensesReducer'
-import GenericAlert from '../../errors/Alerts/index'
 import Page from '../../../components/Page'
 import {
   Box,
@@ -20,6 +19,9 @@ import {
   makeStyles
 } from '@material-ui/core'
 import ArrowRightIcon from '@material-ui/icons/ArrowRight'
+import DoneAllIcon from '@material-ui/icons/DoneAll'
+import { setAlert } from '../../../reducers/alertReducer'
+import CancelIcon from '@material-ui/icons/Cancel'
 const useStyles = makeStyles(() => ({
   root: {},
   actions: {
@@ -38,18 +40,16 @@ const AllExpensesView = () => {
     navigate(`/app/expenses/${id}`)
   }
 
-  const user = JSON.parse(window.localStorage.getItem('loggedUser'))
-  const token = user.token
   const dispatch = useDispatch()
-   const [alertOpen, setAlertOpen] = useState(false)
   useEffect(() => {
-    dispatch(getAllExpenses(token)).catch((error)=>{
-      setAlertOpen(true)
+    dispatch(getAllExpenses()).catch((error) => {
+      dispatch(setAlert('Error', 'Something went wrong', 5000))
     })
-  }, [dispatch, token])
+  }, [dispatch])
   const expenses = useSelector(({ expenses }) => {
     return expenses
   })
+
   if (!expenses) {
     return <div></div>
   }
@@ -58,15 +58,6 @@ const AllExpensesView = () => {
       <Divider />
       <PerfectScrollbar>
         <Box minWidth={800}>
-           {alertOpen ? (
-
-            <GenericAlert
-              type='Error'
-              alertOpen={true}
-              message="Error fetching expenses"
-            >
-            </GenericAlert>
-          ) : (
           <Table>
             <TableHead>
               <TableRow>
@@ -79,12 +70,8 @@ const AllExpensesView = () => {
                     </TableSortLabel>
                   </Tooltip>
                 </TableCell>
-                <TableCell>
-                  Date
-                </TableCell>
-                <TableCell>
-                  Resolved
-                </TableCell>
+                <TableCell>Date</TableCell>
+                <TableCell>Resolved</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
@@ -98,15 +85,19 @@ const AllExpensesView = () => {
                     <Typography>{expense.title}</Typography>
                   </TableCell>
                   <TableCell>{expense.payee.username}</TableCell>
-                  <TableCell>{expense.amount}</TableCell>
+                  <TableCell>{expense.price}</TableCell>
                   <TableCell>{expense.date}</TableCell>
-                  <TableCell>Resolved?</TableCell>
-
+                  <TableCell>
+                    {expense.resolved ? (
+                      <DoneAllIcon></DoneAllIcon>
+                    ) : (
+                      <CancelIcon></CancelIcon>
+                    )}
+                  </TableCell>
                 </TableRow>
               ))}
             </TableBody>
           </Table>
-          )}
         </Box>
       </PerfectScrollbar>
       <Box display="flex" justifyContent="flex-end" p={2}>

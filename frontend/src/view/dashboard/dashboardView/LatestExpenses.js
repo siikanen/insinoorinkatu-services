@@ -20,7 +20,6 @@ import {
   makeStyles
 } from '@material-ui/core'
 import ArrowRightIcon from '@material-ui/icons/ArrowRight'
-import GenericAlert from '../../errors/Alerts'
 const useStyles = makeStyles(() => ({
   root: {},
   actions: {
@@ -46,15 +45,7 @@ const LatestExpenses = (props) => {
       <Divider />
       <PerfectScrollbar>
         <Box minWidth={800}>
-          {props.alertOpen ? (
 
-            <GenericAlert
-              type='Error'
-              alertOpen={props.alertOpen}
-              message="Error fetching expenses"
-            >
-            </GenericAlert>
-          ) : (
             <Table>
               <TableHead>
                 <TableRow>
@@ -80,12 +71,11 @@ const LatestExpenses = (props) => {
                       <Typography>{expense.title}</Typography>
                     </TableCell>
                     <TableCell>{expense.payee.username}</TableCell>
-                    <TableCell>{expense.amount}</TableCell>
+                    <TableCell>{expense.price}</TableCell>
                   </TableRow>
                 ))}
               </TableBody>
             </Table>
-          )}
         </Box>
       </PerfectScrollbar>
       <Box display="flex" justifyContent="flex-end" p={2}>

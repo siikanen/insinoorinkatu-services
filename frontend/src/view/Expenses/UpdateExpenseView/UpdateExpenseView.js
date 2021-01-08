@@ -12,7 +12,7 @@ import {
 } from '@material-ui/core'
 import Page from '../../../components/Page'
 import { updateExpense } from '../../../reducers/expensesReducer'
-import GenericAlert from '../../errors/Alerts/index'
+import { setAlert } from '../../../reducers/alertReducer'
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -25,7 +25,6 @@ const useStyles = makeStyles((theme) => ({
 
 const UpdateExpenseView = () => {
   const [expense, setExpense] = useState()
-  const [alertOpen, setAlertOpen] = useState(false)
   const navigate = useNavigate()
   const classes = useStyles()
   const { id } = useParams()
@@ -36,27 +35,27 @@ const UpdateExpenseView = () => {
   // })
   useEffect(() => {
     expensesService
-      .getExpenseById(loggedInUser.token, id)
+      .getExpenseById( id)
       .then((value) => {
         setExpense(value)
       })
       .catch((err) => navigate('/app/404'))
-  }, [id,loggedInUser.token,navigate])
+  }, [id,navigate])
   if (!expense) {
     return <div></div>
   }
   const handleSubmit = async (event) => {
     event.preventDefault()
     const title = event.target.title.value
-    const amount = event.target.price.value
+    const price = event.target.price.value
     const description = event.target.description.value
     const tags = event.target.tags.value
     dispatch(
-      updateExpense(loggedInUser.token, {
+      updateExpense( {
         id,
         title,
         description,
-        amount,
+        price,
         date: {},
         payee: {
           id: loggedInUser.id,
@@ -65,24 +64,12 @@ const UpdateExpenseView = () => {
         tags: [tags]
       })
     ).catch((error)=>{
-      setAlertOpen(true)
+      dispatch(setAlert('Error','Something went wrong',5000))
     })
   }
   return (
     <Page className={classes.root} title="UpdateExpense">
-       {alertOpen ? (
 
-            <GenericAlert
-              type='Error'
-              alertOpen={true}
-              message="Error updating expense"
-            >
-            </GenericAlert>
-          ) : (
-            <div>
-
-            </div>
-          )}
       <Box
         display="flex"
         flexDirection="column"
@@ -115,7 +102,7 @@ const UpdateExpenseView = () => {
             />
             <TextField
               fullWidth
-              defaultValue={expense.amount}
+              defaultValue={expense.price}
               label="Price"
               type="number"
               margin="normal"

@@ -12,7 +12,6 @@ const useStyles = makeStyles((theme) => ({
 }))
 
 const GenericAlert = (props) => {
-
   const classes = useStyles()
   if(props.alertOpen){
     switch (props.type) {

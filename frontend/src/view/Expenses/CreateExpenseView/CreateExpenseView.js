@@ -10,8 +10,8 @@ import {
 } from '@material-ui/core'
 import Page from '../../../components/Page'
 import { addNewExpense } from '../../../reducers/expensesReducer'
+import {setAlert} from '../../../reducers/alertReducer'
 import { useNavigate } from 'react-router'
-import GenericAlert from '../../errors/Alerts/index'
 const useStyles = makeStyles((theme) => ({
   root: {
     backgroundColor: theme.palette.background.dark,
@@ -25,7 +25,6 @@ const CreateExpenseView = () => {
   const classes = useStyles()
   const dispatch = useDispatch()
   const navigate = useNavigate()
-  const [alertOpen, setAlertOpen] = useState(false)
   const loggedInUser = JSON.parse(window.localStorage.getItem('loggedUser'))
   // let loggedInUser = useSelector(({ users }) => {
   //   return users.loggedInUser
@@ -34,15 +33,14 @@ const CreateExpenseView = () => {
     event.preventDefault()
 
     const title = event.target.title.value
-    const amount = event.target.price.value
+    const price = event.target.price.value
     const description = event.target.description.value
     const tags = event.target.tags.value
     dispatch(
-      addNewExpense(loggedInUser.token, {
+      addNewExpense( {
         title,
         description,
-        amount,
-        date: {},
+        price,
         payee: {
           id: loggedInUser.id,
           username: loggedInUser.username
@@ -50,8 +48,7 @@ const CreateExpenseView = () => {
         tags: [tags]
       })
     ).catch((error) => {
-      setAlertOpen(true)
-      return
+      dispatch(setAlert('Error','Something went wrong',5000))
     })
 
     navigate(`/app/expenses/`)
@@ -64,15 +61,7 @@ const CreateExpenseView = () => {
         height="100%"
         justifyContent="center"
       >
-        {alertOpen ? (
-          <GenericAlert
-            type="Error"
-            alertOpen={true}
-            message="Error creating expense"
-          ></GenericAlert>
-        ) : (
-          <div></div>
-        )}
+
         <Container maxWidth="sm">
           <form onSubmit={handleSubmit}>
             <Box mb={1}>
