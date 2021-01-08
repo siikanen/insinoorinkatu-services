@@ -38,6 +38,16 @@ async function getExpenses(filter = {}) {
   return expenses
 }
 
+/** Get single expense
+ * @param {string} id - id of the expense to return
+ * @returns {object} Expense that matches given id
+ */
+async function getSingleExpense(id) {
+  const expense = Expense.findByPk(id)
+  if (!expense) throw new NotFoundError('Expense not found')
+  return expense
+}
+
 /**
  * Add expenses to database
  * @param {Object} data - Data of the expense to be added
@@ -180,6 +190,7 @@ async function updateExpense(data, id) {
 
 module.exports = {
   getExpenses,
+  getSingleExpense,
   addExpenses,
   deleteExpenses,
   updateExpense

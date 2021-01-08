@@ -2,6 +2,7 @@ const expensesRouter = require('express').Router()
 
 const {
   addExpenses,
+  getSingleExpense,
   getExpenses,
   updateExpense,
   deleteExpenses
@@ -24,7 +25,7 @@ expensesRouter
   .route('/:id')
 
   .get(async (req, res) => {
-    return res.json({ data: await getExpenses({ id: req.params.id }) })
+    return res.json({ data: await getSingleExpense( req.params.id )})
   })
 
   .put(async (req, res) => {
