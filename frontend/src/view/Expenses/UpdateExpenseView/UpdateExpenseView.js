@@ -99,10 +99,10 @@ const UpdateExpenseView = () => {
             <TextField
               fullWidth
               defaultValue={expense.amount}
-              label="Amount"
+              label="Price"
               type="number"
               margin="normal"
-              name="amount"
+              name="price"
               variant="outlined"
             />
             <TextField

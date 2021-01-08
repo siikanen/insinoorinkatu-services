@@ -10,6 +10,7 @@ import {
 } from '@material-ui/core'
 import Page from '../../../components/Page'
 import { addNewExpense } from '../../../reducers/expensesReducer'
+import { useNavigate } from 'react-router'
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -23,14 +24,16 @@ const useStyles = makeStyles((theme) => ({
 const CreateExpenseView = () => {
   const classes = useStyles()
   const dispatch = useDispatch()
+  const navigate = useNavigate()
   const loggedInUser = JSON.parse(window.localStorage.getItem('loggedUser'))
   // let loggedInUser = useSelector(({ users }) => {
   //   return users.loggedInUser
   // })
   const handleSubmit = async (event) => {
     event.preventDefault()
+
     const title = event.target.title.value
-    const amount = event.target.amount.value
+    const amount = event.target.price.value
     const description = event.target.description.value
     const tags = event.target.tags.value
     dispatch(
@@ -46,6 +49,9 @@ const CreateExpenseView = () => {
         tags: [tags]
       })
     )
+
+
+   navigate(`/app/expenses/`)
   }
   return (
     <Page className={classes.root} title="CreateExpense">
@@ -81,10 +87,10 @@ const CreateExpenseView = () => {
             <TextField
               fullWidth
               defaultValue="1"
-              label="Amount"
+              label="Price"
               type="number"
               margin="normal"
-              name="amount"
+              name="price"
               variant="outlined"
             />
             <TextField

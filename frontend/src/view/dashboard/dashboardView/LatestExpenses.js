@@ -57,7 +57,7 @@ let navigate = useNavigate()
                   <Tooltip enterDelay={300} title="Sort">
                     <TableSortLabel
                     active direction="desc">
-                      Amount
+                      Price
                     </TableSortLabel>
                   </Tooltip>
                 </TableCell>

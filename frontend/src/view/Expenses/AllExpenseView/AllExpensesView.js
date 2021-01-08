@@ -62,7 +62,7 @@ const AllExpensesView = () => {
                 <TableCell sortDirection="desc">
                   <Tooltip enterDelay={300} title="Sort">
                     <TableSortLabel active direction="desc">
-                      Amount
+                      Price
                     </TableSortLabel>
                   </Tooltip>
                 </TableCell>
@@ -98,7 +98,7 @@ const AllExpensesView = () => {
       <Box display="flex" justifyContent="flex-end" p={2}>
         <Button
           component={RouterLink}
-          to={'../expenses/create'}
+          to={'/app/expenses/create'}
           color="primary"
           endIcon={<ArrowRightIcon />}
           size="small"
