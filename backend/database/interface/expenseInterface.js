@@ -27,7 +27,7 @@ async function getExpenses(filter = {}) {
       }
     ]
   })
-  if(expenses.length == 0) throw new NotFoundError('Expense not found')
+  if (expenses.length === 0) throw new NotFoundError('Expense not found')
   // Transform to objects
   expenses = expenses.map((expense) => expense.get())
   // Remap tag objects to strings
@@ -43,17 +43,26 @@ async function getExpenses(filter = {}) {
  * @param {Object} data - Data of the expense to be added
  */
 async function addExpenses(data) {
-  let payee = await User.findOne({ where: { id: data.payee.id } })
-  if (!payee) throw new Error('Invalid UserId')
+  let payee = await User.findByPk(data.payee.id)
+  if (!payee) throw new NotFoundError('User id not found')
 
-  let newExpense = await Expense.create({
-    title: data.title,
-    description: data.description,
-    date: data.date || new Date(),
-    amount: data.amount
-  })
+  console.log(data.price)
+  let newExpense = await Expense.create(
+    {
+      title: data.title,
+      price: data.price,
+      description: data.description,
+      date: data.date,
+      resolved: data.resolved
+    },
+    {
+      // TODO: update this to only include below and get fields directly from object
+      // fields: ['title', 'description', 'price', 'date', 'resolved']
+    }
+  )
+  console.log('New expense created')
 
-  // Tag instances may or may not exists
+  // Tag instances may or may not exist
   let tagPromises = data.tags.map((tag) => {
     return Tag.findOrCreate({
       where: {
