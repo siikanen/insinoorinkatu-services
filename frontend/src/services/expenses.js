@@ -21,16 +21,27 @@ const getExpenseById = async (token, id) => {
     return {}
   }
 }
-const updateExpense = async (token,id, expenseToUpdate) => {
+const updateExpense = async (token, id, expenseToUpdate) => {
   const config = { headers: { Authorization: `Bearer ${token}` } }
   let data = { data: expenseToUpdate }
 
   try {
-    await axios.put(`${baseUrl}/${id}`, data,config)
+    await axios.put(`${baseUrl}/${id}`, data, config)
     return
   } catch (err) {
     console.error(err)
     return undefined
+  }
+}
+const deleteExpense = async (token, id) => {
+  const config = { headers: { Authorization: `Bearer ${token}` } }
+
+  try {
+    await axios.delete(`${baseUrl}/${id}`, config)
+    return
+  } catch (err) {
+    console.error(err)
+    return
   }
 }
 const createExpense = async (token, expenseToAdd) => {
@@ -44,4 +55,10 @@ const createExpense = async (token, expenseToAdd) => {
     return undefined
   }
 }
-export default { getAllExpenses, createExpense,getExpenseById,updateExpense }
+export default {
+  getAllExpenses,
+  createExpense,
+  getExpenseById,
+  updateExpense,
+  deleteExpense
+}

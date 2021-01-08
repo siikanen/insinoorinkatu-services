@@ -1,5 +1,4 @@
 import expensesService from '../services/expenses'
-import { useSelector } from 'react-redux'
 
 export const getAllExpenses = (token) => {
   return async (dispatch) => {
@@ -17,10 +16,18 @@ export const updateExpense = (token, expenseToUpdate) => {
       expenseToUpdate.id,
       expenseToUpdate
     )
-    // TODO replace the line below with error handling
     dispatch({
       type: 'UPDATE_EXPENSE',
       data: expenseToUpdate
+    })
+  }
+}
+export const deleteExpense = (token, id) => {
+  return async (dispatch) => {
+    await expensesService.deleteExpense(token, id)
+    dispatch({
+      type: 'DELETE_EXPENSE',
+      data: { id }
     })
   }
 }
@@ -37,15 +44,18 @@ export const addNewExpense = (token, expenseToAdd) => {
   }
 }
 const expensesReducer = (state = [], action) => {
-  let newState
   switch (action.type) {
     case 'SET_EXPENSES':
       return action.data
     case 'NEW_EXPENSE':
       return state.concat(action.data)
+    case 'DELETE_EXPENSE':
+      return state.filter((expense) => expense.id !== action.data.id)
     case 'UPDATE_EXPENSE':
       // Remember, store is immutable!
-      return state.map(expense=>expense.id === action.data.id ? action.data : expense)
+      return state.map((expense) =>
+        expense.id === action.data.id ? action.data : expense
+      )
     default:
       return state
   }
