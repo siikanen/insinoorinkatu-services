@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react'
+import { useDispatch } from 'react-redux'
 import { useParams, useNavigate, NavLink as RouterLink } from 'react-router-dom'
 import expensesService from '../../../services/expenses'
 import {
@@ -14,9 +15,13 @@ import {
   Typography,
   Button
 } from '@material-ui/core'
+import IconButton from '@material-ui/core/IconButton'
 import ArrowRightIcon from '@material-ui/icons/ArrowRight'
+import Tooltip from '@material-ui/core/Tooltip'
+import CloseIcon from '@material-ui/icons/Close'
 import { Divider, Card } from '@material-ui/core'
-
+import DeleteDialog from './DeleteExpense'
+import { deleteExpense } from '../../../reducers/expensesReducer'
 const useStyles = makeStyles((theme) => ({
   root: {
     backgroundColor: theme.palette.background.dark,
@@ -27,6 +32,8 @@ const useStyles = makeStyles((theme) => ({
 }))
 const Expense = (props) => {
   const [expense, setExpense] = useState()
+  const [dialogOpen, setDialogOpen] = useState(false)
+  const dispatch = useDispatch()
   let navigate = useNavigate()
   const classes = useStyles()
   const { id } = useParams()
@@ -38,12 +45,29 @@ const Expense = (props) => {
         setExpense(value.data[0])
       })
       .catch((err) => navigate('/app/404'))
-  }, [])
+  }, [loggedInUser.token,id,navigate])
   if (!expense) {
     return <div></div>
   }
+  const handleDeleteClick = () => {
+    setDialogOpen(true)
+  }
+  const handleClose = () => {
+    setDialogOpen(false)
+  }
+  const handleConfirmDelete = () => {
+    console.log("Deleting")
+    dispatch(deleteExpense(loggedInUser.token, id))
+    setDialogOpen(false)
+    setExpense(null)
+  }
   return (
-    <Card className={classes.root} title="CreateExpense">
+    <Card className={classes.root} title="Create expense">
+      <DeleteDialog
+        dialogOpen={dialogOpen}
+        handleClose={handleClose}
+        handleConfirmDelete={handleConfirmDelete}
+      ></DeleteDialog>
       <Box
         display="flex"
         flexDirection="column"
@@ -51,7 +75,17 @@ const Expense = (props) => {
         justifyContent="center"
       >
         <Container maxWidth="sm">
-          <CardHeader title={expense.title} subheader={expense.id}></CardHeader>
+          <CardHeader
+            title={expense.title}
+            subheader={expense.id}
+            action={
+              <Tooltip title="Delete">
+                <IconButton aria-label="Delete" onClick={handleDeleteClick}>
+                  <CloseIcon></CloseIcon>
+                </IconButton>
+              </Tooltip>
+            }
+          ></CardHeader>
           <Divider />
           <Box mb={1}>
             <Table>
@@ -95,7 +129,7 @@ const Expense = (props) => {
                   </TableCell>
                   <TableCell>
                     {expense.tags.map((tag) => (
-                      <Typography key = {tag}>tag</Typography>
+                      <Typography key={tag}>tag</Typography>
                     ))}
                   </TableCell>
                 </TableRow>
@@ -103,16 +137,18 @@ const Expense = (props) => {
             </Table>
           </Box>
           <Box display="flex" justifyContent="flex-end" p={2}>
-            <Button
-              color="primary"
-              component={RouterLink}
-              to={`/app/expenses/update/${expense.id}`}
-              endIcon={<ArrowRightIcon />}
-              size="small"
-              variant="text"
-            >
-              Edit
-            </Button>
+            <Tooltip title="Edit expense">
+              <Button
+                color="primary"
+                component={RouterLink}
+                to={`/app/expenses/update/${expense.id}`}
+                endIcon={<ArrowRightIcon />}
+                size="small"
+                variant="text"
+              >
+                Edit
+              </Button>
+            </Tooltip>
           </Box>
         </Container>
       </Box>
