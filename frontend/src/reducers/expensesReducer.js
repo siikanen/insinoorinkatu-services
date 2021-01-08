@@ -2,10 +2,10 @@ import expensesService from '../services/expenses'
 
 export const getAllExpenses = (token) => {
   return async (dispatch) => {
-    const response = await expensesService.getAllExpenses(token)
+    const data = await expensesService.getAllExpenses(token)
     dispatch({
       type: 'SET_EXPENSES',
-      data: response.data
+      data
     })
   }
 }
