@@ -23,58 +23,31 @@ const formatPrice = function (expense) {
 
 const getAllExpenses = async (token) => {
   const config = { headers: { Authorization: `Bearer ${token}` } }
-  try {
-    const response = await axios.get(baseUrl, config)
-    return response.data.data.map(formatPrice)
-  } catch (err) {
-    console.error(err)
-    return []
-  }
+  const response = await axios.get(baseUrl, config)
+  return response.data.data.map(formatPrice)
 }
 const getExpenseById = async (token, id) => {
   const config = { headers: { Authorization: `Bearer ${token}` } }
-  try {
-    const response = await axios.get(`${baseUrl}/${id}`, config)
-    console.log(response.data.data[0])
-    return formatPrice(response.data.data[0])
-  } catch (err) {
-    console.error(err)
-    return {}
-  }
+  const response = await axios.get(`${baseUrl}/${id}`, config)
+  //TODO: Remove [0] when backend is fixed
+  return formatPrice(response.data.data[0])
 }
 const updateExpense = async (token, id, expenseToUpdate) => {
   const config = { headers: { Authorization: `Bearer ${token}` } }
   const data = { data: expenseToUpdate }
 
-  try {
-    await axios.put(`${baseUrl}/${id}`, data, config)
-    return
-  } catch (err) {
-    console.error(err)
-    return undefined
-  }
+  await axios.put(`${baseUrl}/${id}`, data, config)
 }
 const deleteExpense = async (token, id) => {
   const config = { headers: { Authorization: `Bearer ${token}` } }
 
-  try {
-    await axios.delete(`${baseUrl}/${id}`, config)
-    return
-  } catch (err) {
-    console.error(err)
-    return
-  }
+  await axios.delete(`${baseUrl}/${id}`, config)
 }
 const createExpense = async (token, expenseToAdd) => {
   const config = { headers: { Authorization: `Bearer ${token}` } }
   const data = { data: [expenseToAdd] }
-  try {
-    const response = await axios.post(baseUrl, data, config)
-    return response.data
-  } catch (err) {
-    console.error(err)
-    return undefined
-  }
+  const response = await axios.post(baseUrl, data, config)
+  return response.data.data.map(formatPrice)
 }
 export default {
   getAllExpenses,
