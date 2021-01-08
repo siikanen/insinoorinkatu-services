@@ -15,9 +15,8 @@ usersRouter
   })
 
   .post(async (req, res) => {
-    const newUser = await User.create({
-      username: req.body.username,
-      password: req.body.password
+    const newUser = await User.create(req.body, {
+      fields: ['username', 'password']
     })
     return res.json(newUser)
   })
@@ -35,7 +34,7 @@ usersRouter
     if (
       !user ||
       typeof req.body.password !== 'string' ||
-      !user.checkPassword(req.body.password)
+      !(await user.checkPassword(req.body.password))
     )
       throw new UserValidationError('Invalid username or password')
 
