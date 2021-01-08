@@ -60,9 +60,10 @@ const Expense = (props) => {
     dispatch(deleteExpense(loggedInUser.token, id))
     setDialogOpen(false)
     setExpense(null)
+    navigate("/app/expenses")
   }
   return (
-    <Card className={classes.root} title="Create expense">
+    <Card className={classes.root} >
       <DeleteDialog
         dialogOpen={dialogOpen}
         handleClose={handleClose}
