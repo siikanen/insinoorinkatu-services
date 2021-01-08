@@ -1,19 +1,24 @@
 'use strict'
 const { v4: uuidv4 } = require('uuid')
-const models = require('../models')
+const User = require('../models').User
 const faker = require('faker')
 //TODO: remove random data from seeds, replace with static test data
 module.exports = {
   up: async (queryInterface, Sequelize) => {
     let expenses = []
-    const userModel = models.User
-    const user = await userModel.findOne()
-    for (let i = 0; i < 5; i++) {
+    const users = await User.findAll()
+    for (let i = 0; i < 10; i++) {
       expenses.push({
         id: uuidv4(),
         title: faker.commerce.productName(),
-        amount: faker.random.number(),
-        userID: user.id,
+        price: faker.random.number(),
+        description: faker.commerce.productDescription(),
+        date: new Date(),
+        UserId: ((userList) => {
+          const randomIndex = Math.floor(Math.random() * (userList.length - 1 ))
+          return userList[randomIndex].id
+        })(users),
+        resolved: ((i = Math.random()) => i >= 0.5 )(),
         createdAt: new Date(),
         updatedAt: new Date(),
       })

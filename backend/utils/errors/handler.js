@@ -19,6 +19,14 @@ module.exports = async (err, req, res, next) => {
       })
       break
     }
+    case 'SequelizeValidationError': {
+      res.status(400).json({
+        error: {
+          message: err.errors.map((e) => e.message).join(', ')
+        }
+      })
+      break
+    }
     case 'NotFoundError': {
       res.status(err.statusCode).json({
         error: {

@@ -1,5 +1,5 @@
 'use strict'
-const { Model } = require('sequelize')
+const { Model, ValidationError } = require('sequelize')
 module.exports = (sequelize, DataTypes) => {
   class expense extends Model {
     /**
@@ -19,20 +19,98 @@ module.exports = (sequelize, DataTypes) => {
         primaryKey: true,
         allowNull: false,
         type: DataTypes.UUID,
+        defaultValue: DataTypes.UUIDV4,
         validate: {
           notNull: true,
+          isUUID: 4
         },
-        defaultValue: DataTypes.UUIDV4,
-        autoIncrement: false,
       },
-      title: DataTypes.STRING,
-      description: DataTypes.STRING,
-      date: DataTypes.DATE,
-      amount: DataTypes.INTEGER,
+      title: {
+        type: DataTypes.STRING,
+        allowNull: false,
+        validate: {
+          len: {
+            args: [ 1, 69 ],
+            msg: 'Title must be between 1 and 69 characters'
+          },
+          notNull: {
+            msg: 'Please enter title'
+          }
+        }
+      },
+      description: {
+        type: DataTypes.STRING,
+        allowNull: true,
+        validate: {
+          len: {
+            args: [5, 2500],
+            msg: "Description must be 5-2500 characters"
+
+          },
+          min: {
+            args: [10],
+            msg: 'Please be a little bit more precise :)'
+          },
+          max: {
+            args: [1500],
+            msg: 'Description must be under 1500 characters'
+          }
+        }
+      },
+      price: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+        validate: {
+          notNull: {
+            msg: "Please enter price"
+          },
+          isInt: {
+            msg: 'Price must be integer, convert euros to cents'
+          },
+          min: {
+            args: [0],
+            msg: 'Price must be greater than 0'
+          },
+          max: {
+            args: [100000000],
+            msg: 'Price must be less than one million'
+          },
+          test(value) {
+            console.log(value)
+          }
+        }
+      },
+      resolved: {
+        type: DataTypes.BOOLEAN,
+        defaultValue: false,
+        allowNull: false,
+        validate: {
+          isBoolean(value) {
+            if ( typeof value !== 'boolean' )
+              throw new ValidationError('Resolved must be boolean')
+          },
+          notNull: {
+            msg: 'Resolved cannot be null'
+          }
+        }
+      },
+      date: {
+        type: DataTypes.DATE,
+        defaultValue: DataTypes.NOW,
+        allowNull: false,
+        validate: {
+          isDate: {
+            msg: 'Please provide date that follows ISO8601'
+          },
+          notNull:{
+            msg: 'Date cannot be empty'
+          }
+        }
+      }
     },
     {
       sequelize,
-      modelName: 'Expense',
+      modelName: 'Expense'
     }
   )
   return expense
