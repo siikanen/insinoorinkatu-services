@@ -1,4 +1,4 @@
-import React, { useEffect,useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { NavLink as RouterLink, useNavigate } from 'react-router-dom'
 import PerfectScrollbar from 'react-perfect-scrollbar'
@@ -19,7 +19,9 @@ import {
   makeStyles
 } from '@material-ui/core'
 import ArrowRightIcon from '@material-ui/icons/ArrowRight'
+import DoneAllIcon from '@material-ui/icons/DoneAll'
 import { setAlert } from '../../../reducers/alertReducer'
+import CancelIcon from '@material-ui/icons/Cancel'
 const useStyles = makeStyles(() => ({
   root: {},
   actions: {
@@ -38,16 +40,16 @@ const AllExpensesView = () => {
     navigate(`/app/expenses/${id}`)
   }
 
-
   const dispatch = useDispatch()
   useEffect(() => {
-    dispatch(getAllExpenses()).catch((error)=>{
-    dispatch(setAlert('Error',"Something went wrong",5000))
+    dispatch(getAllExpenses()).catch((error) => {
+      dispatch(setAlert('Error', 'Something went wrong', 5000))
     })
   }, [dispatch])
   const expenses = useSelector(({ expenses }) => {
     return expenses
   })
+
   if (!expenses) {
     return <div></div>
   }
@@ -68,12 +70,8 @@ const AllExpensesView = () => {
                     </TableSortLabel>
                   </Tooltip>
                 </TableCell>
-                <TableCell>
-                  Date
-                </TableCell>
-                <TableCell>
-                  Resolved
-                </TableCell>
+                <TableCell>Date</TableCell>
+                <TableCell>Resolved</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
@@ -89,8 +87,13 @@ const AllExpensesView = () => {
                   <TableCell>{expense.payee.username}</TableCell>
                   <TableCell>{expense.price}</TableCell>
                   <TableCell>{expense.date}</TableCell>
-                  <TableCell>Resolved?</TableCell>
-
+                  <TableCell>
+                    {expense.resolved ? (
+                      <DoneAllIcon></DoneAllIcon>
+                    ) : (
+                      <CancelIcon></CancelIcon>
+                    )}
+                  </TableCell>
                 </TableRow>
               ))}
             </TableBody>

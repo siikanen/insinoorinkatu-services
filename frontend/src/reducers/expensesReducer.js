@@ -9,22 +9,18 @@ export const getAllExpenses = () => {
     })
   }
 }
-export const updateExpense = ( expenseToUpdate) => {
+export const updateExpense = (expenseToUpdate) => {
   return async (dispatch) => {
-    await expensesService.updateExpense(
-
-      expenseToUpdate.id,
-      expenseToUpdate
-    )
+    await expensesService.updateExpense(expenseToUpdate.id, expenseToUpdate)
     dispatch({
       type: 'UPDATE_EXPENSE',
       data: expenseToUpdate
     })
   }
 }
-export const deleteExpense = ( id) => {
+export const deleteExpense = (id) => {
   return async (dispatch) => {
-    await expensesService.deleteExpense( id)
+    await expensesService.deleteExpense(id)
     dispatch({
       type: 'DELETE_EXPENSE',
       data: { id }
@@ -32,23 +28,23 @@ export const deleteExpense = ( id) => {
   }
 }
 
-export const addNewExpense = ( expenseToAdd) => {
+export const addNewExpense = (expenseToAdd) => {
   return async (dispatch) => {
-    const response = await expensesService.createExpense( expenseToAdd)
-    // TODO replace the line below with error handling
-    if (!response) return
+    const data = await expensesService.createExpense(expenseToAdd)
     dispatch({
       type: 'NEW_EXPENSE',
-      data: response.data
+      data: data
     })
   }
 }
 const expensesReducer = (state = [], action) => {
+  let newArray
   switch (action.type) {
     case 'SET_EXPENSES':
       return action.data
     case 'NEW_EXPENSE':
-      return state.concat(action.data)
+      newArray = state.concat(action.data)
+      return newArray
     case 'DELETE_EXPENSE':
       return state.filter((expense) => expense.id !== action.data.id)
     case 'UPDATE_EXPENSE':
