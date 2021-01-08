@@ -101,7 +101,7 @@ const Expense = (props) => {
                   <TableCell>
                     <Typography variant="h4">Price:</Typography>
                   </TableCell>
-                  <TableCell>{expense.amount}</TableCell>
+                  <TableCell>{expense.price}</TableCell>
                 </TableRow>
                 <TableRow>
                   <TableCell>

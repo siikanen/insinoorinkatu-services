@@ -47,7 +47,7 @@ const UpdateExpenseView = () => {
   const handleSubmit = async (event) => {
     event.preventDefault()
     const title = event.target.title.value
-    const amount = event.target.price.value
+    const price = event.target.price.value
     const description = event.target.description.value
     const tags = event.target.tags.value
     dispatch(
@@ -55,7 +55,7 @@ const UpdateExpenseView = () => {
         id,
         title,
         description,
-        amount,
+        price,
         date: {},
         payee: {
           id: loggedInUser.id,
@@ -102,7 +102,7 @@ const UpdateExpenseView = () => {
             />
             <TextField
               fullWidth
-              defaultValue={expense.amount}
+              defaultValue={expense.price}
               label="Price"
               type="number"
               margin="normal"

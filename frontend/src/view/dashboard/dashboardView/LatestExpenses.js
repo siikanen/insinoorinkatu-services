@@ -71,7 +71,7 @@ const LatestExpenses = (props) => {
                       <Typography>{expense.title}</Typography>
                     </TableCell>
                     <TableCell>{expense.payee.username}</TableCell>
-                    <TableCell>{expense.amount}</TableCell>
+                    <TableCell>{expense.price}</TableCell>
                   </TableRow>
                 ))}
               </TableBody>

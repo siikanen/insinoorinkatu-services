@@ -25,7 +25,6 @@ const CreateExpenseView = () => {
   const classes = useStyles()
   const dispatch = useDispatch()
   const navigate = useNavigate()
-  const [alertOpen, setAlertOpen] = useState(false)
   const loggedInUser = JSON.parse(window.localStorage.getItem('loggedUser'))
   // let loggedInUser = useSelector(({ users }) => {
   //   return users.loggedInUser
@@ -34,15 +33,14 @@ const CreateExpenseView = () => {
     event.preventDefault()
 
     const title = event.target.title.value
-    const amount = event.target.price.value
+    const price = event.target.price.value
     const description = event.target.description.value
     const tags = event.target.tags.value
     dispatch(
       addNewExpense( {
         title,
         description,
-        amount,
-        date: {},
+        price,
         payee: {
           id: loggedInUser.id,
           username: loggedInUser.username

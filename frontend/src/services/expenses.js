@@ -3,21 +3,7 @@ const baseUrl = 'http://localhost:3000/api/v1/expenses'
 // TODO Make a better exception handling
 //Format the price, e.g 1010 = 10,10
 const formatPrice = function (expense) {
-  const len = expense.amount.toString().length
-  switch (len) {
-    case 2:
-      expense.amount = `0,${expense.amount}`
-      break
-    case 1:
-      expense.amount = `0,${expense.amount}0`
-      break
-    default:
-      expense.amount = `${expense.amount
-        .toString()
-        .substring(0, len - 2)},${expense.amount.toString().substring(len - 2)}`
-      break
-  }
-
+  expense.price = expense.price/100
   return expense
 }
 const getToken = function(){
