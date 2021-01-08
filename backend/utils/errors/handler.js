@@ -41,6 +41,7 @@ module.exports = async (err, req, res, next) => {
           message: err.message
         }
       })
+      break;
     }
     case 'UserValidationError': {
       res.status(err.statusCode).json({
