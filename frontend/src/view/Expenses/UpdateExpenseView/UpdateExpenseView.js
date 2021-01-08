@@ -39,7 +39,7 @@ const UpdateExpenseView = () => {
         setExpense(value.data[0])
       })
       .catch((err) => navigate('/app/404'))
-  }, [])
+  }, [id,loggedInUser.token,navigate])
   if (!expense) {
     return <div></div>
   }
