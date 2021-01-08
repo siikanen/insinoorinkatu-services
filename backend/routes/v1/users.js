@@ -1,4 +1,5 @@
 const jwt = require('jsonwebtoken')
+const { Op } = require('sequelize')
 const usersRouter = require('express').Router()
 const User = require('../../database/models').User
 const {
@@ -25,12 +26,18 @@ usersRouter
   .route('/login')
 
   .post(async (req, res) => {
-    const user = await User.findOne({
-      where: {
-        username: req.body.username
-      }
-    })
-
+    // User can log in with either username or user UUID
+    const user = await User.findOne(
+      {
+        where: {
+          [Op.or]: [
+            { username: req.body.username || null },
+            { id: req.body.id || null }
+          ]
+        }
+      },
+      { fields: ['username', 'id'] }
+    )
     if (
       !user ||
       typeof req.body.password !== 'string' ||
@@ -60,7 +67,7 @@ usersRouter
   // Find user or throw before doing anything else
   .all(async (req, res, next) => {
     const user = await User.findByPk(req.params.id)
-    if (!user) throw new NotFoundError('No user has given id')
+    if (!user) throw new NotFoundError('User not found')
     req.user = user
     next()
   })
