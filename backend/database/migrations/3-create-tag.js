@@ -5,6 +5,7 @@ module.exports = {
       name: {
         primaryKey: true,
         type: Sequelize.STRING,
+        allowNull: false
       }
     })
   },
