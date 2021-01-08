@@ -1,4 +1,4 @@
-import React, {  useEffect } from 'react'
+import React, { useState, useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { Container, Grid, makeStyles } from '@material-ui/core'
 import Page from '../../../components/Page'
@@ -15,16 +15,19 @@ const useStyles = makeStyles((theme) => ({
 }))
 
 const Dashboard = () => {
-  const user = JSON.parse(window.localStorage.getItem('loggedUser'))
-  const token = user.token
-  const dispatch = useDispatch()
+  let user = JSON.parse(window.localStorage.getItem('loggedUser'))
+  let token = user.token
+  const [alertOpen, setAlertOpen] = useState(false)
+  let dispatch = useDispatch()
   useEffect(() => {
-    dispatch(getAllExpenses(token))
+    dispatch(getAllExpenses(token)).catch((error)=>{
+      setAlertOpen(true)
+    }
+    )
   }, [dispatch,token])
   const expenses = useSelector(({ expenses }) => {
     return expenses
   })
-
 
   const classes = useStyles()
 
@@ -33,7 +36,7 @@ const Dashboard = () => {
       <Container maxWidth={false}>
         <Grid container spacing={3}>
           <Grid item lg={8} md={12} xl={9} xs={12}>
-            <LatestExpenses expenses={expenses}></LatestExpenses>
+            <LatestExpenses expenses={expenses} alertOpen={alertOpen}></LatestExpenses>
           </Grid>
         </Grid>
       </Container>

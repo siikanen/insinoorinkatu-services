@@ -1,9 +1,10 @@
-import React, { useEffect } from 'react'
+import React, { useEffect,useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { NavLink as RouterLink, useNavigate } from 'react-router-dom'
 import PerfectScrollbar from 'react-perfect-scrollbar'
 import { Typography } from '@material-ui/core'
 import { getAllExpenses } from '../../../reducers/expensesReducer'
+import GenericAlert from '../../errors/Alerts/index'
 import Page from '../../../components/Page'
 import {
   Box,
@@ -40,8 +41,11 @@ const AllExpensesView = () => {
   const user = JSON.parse(window.localStorage.getItem('loggedUser'))
   const token = user.token
   const dispatch = useDispatch()
+   const [alertOpen, setAlertOpen] = useState(false)
   useEffect(() => {
-    dispatch(getAllExpenses(token))
+    dispatch(getAllExpenses(token)).catch((error)=>{
+      setAlertOpen(true)
+    })
   }, [dispatch, token])
   const expenses = useSelector(({ expenses }) => {
     return expenses
@@ -54,6 +58,15 @@ const AllExpensesView = () => {
       <Divider />
       <PerfectScrollbar>
         <Box minWidth={800}>
+           {alertOpen ? (
+
+            <GenericAlert
+              type='Error'
+              alertOpen={true}
+              message="Error fetching expenses"
+            >
+            </GenericAlert>
+          ) : (
           <Table>
             <TableHead>
               <TableRow>
@@ -93,6 +106,7 @@ const AllExpensesView = () => {
               ))}
             </TableBody>
           </Table>
+          )}
         </Box>
       </PerfectScrollbar>
       <Box display="flex" justifyContent="flex-end" p={2}>

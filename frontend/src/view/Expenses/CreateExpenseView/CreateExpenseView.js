@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { useDispatch } from 'react-redux'
 import {
   Box,
@@ -11,7 +11,7 @@ import {
 import Page from '../../../components/Page'
 import { addNewExpense } from '../../../reducers/expensesReducer'
 import { useNavigate } from 'react-router'
-
+import GenericAlert from '../../errors/Alerts/index'
 const useStyles = makeStyles((theme) => ({
   root: {
     backgroundColor: theme.palette.background.dark,
@@ -25,6 +25,7 @@ const CreateExpenseView = () => {
   const classes = useStyles()
   const dispatch = useDispatch()
   const navigate = useNavigate()
+  const [alertOpen, setAlertOpen] = useState(false)
   const loggedInUser = JSON.parse(window.localStorage.getItem('loggedUser'))
   // let loggedInUser = useSelector(({ users }) => {
   //   return users.loggedInUser
@@ -48,10 +49,12 @@ const CreateExpenseView = () => {
         },
         tags: [tags]
       })
-    )
+    ).catch((error) => {
+      setAlertOpen(true)
+      return
+    })
 
-
-   navigate(`/app/expenses/`)
+    navigate(`/app/expenses/`)
   }
   return (
     <Page className={classes.root} title="CreateExpense">
@@ -61,6 +64,15 @@ const CreateExpenseView = () => {
         height="100%"
         justifyContent="center"
       >
+        {alertOpen ? (
+          <GenericAlert
+            type="Error"
+            alertOpen={true}
+            message="Error creating expense"
+          ></GenericAlert>
+        ) : (
+          <div></div>
+        )}
         <Container maxWidth="sm">
           <form onSubmit={handleSubmit}>
             <Box mb={1}>

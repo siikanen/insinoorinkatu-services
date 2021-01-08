@@ -12,6 +12,7 @@ import {
 } from '@material-ui/core'
 import Page from '../../../components/Page'
 import { updateExpense } from '../../../reducers/expensesReducer'
+import GenericAlert from '../../errors/Alerts/index'
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -24,6 +25,7 @@ const useStyles = makeStyles((theme) => ({
 
 const UpdateExpenseView = () => {
   const [expense, setExpense] = useState()
+  const [alertOpen, setAlertOpen] = useState(false)
   const navigate = useNavigate()
   const classes = useStyles()
   const { id } = useParams()
@@ -46,7 +48,7 @@ const UpdateExpenseView = () => {
   const handleSubmit = async (event) => {
     event.preventDefault()
     const title = event.target.title.value
-    const amount = event.target.amount.value
+    const amount = event.target.price.value
     const description = event.target.description.value
     const tags = event.target.tags.value
     dispatch(
@@ -62,10 +64,25 @@ const UpdateExpenseView = () => {
         },
         tags: [tags]
       })
-    )
+    ).catch((error)=>{
+      setAlertOpen(true)
+    })
   }
   return (
     <Page className={classes.root} title="UpdateExpense">
+       {alertOpen ? (
+
+            <GenericAlert
+              type='Error'
+              alertOpen={true}
+              message="Error updating expense"
+            >
+            </GenericAlert>
+          ) : (
+            <div>
+
+            </div>
+          )}
       <Box
         display="flex"
         flexDirection="column"
