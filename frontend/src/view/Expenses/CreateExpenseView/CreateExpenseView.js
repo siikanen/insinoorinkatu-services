@@ -47,11 +47,12 @@ const CreateExpenseView = () => {
         },
         tags: [tags]
       })
-    ).catch((error) => {
+    ).then(()=>{
+      navigate('/app/expenses')
+    }).catch((error) => {
       dispatch(setAlert('Error','Something went wrong',5000))
     })
 
-    navigate(`/app/expenses/`)
   }
   return (
     <Page className={classes.root} title="CreateExpense">

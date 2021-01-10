@@ -56,14 +56,15 @@ const UpdateExpenseView = () => {
         title,
         description,
         price,
-        date: {},
         payee: {
           id: loggedInUser.id,
           username: loggedInUser.username
         },
         tags: [tags]
       })
-    ).catch((error)=>{
+    ).then(()=>{
+      navigate("/app/expenses")
+    }).catch((error)=>{
       dispatch(setAlert('Error','Something went wrong',5000))
     })
   }
