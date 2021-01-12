@@ -3,7 +3,7 @@ import DashboardLayout from './layouts/DashboardLayout'
 import MainLayout from './layouts/MainLayout'
 import Expense from './view/Expenses/ExpenseView/Expense'
 import DashboardView from './view/dashboard/dashboardView'
-import LoginForm from './components/login/LoginForm'
+import LoginView from './view/login/LoginView'
 import UpdateExpenseView from './view/Expenses/UpdateExpenseView/UpdateExpenseView'
 import CreateExpenseView from './view/Expenses/CreateExpenseView/CreateExpenseView'
 import NotFoundView from './view/errors/NotFoundView'
@@ -37,7 +37,7 @@ const routes = [
     path: '/',
     element: <MainLayout />,
     children: [
-      { path: 'login', element: <LoginForm /> },
+      { path: 'login', element: <LoginView /> },
       { path: '/', element: <Navigate to="/login"></Navigate> },
       //{ path: '*', element: <Navigate to="/"></Navigate> }
     ]
