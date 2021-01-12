@@ -13,12 +13,13 @@ import {
   makeStyles,
   CardHeader,
   Typography,
-  Button
+  Button,
+  Chip
 } from '@material-ui/core'
 import IconButton from '@material-ui/core/IconButton'
 import ArrowRightIcon from '@material-ui/icons/ArrowRight'
 import Tooltip from '@material-ui/core/Tooltip'
-import CloseIcon from '@material-ui/icons/Close'
+import DeleteIcon from '@material-ui/icons/Delete'
 import { Divider, Card } from '@material-ui/core'
 import DeleteDialog from './DeleteExpense'
 import { deleteExpense } from '../../../reducers/expensesReducer'
@@ -39,12 +40,12 @@ const Expense = (props) => {
   const { id } = useParams()
   useEffect(() => {
     expensesService
-      .getExpenseById( id)
+      .getExpenseById(id)
       .then((value) => {
         setExpense(value)
       })
       .catch((err) => navigate('/app/404'))
-  }, [id,navigate])
+  }, [id, navigate])
   if (!expense) {
     return <div></div>
   }
@@ -55,13 +56,13 @@ const Expense = (props) => {
     setDialogOpen(false)
   }
   const handleConfirmDelete = () => {
-    dispatch(deleteExpense( id))
+    dispatch(deleteExpense(id))
     setDialogOpen(false)
     setExpense(null)
     navigate('/app/expenses')
   }
   return (
-    <Card className={classes.root} >
+    <Card className={classes.root}>
       <DeleteDialog
         dialogOpen={dialogOpen}
         handleClose={handleClose}
@@ -80,7 +81,7 @@ const Expense = (props) => {
             action={
               <Tooltip title="Delete">
                 <IconButton aria-label="Delete" onClick={handleDeleteClick}>
-                  <CloseIcon></CloseIcon>
+                  <DeleteIcon></DeleteIcon>
                 </IconButton>
               </Tooltip>
             }
@@ -114,7 +115,11 @@ const Expense = (props) => {
                   <TableCell>
                     <Typography variant="h4">Payee:</Typography>
                   </TableCell>
-                  <TableCell>{expense.payee.username}</TableCell>
+                  {expense.payee ? (
+                    <TableCell>{expense.payee.username}</TableCell>
+                  ) : (
+                    <TableCell></TableCell>
+                  )}
                 </TableRow>
                 <TableRow>
                   <TableCell>
@@ -128,7 +133,7 @@ const Expense = (props) => {
                   </TableCell>
                   <TableCell>
                     {expense.tags.map((tag) => (
-                      <Typography key={tag}>tag</Typography>
+                      <Chip key={tag} label={tag} color="primary"></Chip>
                     ))}
                   </TableCell>
                 </TableRow>
