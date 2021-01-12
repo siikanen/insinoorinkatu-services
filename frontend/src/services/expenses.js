@@ -1,6 +1,5 @@
 import axios from 'axios'
-const baseUrl = 'http://localhost:3000/api/v1/expenses'
-// TODO Make a better exception handling
+const baseUrl = `${process.env.REACT_APP_SERVER_URL}/expenses`
 //Format the price, e.g 1010 = 10,10
 const formatPrice = function (expense) {
   expense.price = expense.price/100
