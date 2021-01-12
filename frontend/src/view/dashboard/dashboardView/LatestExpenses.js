@@ -45,7 +45,6 @@ const LatestExpenses = (props) => {
       <Divider />
       <PerfectScrollbar>
         <Box minWidth={800}>
-
           <Table>
             <TableHead>
               <TableRow>
@@ -54,7 +53,7 @@ const LatestExpenses = (props) => {
                 <TableCell sortDirection="desc">
                   <Tooltip enterDelay={300} title="Sort">
                     <TableSortLabel active direction="desc">
-                        Price
+                      Price
                     </TableSortLabel>
                   </Tooltip>
                 </TableCell>
@@ -70,7 +69,12 @@ const LatestExpenses = (props) => {
                   <TableCell>
                     <Typography>{expense.title}</Typography>
                   </TableCell>
-                  <TableCell>{expense.payee.username}</TableCell>
+                  {expense.payee ? (
+                    <TableCell>{expense.payee.username}</TableCell>
+                  ) : (
+                    <TableCell></TableCell>
+                  )}
+
                   <TableCell>{expense.price}</TableCell>
                 </TableRow>
               ))}

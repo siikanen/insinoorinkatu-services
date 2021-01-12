@@ -83,7 +83,11 @@ const AllExpensesView = () => {
                   <TableCell>
                     <Typography>{expense.title}</Typography>
                   </TableCell>
-                  <TableCell>{expense.payee.username}</TableCell>
+                  {expense.payee ? (
+                    <TableCell>{expense.payee.username}</TableCell>
+                  ) : (
+                    <TableCell></TableCell>
+                  )}
                   <TableCell>{expense.price}</TableCell>
                   <TableCell>{expense.date}</TableCell>
                   <TableCell>
