@@ -36,10 +36,11 @@ const createExpense = async ( expenseToAdd) => {
   const response = await axios.post(baseUrl, data, config)
   return response.data.data.map(formatPrice)
 }
-export default {
+const expenseService= {
   getAllExpenses,
   createExpense,
   getExpenseById,
   updateExpense,
   deleteExpense
 }
+export default expenseService

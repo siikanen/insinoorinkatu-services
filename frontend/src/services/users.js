@@ -1,5 +1,5 @@
 import axios from 'axios'
-import jwt_decode from "jwt-decode";
+import jwt_decode from 'jwt-decode'
 const baseUrl = `${process.env.REACT_APP_SERVER_URL}/users`
 
 const logIn = async (credentials) => {
@@ -11,4 +11,5 @@ const logIn = async (credentials) => {
     token:response.data.token
   }
 }
-export default { logIn }
+const userService = {logIn}
+export default userService

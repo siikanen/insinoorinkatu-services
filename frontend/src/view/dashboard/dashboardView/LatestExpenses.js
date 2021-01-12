@@ -46,36 +46,36 @@ const LatestExpenses = (props) => {
       <PerfectScrollbar>
         <Box minWidth={800}>
 
-            <Table>
-              <TableHead>
-                <TableRow>
-                  <TableCell>Title</TableCell>
-                  <TableCell>Payee</TableCell>
-                  <TableCell sortDirection="desc">
-                    <Tooltip enterDelay={300} title="Sort">
-                      <TableSortLabel active direction="desc">
+          <Table>
+            <TableHead>
+              <TableRow>
+                <TableCell>Title</TableCell>
+                <TableCell>Payee</TableCell>
+                <TableCell sortDirection="desc">
+                  <Tooltip enterDelay={300} title="Sort">
+                    <TableSortLabel active direction="desc">
                         Price
-                      </TableSortLabel>
-                    </Tooltip>
+                    </TableSortLabel>
+                  </Tooltip>
+                </TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {props.expenses.map((expense) => (
+                <TableRow
+                  hover
+                  key={expense.id}
+                  onClick={(event) => handleRowClick(event, expense.id)}
+                >
+                  <TableCell>
+                    <Typography>{expense.title}</Typography>
                   </TableCell>
+                  <TableCell>{expense.payee.username}</TableCell>
+                  <TableCell>{expense.price}</TableCell>
                 </TableRow>
-              </TableHead>
-              <TableBody>
-                {props.expenses.map((expense) => (
-                  <TableRow
-                    hover
-                    key={expense.id}
-                    onClick={(event) => handleRowClick(event, expense.id)}
-                  >
-                    <TableCell>
-                      <Typography>{expense.title}</Typography>
-                    </TableCell>
-                    <TableCell>{expense.payee.username}</TableCell>
-                    <TableCell>{expense.price}</TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
+              ))}
+            </TableBody>
+          </Table>
         </Box>
       </PerfectScrollbar>
       <Box display="flex" justifyContent="flex-end" p={2}>

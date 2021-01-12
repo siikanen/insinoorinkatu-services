@@ -36,15 +36,15 @@ const alertReducer = (
   action
 ) => {
   switch (action.type) {
-    case 'SET_ALERT':
-      return action.data
-    case 'HIDE_ALERT':
-      return {
-        type: 'Hidden',
-        message: 'You should not see this'
-      }
-    default:
-      return state
+  case 'SET_ALERT':
+    return action.data
+  case 'HIDE_ALERT':
+    return {
+      type: 'Hidden',
+      message: 'You should not see this'
+    }
+  default:
+    return state
   }
 }
 

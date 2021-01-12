@@ -51,7 +51,6 @@
     ]
   },
   "devDependencies": {
-    "eslint": "^7.17.0",
     "eslint-config-prettier": "^7.1.0",
     "redux-devtools-extension": "^2.13.8"
   }

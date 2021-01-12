@@ -58,7 +58,7 @@ const Expense = (props) => {
     dispatch(deleteExpense( id))
     setDialogOpen(false)
     setExpense(null)
-    navigate("/app/expenses")
+    navigate('/app/expenses')
   }
   return (
     <Card className={classes.root} >

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { Container, Grid, makeStyles } from '@material-ui/core'
 import Page from '../../../components/Page'
@@ -19,14 +19,13 @@ const Dashboard = () => {
   let dispatch = useDispatch()
   useEffect(() => {
     dispatch(getAllExpenses()).catch((error)=>{
-      dispatch(setAlert('Error',"Something went wrong",5000))
+      dispatch(setAlert('Error','Something went wrong',5000))
     }
     )
   }, [dispatch])
   const expenses = useSelector(({ expenses }) => {
     return expenses
   })
-
   const classes = useStyles()
 
   return (

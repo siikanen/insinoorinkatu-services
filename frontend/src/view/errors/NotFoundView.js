@@ -1,11 +1,11 @@
-import React from 'react';
+import React from 'react'
 import {
   Box,
   Container,
   Typography,
   makeStyles
-} from '@material-ui/core';
-import Page from '../../components/Page';
+} from '@material-ui/core'
+import Page from '../../components/Page'
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -20,10 +20,10 @@ const useStyles = makeStyles((theme) => ({
     maxWidth: '100%',
     width: 560
   }
-}));
+}))
 
 const NotFoundView = () => {
-  const classes = useStyles();
+  const classes = useStyles()
 
   return (
     <Page
@@ -56,7 +56,7 @@ const NotFoundView = () => {
         </Container>
       </Box>
     </Page>
-  );
-};
+  )
+}
 
-export default NotFoundView;
+export default NotFoundView

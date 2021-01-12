@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { NavLink as RouterLink, useNavigate } from 'react-router-dom'
 import PerfectScrollbar from 'react-perfect-scrollbar'
@@ -49,7 +49,6 @@ const AllExpensesView = () => {
   const expenses = useSelector(({ expenses }) => {
     return expenses
   })
-
   if (!expenses) {
     return <div></div>
   }

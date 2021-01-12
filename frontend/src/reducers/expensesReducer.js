@@ -40,20 +40,20 @@ export const addNewExpense = (expenseToAdd) => {
 const expensesReducer = (state = [], action) => {
   let newArray
   switch (action.type) {
-    case 'SET_EXPENSES':
-      return action.data
-    case 'NEW_EXPENSE':
-      newArray = state.concat(action.data)
-      return newArray
-    case 'DELETE_EXPENSE':
-      return state.filter((expense) => expense.id !== action.data.id)
-    case 'UPDATE_EXPENSE':
-      // Remember, store is immutable!
-      return state.map((expense) =>
-        expense.id === action.data.id ? action.data : expense
-      )
-    default:
-      return state
+  case 'SET_EXPENSES':
+    return action.data
+  case 'NEW_EXPENSE':
+    newArray = state.concat(action.data)
+    return newArray
+  case 'DELETE_EXPENSE':
+    return state.filter((expense) => expense.id !== action.data.id)
+  case 'UPDATE_EXPENSE':
+    // Remember, store is immutable!
+    return state.map((expense) =>
+      expense.id === action.data.id ? action.data : expense
+    )
+  default:
+    return state
   }
 }
 

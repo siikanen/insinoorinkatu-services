@@ -36,7 +36,11 @@ const routes = [
   {
     path: '/',
     element: <MainLayout />,
-    children: [{ path: 'login', element: <LoginForm /> }]
+    children: [
+      { path: 'login', element: <LoginForm /> },
+      { path: '/', element: <Navigate to="/login"></Navigate> },
+      //{ path: '*', element: <Navigate to="/"></Navigate> }
+    ]
   }
 ]
 

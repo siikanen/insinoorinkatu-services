@@ -63,7 +63,7 @@ const UpdateExpenseView = () => {
         tags: [tags]
       })
     ).then(()=>{
-      navigate("/app/expenses")
+      navigate('/app/expenses')
     }).catch((error)=>{
       dispatch(setAlert('Error','Something went wrong',5000))
     })
