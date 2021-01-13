@@ -1,13 +1,31 @@
 const { NotFoundError } = require('../../utils/errors/userfacing')
 const { User, Expense, Tag } = require('../models')
+const { Op } = require('sequelize')
 
 /**
  * Fetch all expenses matching filter as json
  *
  */
 async function getExpenses(req) {
-  const { skip, limit } = req.query
+  const { skip, limit, month, year } = req.query
+  const query = {}
+
+  if (month || year) {
+    // (month, !year) => select current year,
+    // (!month, year) => select that month this year
+    // (month, year) => select that month, that year
+    const dateStart = new Date(year || new Date().getFullYear(), month - 1 || 0)
+    const dateEnd = new Date(dateStart)
+    if (month) dateEnd.setMonth(dateStart.getMonth() + 1)
+    else dateEnd.setFullYear(dateStart.getFullYear() + 1)
+
+    query['date'] = {
+      [Op.gt]: dateStart,
+      [Op.lt]: dateEnd
+    }
+  }
   let expenses = await Expense.findAll({
+    where: query,
     limit: limit || 50,
     offset: skip || 0,
     order: [['date', 'DESC']],
