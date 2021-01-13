@@ -43,9 +43,32 @@ async function getExpenses(filter = {}) {
  * @returns {object} Expense that matches given id
  */
 async function getSingleExpense(id) {
-  const expense = Expense.findByPk(id)
+  const expense = await Expense.findByPk(id, {
+    attributes: {
+      exclude: ['UserId']
+    },
+    include: [
+      {
+        model: Tag,
+        as: 'tags',
+        attributes: ['name'],
+        through: {
+          attributes: []
+        }
+      },
+      {
+        model: User,
+        as: 'payee',
+        attributes: ['id', 'username']
+      }
+    ]
+  })
   if (!expense) throw new NotFoundError('Expense not found')
-  return expense
+  // Transform to object
+  const expenseObj = expense.toJSON()
+  // Remap tag objects to strings
+  expenseObj.tags = expenseObj.tags.map((tag) => tag.name)
+  return expenseObj
 }
 
 /**
