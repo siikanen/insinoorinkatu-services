@@ -1,14 +1,14 @@
 import React from 'react'
 import DashboardLayout from './layouts/DashboardLayout'
 import MainLayout from './layouts/MainLayout'
-import Expense from './view/Expenses/ExpenseView/Expense'
+import SingleExpenseView from './view/Expenses/ExpenseView/index'
 import DashboardView from './view/dashboard/dashboardView'
 import LoginView from './view/login/LoginView'
 import UpdateExpenseView from './view/Expenses/UpdateExpenseView/UpdateExpenseView'
 import CreateExpenseView from './view/Expenses/CreateExpenseView/CreateExpenseView'
 import NotFoundView from './view/errors/NotFoundView'
 import { Navigate } from 'react-router'
-import AllExpensesView from './view/Expenses/AllExpenseView/AllExpensesView'
+import AllExpensesView from './view/Expenses/AllExpenseView/index'
 
 const routes = [
   {
@@ -28,8 +28,9 @@ const routes = [
         path: 'expenses/create',
         element: <CreateExpenseView></CreateExpenseView>
       },
-      { path: 'expenses/:id', element: <Expense></Expense> },
+      { path: 'expenses/:id', element: <SingleExpenseView></SingleExpenseView> },
       { path: '404', element: <NotFoundView /> },
+
       { path: '*', element: <Navigate to="/app/404"></Navigate> }
     ]
   },
@@ -38,7 +39,7 @@ const routes = [
     element: <MainLayout />,
     children: [
       { path: 'login', element: <LoginView /> },
-      { path: '/', element: <Navigate to="/login"></Navigate> },
+      { path: '/', element: <Navigate to="/login"></Navigate> }
       //{ path: '*', element: <Navigate to="/"></Navigate> }
     ]
   }
