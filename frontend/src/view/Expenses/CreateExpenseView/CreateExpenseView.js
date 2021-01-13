@@ -8,7 +8,7 @@ import {
   Typography,
   makeStyles,
   Grid,
-  Chip,
+  Chip
 } from '@material-ui/core'
 import Page from '../../../components/Page'
 import { addNewExpense } from '../../../reducers/expensesReducer'
@@ -37,12 +37,11 @@ const CreateExpenseView = () => {
   // let loggedInUser = useSelector(({ users }) => {
   //   return users.loggedInUser
   // })
-  const handleSubmit = async ({title,description,price,tags}) => {
-
+  const handleSubmit = async ({ title, description, price, tags }) => {
     dispatch(
       addNewExpense({
         title,
-        description:description || null,
+        description: description || null,
         price,
         payee: {
           id: loggedInUser.id,
@@ -55,7 +54,13 @@ const CreateExpenseView = () => {
         navigate('/app/expenses')
       })
       .catch((error) => {
-        dispatch(setAlert('Error', 'Something went wrong', 5000))
+        dispatch(
+          setAlert(
+            'Error',
+            `${error.response.status}: ${error.response.data.error.message}`,
+            5000
+          )
+        )
       })
   }
 
@@ -69,11 +74,10 @@ const CreateExpenseView = () => {
         </Box>
         <Formik
           initialValues={{
-            title: 'K-MarketTrip',
-            description: 'Chicken and stuff',
-            price: 100.0,
-            tags: [],
-            tag: ''
+            title: '',
+            description: '',
+            price: 0,
+            tags: []
           }}
           onSubmit={(values) => {
             handleSubmit(values)
@@ -91,7 +95,7 @@ const CreateExpenseView = () => {
                   >
                     <Grid item xs={12}>
                       <TextField
-                        placeholder={values.title}
+                        placeholder="K-market shoppings"
                         onChange={handleChange}
                         fullWidth
                         label="Title"
@@ -105,7 +109,7 @@ const CreateExpenseView = () => {
                         multiline={true}
                         rows="2"
                         rowsMax="4"
-                        placeholder={values.description}
+                        placeholder={'Chicken and bread'}
                         onChange={handleChange}
                         fullWidth
                         label="Description"
@@ -126,10 +130,9 @@ const CreateExpenseView = () => {
                     </Grid>
                     <Grid item xs={8} sm={6}>
                       <TextField
-                        placeholder="Tag"
+                        placeholder="Food"
                         onChange={handleChange}
                         label="Tag"
-                        value={values.tag}
                         margin="normal"
                         fullWidth
                         name="tag"
