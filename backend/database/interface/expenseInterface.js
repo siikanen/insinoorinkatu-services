@@ -5,9 +5,12 @@ const { User, Expense, Tag } = require('../models')
  * Fetch all expenses matching filter as json
  *
  */
-async function getExpenses(filter = {}) {
+async function getExpenses(req) {
+  const { skip, limit } = req.query
   let expenses = await Expense.findAll({
-    where: filter,
+    limit: limit || 50,
+    offset: skip || 0,
+    order: [['date', 'DESC']],
     attributes: {
       exclude: ['UserId']
     },
