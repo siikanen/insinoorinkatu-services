@@ -1,7 +1,4 @@
-import React, { useState, useEffect } from 'react'
-import { useDispatch } from 'react-redux'
-import { useParams, useNavigate, NavLink as RouterLink } from 'react-router-dom'
-import expensesService from '../../../services/expenses'
+import React from 'react'
 import {
   Box,
   Container,
@@ -13,79 +10,30 @@ import {
   makeStyles,
   CardHeader,
   Typography,
-  Button,
-  Chip
+  Chip,
+  Tooltip,
+  Button
 } from '@material-ui/core'
-import IconButton from '@material-ui/core/IconButton'
+
+import { NavLink as RouterLink } from 'react-router-dom'
 import ArrowRightIcon from '@material-ui/icons/ArrowRight'
-import Tooltip from '@material-ui/core/Tooltip'
-import DeleteIcon from '@material-ui/icons/Delete'
 import { Divider, Card } from '@material-ui/core'
-import DeleteDialog from './DeleteExpense'
-import { deleteExpense } from '../../../reducers/expensesReducer'
+
 const useStyles = makeStyles((theme) => ({
   root: {
-    backgroundColor: theme.palette.background.dark,
-    height: '100%',
-    paddingBottom: theme.spacing(15),
-    paddingTop: theme.spacing(0)
+    backgroundColor: theme.palette.background.dark
   }
 }))
-const Expense = (props) => {
-  const [expense, setExpense] = useState()
-  const [dialogOpen, setDialogOpen] = useState(false)
-  const dispatch = useDispatch()
-  const navigate = useNavigate()
+const ExpenseCard = ({ expense }) => {
   const classes = useStyles()
-  const { id } = useParams()
-  useEffect(() => {
-    expensesService
-      .getExpenseById(id)
-      .then((value) => {
-        setExpense(value)
-      })
-      .catch((err) => navigate('/app/404'))
-  }, [id, navigate])
   if (!expense) {
     return <div></div>
   }
-  const handleDeleteClick = () => {
-    setDialogOpen(true)
-  }
-  const handleClose = () => {
-    setDialogOpen(false)
-  }
-  const handleConfirmDelete = () => {
-    dispatch(deleteExpense(id))
-    setDialogOpen(false)
-    setExpense(null)
-    navigate('/app/expenses')
-  }
   return (
     <Card className={classes.root}>
-      <DeleteDialog
-        dialogOpen={dialogOpen}
-        handleClose={handleClose}
-        handleConfirmDelete={handleConfirmDelete}
-      ></DeleteDialog>
-      <Box
-        display="flex"
-        flexDirection="column"
-        height="100%"
-        justifyContent="center"
-      >
+      <Box display="flex" flexDirection="column" justifyContent="center">
         <Container maxWidth="sm">
-          <CardHeader
-            title={expense.title}
-            subheader={expense.id}
-            action={
-              <Tooltip title="Delete">
-                <IconButton aria-label="Delete" onClick={handleDeleteClick}>
-                  <DeleteIcon></DeleteIcon>
-                </IconButton>
-              </Tooltip>
-            }
-          ></CardHeader>
+          <CardHeader title={expense.title} subheader={expense.id}></CardHeader>
           <Divider />
           <Box mb={1}>
             <Table>
@@ -159,4 +107,4 @@ const Expense = (props) => {
     </Card>
   )
 }
-export default Expense
+export default ExpenseCard
