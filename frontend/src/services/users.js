@@ -1,6 +1,6 @@
 import axios from 'axios'
-import jwt_decode from "jwt-decode";
-const baseUrl = 'http://localhost:3000/api/v1/users'
+import jwt_decode from 'jwt-decode'
+const baseUrl = `${process.env.REACT_APP_SERVER_URL}/users`
 
 const logIn = async (credentials) => {
   const response= await axios.post(baseUrl + '/login', credentials)
@@ -11,4 +11,5 @@ const logIn = async (credentials) => {
     token:response.data.token
   }
 }
-export default { logIn }
+const userService = {logIn}
+export default userService

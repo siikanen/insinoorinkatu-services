@@ -12,10 +12,10 @@ export const logIn = (user) => {
 }
 const usersReducers = (state = {}, action) => {
   switch (action.type) {
-    case 'SET_LOGGED_USER':
-      return { ...state, loggedInUser: action.data }
-    default:
-      return state
+  case 'SET_LOGGED_USER':
+    return { ...state, loggedInUser: action.data }
+  default:
+    return state
   }
 }
 

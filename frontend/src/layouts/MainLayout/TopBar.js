@@ -1,22 +1,22 @@
-import React from 'react';
-import { Link as RouterLink } from 'react-router-dom';
-import clsx from 'clsx';
-import PropTypes from 'prop-types';
+import React from 'react'
+import { Link as RouterLink } from 'react-router-dom'
+import clsx from 'clsx'
+import PropTypes from 'prop-types'
 import {
   AppBar,
   Toolbar,
   makeStyles
-} from '@material-ui/core';
+} from '@material-ui/core'
 
 const useStyles = makeStyles(({
   root: {},
   toolbar: {
     height: 64
   }
-}));
+}))
 
 const TopBar = ({ className, ...rest }) => {
-  const classes = useStyles();
+  const classes = useStyles()
 
   return (
     <AppBar
@@ -29,11 +29,11 @@ const TopBar = ({ className, ...rest }) => {
         </RouterLink>
       </Toolbar>
     </AppBar>
-  );
-};
+  )
+}
 
 TopBar.propTypes = {
   className: PropTypes.string
-};
+}
 
-export default TopBar;
+export default TopBar

@@ -1,4 +1,4 @@
-export default {
+const typography= {
   h1: {
     fontWeight: 500,
     fontSize: 35,
@@ -32,4 +32,5 @@ export default {
   overline: {
     fontWeight: 500
   }
-};
+}
+export default typography
