@@ -12,8 +12,7 @@ const { NotFoundError } = require('../../utils/errors/userfacing')
 expensesRouter
   .route('/')
   .get(async (req, res) => {
-    // TODO: Validate the request and pass filters from req params to getExpenses()
-    const allExpenses = await getExpenses()
+    const allExpenses = await getExpenses(req)
     res.json({ data: allExpenses })
   })
   .post(async (req, res) => {
