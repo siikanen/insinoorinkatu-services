@@ -11,7 +11,7 @@ import Checkbox from '@material-ui/core/Checkbox'
 import Typography from '@material-ui/core/Typography'
 import { makeStyles } from '@material-ui/core/styles'
 import Container from '@material-ui/core/Container'
-
+import { setAlert } from '../../reducers/alertReducer'
 const LoginView = (props) => {
   const navigate = useNavigate()
   const dispatch = useDispatch()
@@ -26,11 +26,20 @@ const LoginView = (props) => {
         username,
         password
       })
-    ).then(() => {
-      navigate('../app/dashboard')
-    }).catch((err)=>{
-      console.error(err)
-    })
+    )
+      .then(() => {
+        navigate('../app/dashboard')
+      })
+      .catch((error) => {
+        console.log(error)
+        dispatch(
+          setAlert(
+            'Error',
+            `${error.response.status}: ${error.response.data.error.message}`,
+            5000
+          )
+        )
+      })
   }
   const useStyles = makeStyles((theme) => ({
     paper: {
