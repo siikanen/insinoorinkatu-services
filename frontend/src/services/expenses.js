@@ -10,18 +10,36 @@ const priceToInt = (price) => {
 const getToken = function () {
   return JSON.parse(window.localStorage.getItem('loggedUser')).token
 }
+const humanizeDate = (date) => {
+  return `${new Intl.DateTimeFormat('en-GB', {
+    weekday: 'short',
+    year: 'numeric',
+    month: 'short',
+    day: 'numeric',
+    hour: 'numeric',
+    minute: 'numeric'
+  }).format(new Date(date))}`
+}
 const getAllExpenses = async () => {
   const config = { headers: { Authorization: `Bearer ${getToken()}` } }
   const response = await axios.get(baseUrl, config)
   return response.data.data.map((expense) => {
-    return { ...expense, price: intToPrice(expense.price) }
+    return {
+      ...expense,
+      price: intToPrice(expense.price),
+      date: humanizeDate(expense.date)
+    }
   })
 }
 const getExpenseById = async (id) => {
   const config = { headers: { Authorization: `Bearer ${getToken()}` } }
   const response = await axios.get(`${baseUrl}/${id}`, config)
   //TODO: Remove [0] when backend is fixed
-  return { ...response.data.data[0], price: intToPrice(response.data.data[0].price) }
+  return {
+    ...response.data.data,
+    price: intToPrice(response.data.data.price),
+    tags: response.data.data.tags || []
+  }
 }
 const updateExpense = async (id, expenseToUpdate) => {
   const config = { headers: { Authorization: `Bearer ${getToken()}` } }
