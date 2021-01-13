@@ -180,7 +180,7 @@ async function updateExpense(data, id) {
   }
 
   await expenseToUpdate.update(data, {
-    fields: ['title', 'description', 'amount', 'date']
+    fields: ['title', 'description', 'price', 'date']
   })
 
   await expenseToUpdate.save()
