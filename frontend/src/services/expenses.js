@@ -10,6 +10,7 @@ const priceToInt = (price) => {
 const getToken = function () {
   return JSON.parse(window.localStorage.getItem('loggedUser')).token
 }
+
 const humanizeDate = (date) => {
   return `${new Intl.DateTimeFormat('en-GB', {
     weekday: 'short',
@@ -20,9 +21,12 @@ const humanizeDate = (date) => {
     minute: 'numeric'
   }).format(new Date(date))}`
 }
-const getAllExpenses = async () => {
+const getAllExpenses = async (searchParams = {}) => {
+  var queryString = Object.keys(searchParams)
+    .map((key) => key + '=' + searchParams[key])
+    .join('&')
   const config = { headers: { Authorization: `Bearer ${getToken()}` } }
-  const response = await axios.get(baseUrl, config)
+  const response = await axios.get(`${baseUrl}?${queryString}`, config)
   return response.data.data.map((expense) => {
     return {
       ...expense,
@@ -43,7 +47,9 @@ const getExpenseById = async (id) => {
 }
 const updateExpense = async (id, expenseToUpdate) => {
   const config = { headers: { Authorization: `Bearer ${getToken()}` } }
-  const data = { data: expenseToUpdate }
+  const data = {
+    data: { ...expenseToUpdate, price: priceToInt(expenseToUpdate.price) }
+  }
 
   await axios.put(`${baseUrl}/${id}`, data, config)
 }

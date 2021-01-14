@@ -1,8 +1,8 @@
 import expensesService from '../services/expenses'
 
-export const getAllExpenses = () => {
+export const getAllExpenses = (searchParams={}) => {
   return async (dispatch) => {
-    const data = await expensesService.getAllExpenses()
+    const data = await expensesService.getAllExpenses(searchParams)
     dispatch({
       type: 'SET_EXPENSES',
       data
