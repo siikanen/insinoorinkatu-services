@@ -1,6 +1,5 @@
-import React, { useState, useEffect } from 'react'
+import React  from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
-import expensesService from '../../../services/expenses'
 import { useDispatch } from 'react-redux'
 import {
   Box,
@@ -10,8 +9,11 @@ import {
   Typography,
   makeStyles,
   Grid,
-  Chip
+  Chip,
+  Tooltip,
+  IconButton
 } from '@material-ui/core'
+import DeleteIcon from '@material-ui/icons/Delete'
 import Page from '../../../components/Page'
 import { updateExpense } from '../../../reducers/expensesReducer'
 import { setAlert } from '../../../reducers/alertReducer'
@@ -25,8 +27,7 @@ const useStyles = makeStyles((theme) => ({
   }
 }))
 
-const UpdateExpenseView = () => {
-  const [expense, setExpense] = useState()
+const UpdateExpense = ({ expense, handleDeleteClick }) => {
   const navigate = useNavigate()
   const classes = useStyles()
   const { id } = useParams()
@@ -35,14 +36,7 @@ const UpdateExpenseView = () => {
   // let loggedInUser = useSelector(({ users }) => {
   //   return users.loggedInUser
   // })
-  useEffect(() => {
-    expensesService
-      .getExpenseById(id)
-      .then((value) => {
-        setExpense(value)
-      })
-      .catch((err) => navigate('/app/404'))
-  }, [id, navigate])
+
   if (!expense) {
     return <div></div>
   }
@@ -76,12 +70,21 @@ const UpdateExpenseView = () => {
   }
   return (
     <Page className={classes.root} title="UpdateExpense">
-      <Container maxWidth="sm">
-        <Box mb={1}>
-          <Typography color="textPrimary" variant="h2">
-            Update an expense
-          </Typography>
-          <Typography variant="subtitle1">{expense.id}</Typography>
+      <Container maxWidth={false}>
+        <Box display="flex" flexDirection="row" p={1} m={1}>
+          <Box flexGrow={1}>
+            <Typography color="textPrimary" variant="h2">
+              Update an expense
+            </Typography>
+            <Typography variant="subtitle1">{expense.id}</Typography>
+          </Box>
+          <Box>
+            <Tooltip title="Delete">
+              <IconButton aria-label="Delete" onClick={handleDeleteClick}>
+                <DeleteIcon></DeleteIcon>
+              </IconButton>
+            </Tooltip>
+          </Box>
         </Box>
         <Formik
           initialValues={{
@@ -201,4 +204,4 @@ const UpdateExpenseView = () => {
   )
 }
 
-export default UpdateExpenseView
+export default UpdateExpense

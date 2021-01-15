@@ -18,7 +18,7 @@ const Dashboard = () => {
 
   let dispatch = useDispatch()
   useEffect(() => {
-    dispatch(getAllExpenses()).catch((error)=>{
+    dispatch(getAllExpenses({limit:10})).catch((error)=>{
       dispatch(setAlert('Error','Something went wrong',5000))
     }
     )
