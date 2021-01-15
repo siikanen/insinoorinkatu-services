@@ -11,6 +11,30 @@ module.exports = (sequelize, DataTypes) => {
       // define association here
       this.belongsTo(models.User, { as: 'payee', foreignKey: 'UserId' })
       this.belongsToMany(models.Tag, { as: 'tags', through: 'ExpenseTags' })
+
+      // Scopes
+      this.addScope('defaultScope', {
+        attributes: {
+          // This field is used to link tables,
+          // it is referred as payee below
+          exclude: ['UserId']
+        },
+        include: [
+          {
+            model: models.User,
+            as: 'payee',
+            attributes: ['id', 'username']
+          },
+          {
+            model: models.Tag,
+            as: 'tags',
+            attributes: ['name'],
+            through: {
+              attributes: []
+            }
+          }
+        ]
+      })
     }
   }
   expense.init(
@@ -23,14 +47,14 @@ module.exports = (sequelize, DataTypes) => {
         validate: {
           notNull: true,
           isUUID: 4
-        },
+        }
       },
       title: {
         type: DataTypes.STRING,
         allowNull: false,
         validate: {
           len: {
-            args: [ 1, 69 ],
+            args: [1, 69],
             msg: 'Title must be between 1 and 69 characters'
           },
           notNull: {
@@ -44,8 +68,7 @@ module.exports = (sequelize, DataTypes) => {
         validate: {
           len: {
             args: [5, 2500],
-            msg: "Description must be 5-2500 characters"
-
+            msg: 'Description must be 5-2500 characters'
           },
           min: {
             args: [10],
@@ -62,7 +85,7 @@ module.exports = (sequelize, DataTypes) => {
         allowNull: false,
         validate: {
           notNull: {
-            msg: "Please enter price"
+            msg: 'Please enter price'
           },
           isInt: {
             msg: 'Price must be integer, convert euros to cents'
@@ -86,7 +109,7 @@ module.exports = (sequelize, DataTypes) => {
         allowNull: false,
         validate: {
           isBoolean(value) {
-            if ( typeof value !== 'boolean' )
+            if (typeof value !== 'boolean')
               throw new ValidationError('Resolved must be boolean')
           },
           notNull: {
@@ -102,7 +125,7 @@ module.exports = (sequelize, DataTypes) => {
           isDate: {
             msg: 'Please provide date that follows ISO8601'
           },
-          notNull:{
+          notNull: {
             msg: 'Date cannot be empty'
           }
         }
