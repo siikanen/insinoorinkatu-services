@@ -17,6 +17,7 @@ import expensesService from '../../../services/expenses'
 import DeleteDialog from './DeleteExpense'
 import { deleteExpense } from '../../../reducers/expensesReducer'
 import ExpenseCard from './ExpenseCard'
+import {intToPrice,humanizeDate} from '../../../utils/utils'
 const useStyles = makeStyles((theme) => ({
   root: {
     backgroundColor: theme.palette.background.dark,
@@ -36,8 +37,13 @@ const SingleExpenseView = () => {
   useEffect(() => {
     expensesService
       .getExpenseById(id)
-      .then((value) => {
-        setExpense(value)
+      .then((response) => {
+        setExpense({
+          ...response.data.data,
+          price: intToPrice(response.data.data.price),
+          date: humanizeDate(response.data.data.date),
+          tags: response.data.data.tags || []
+        })
       })
       .catch((err) => {
         console.error(err)
@@ -69,7 +75,7 @@ const SingleExpenseView = () => {
             handleClose={handleClose}
             handleConfirmDelete={handleConfirmDelete}
           ></DeleteDialog>
-          <Grid item just>
+          <Grid item justifycontent="flex-end">
             <Tooltip title="Delete">
               <IconButton aria-label="Delete" onClick={handleDeleteClick}>
                 <DeleteIcon></DeleteIcon>

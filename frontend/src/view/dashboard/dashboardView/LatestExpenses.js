@@ -75,7 +75,7 @@ const LatestExpenses = (props) => {
                     <TableCell></TableCell>
                   )}
 
-                  <TableCell>{expense.price}</TableCell>
+                  <TableCell>{`${expense.price}€`}</TableCell>
                 </TableRow>
               ))}
             </TableBody>

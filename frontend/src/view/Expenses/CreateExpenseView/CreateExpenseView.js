@@ -15,6 +15,7 @@ import { addNewExpense } from '../../../reducers/expensesReducer'
 import { setAlert } from '../../../reducers/alertReducer'
 import { useNavigate } from 'react-router'
 import { FieldArray, Formik } from 'formik'
+import { priceToInt } from '../../../utils/utils'
 const useStyles = makeStyles((theme) => ({
   root: {
     backgroundColor: theme.palette.background.dark,
@@ -42,7 +43,7 @@ const CreateExpenseView = () => {
       addNewExpense({
         title,
         description: description || null,
-        price,
+        price:priceToInt(price),
         payee: {
           id: loggedInUser.id,
           username: loggedInUser.username
