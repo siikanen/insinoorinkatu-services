@@ -1,8 +1,16 @@
 import expensesService from '../services/expenses'
-
+import {intToPrice,humanizeDate} from '../utils/utils'
 export const getAllExpenses = (searchParams={}) => {
   return async (dispatch) => {
-    const data = await expensesService.getAllExpenses(searchParams)
+    const response = await expensesService.getAllExpenses(searchParams)
+    const data=response.data.data.map((expense) => {
+      return {
+        ...expense,
+        price: intToPrice(expense.price),
+        date: humanizeDate(expense.date)
+      }
+    })
+
     dispatch({
       type: 'SET_EXPENSES',
       data
@@ -11,10 +19,16 @@ export const getAllExpenses = (searchParams={}) => {
 }
 export const updateExpense = (expenseToUpdate) => {
   return async (dispatch) => {
-    await expensesService.updateExpense(expenseToUpdate.id, expenseToUpdate)
+    const response= await expensesService.updateExpense(expenseToUpdate.id, expenseToUpdate)
+    const data=
+      {
+        ...response.data.data,
+        price: intToPrice(response.data.data.price),
+        date: humanizeDate(response.data.data.date)
+      }
     dispatch({
       type: 'UPDATE_EXPENSE',
-      data: expenseToUpdate
+      data
     })
   }
 }
@@ -30,7 +44,15 @@ export const deleteExpense = (id) => {
 
 export const addNewExpense = (expenseToAdd) => {
   return async (dispatch) => {
-    const data = await expensesService.createExpense(expenseToAdd)
+    const response = await expensesService.createExpense(expenseToAdd)
+    const data=response.data.data.map((expense) => {
+      return {
+        ...expense,
+        price: intToPrice(expense.price),
+        date: humanizeDate(expense.date)
+      }
+    })
+
     dispatch({
       type: 'NEW_EXPENSE',
       data: data
@@ -43,6 +65,7 @@ const expensesReducer = (state = [], action) => {
   case 'SET_EXPENSES':
     return action.data
   case 'NEW_EXPENSE':
+  // Wont work without this assingment.
     newArray = state.concat(action.data)
     return newArray
   case 'DELETE_EXPENSE':
