@@ -15,7 +15,7 @@ import {
 } from '@material-ui/core'
 import DoneAllIcon from '@material-ui/icons/DoneAll'
 import CancelIcon from '@material-ui/icons/Cancel'
-import { getAllExpenses } from '../../../reducers/expensesReducer'
+import { getExpenses } from '../../../reducers/expensesReducer'
 import { setAlert } from '../../../reducers/alertReducer'
 const useStyles = makeStyles((theme) => ({
   table: {
@@ -31,7 +31,7 @@ const AllExpenses = ({ expenses, setSelectedExpense }) => {
   const [rowsPerPage, setRowsPerPage] = useState(10)
   useEffect(() => {
     dispatch(
-      getAllExpenses({ skip: page * rowsPerPage, limit: rowsPerPage })
+      getExpenses({ skip: page * rowsPerPage, limit: rowsPerPage })
     ).catch((error) => {
       dispatch(setAlert('Error', String(error), 5000))
     })

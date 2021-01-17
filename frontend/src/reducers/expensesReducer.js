@@ -1,6 +1,6 @@
 import expensesService from '../services/expenses'
 import {intToPrice,humanizeDate} from '../utils/utils'
-export const getAllExpenses = (searchParams={}) => {
+export const getExpenses = (searchParams={}) => {
   return async (dispatch) => {
     const response = await expensesService.getAllExpenses(searchParams)
     const data=response.data.data.map((expense) => {

@@ -112,9 +112,6 @@ const UpdateExpense = ({ expense, handleDeleteClick }) => {
           onSubmit={(values, { setSubmitting }) => {
             handleSubmit(values, setSubmitting)
           }}
-          handleChange={(e) => {
-            console.log(e)
-          }}
           validationSchema={expenseValidationSchema}
           validateOnChange={true}
         >

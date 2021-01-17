@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { Container, Grid, makeStyles } from '@material-ui/core'
 import Page from '../../../components/Page'
 import LatestExpenses from './LatestExpenses'
-import { getAllExpenses } from '../../../reducers/expensesReducer'
+import { getExpenses } from '../../../reducers/expensesReducer'
 import {setAlert} from '../../../reducers/alertReducer'
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -18,7 +18,7 @@ const Dashboard = () => {
 
   let dispatch = useDispatch()
   useEffect(() => {
-    dispatch(getAllExpenses({limit:10})).catch((error)=>{
+    dispatch(getExpenses({limit:10})).catch((error)=>{
       dispatch(setAlert('Error','Something went wrong',5000))
     }
     )
