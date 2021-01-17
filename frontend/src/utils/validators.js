@@ -17,3 +17,21 @@ export const expenseValidationSchema = Yup.object().shape({
     .min(4, 'Minimum lenght is ${min}')
     .max(10, 'Max lenght is ${max}')
 })
+export const userValidationSchema = Yup.object().shape({
+  username: Yup.string()
+    .min(3, 'Must be atleast ${min} chars')
+    .max(50, 'Maximum length of ${max} reached')
+    .required('Required'),
+
+  password: Yup.string()
+    .min(8, 'Must be atleast ${min} chars long!')
+    .max(70, 'Upper limit of ${max} reached!')
+    .matches(
+      '(?=(?:.*?[A-Z]){1})(?=.*?[a-z])(?=(?:.*?[0-9]){2}).*$',
+      'Must contain atleast 1 uppercase, lowercase and 2 numbers'
+    )
+    .required('Required'),
+  passwordConfirm: Yup.string()
+    .oneOf([Yup.ref('password'), null],'Passwords must match')
+    .required('Required')
+})
