@@ -1,4 +1,4 @@
-import React  from 'react'
+import React, { useState } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import { useDispatch } from 'react-redux'
 import {
@@ -11,13 +11,16 @@ import {
   Grid,
   Chip,
   Tooltip,
-  IconButton
+  IconButton,
+  FormControlLabel,
+  Checkbox
 } from '@material-ui/core'
 import DeleteIcon from '@material-ui/icons/Delete'
 import Page from '../../../components/Page'
 import { updateExpense } from '../../../reducers/expensesReducer'
 import { setAlert } from '../../../reducers/alertReducer'
 import { Formik, FieldArray } from 'formik'
+import { priceToInt } from '../../../utils/utils'
 const useStyles = makeStyles((theme) => ({
   root: {
     backgroundColor: theme.palette.background.dark,
@@ -33,6 +36,7 @@ const UpdateExpense = ({ expense, handleDeleteClick }) => {
   const { id } = useParams()
   const dispatch = useDispatch()
   const loggedInUser = JSON.parse(window.localStorage.getItem('loggedUser'))
+  const [intialExpense] = useState(expense)
   // let loggedInUser = useSelector(({ users }) => {
   //   return users.loggedInUser
   // })
@@ -41,24 +45,29 @@ const UpdateExpense = ({ expense, handleDeleteClick }) => {
     return <div></div>
   }
 
-  const handleSubmit = async ({ title, description, price, tags }) => {
-    dispatch(
-      updateExpense({
-        id,
-        title,
-        description,
-        price,
-        payee: {
-          id: loggedInUser.id,
-          username: loggedInUser.username
-        },
-        tags
-      })
-    )
+  const handleSubmit = async (values, setSubmitting) => {
+    setSubmitting(true)
+    const objectToSend = {
+      id,
+      payee: {
+        id: loggedInUser.id,
+        username: loggedInUser.username
+      }
+    }
+    // Tag is not meant to be sent to backend
+    for (let key of Object.keys(values)) {
+      if (values[key] !== intialExpense[key] && key != 'tag') {
+        objectToSend[key] = values[key]
+        if (key === 'price') objectToSend[key] = priceToInt(values[key])
+      }
+    }
+    dispatch(updateExpense(objectToSend))
       .then(() => {
+        setSubmitting(false)
         navigate('/app/expenses')
       })
       .catch((error) => {
+        setSubmitting(false)
         dispatch(
           setAlert(
             'Error',
@@ -92,13 +101,21 @@ const UpdateExpense = ({ expense, handleDeleteClick }) => {
             description: expense.description,
             price: expense.price,
             tags: expense.tags,
+            resolved:expense.resolved,
             tag: ''
           }}
-          onSubmit={(values) => {
-            handleSubmit(values)
+          onSubmit={(values, { setSubmitting }) => {
+            handleSubmit(values, setSubmitting)
           }}
         >
-          {({ handleSubmit, values, handleChange, setFieldValue }) => (
+          {({
+            handleSubmit,
+            values,
+            handleChange,
+            dirty,
+            isSubmitting,
+            setFieldValue
+          }) => (
             <form onSubmit={handleSubmit}>
               <FieldArray name="tags">
                 {({ insert, remove, push }) => (
@@ -106,9 +123,9 @@ const UpdateExpense = ({ expense, handleDeleteClick }) => {
                     container
                     spacing={2}
                     alignItems="center"
-                    justify="center"
+                    justify="flex-start"
                   >
-                    <Grid item xs={12}>
+                    <Grid item xs={10}>
                       <TextField
                         defaultValue={values.title}
                         onChange={handleChange}
@@ -119,7 +136,21 @@ const UpdateExpense = ({ expense, handleDeleteClick }) => {
                         variant="outlined"
                       />
                     </Grid>
-                    <Grid item xs={12}>
+                    <Grid item xs={2}>
+                      <FormControlLabel
+                        labelPlacement="top"
+                        label="Resolved"
+                        control={
+                          <Checkbox
+                            checked={values.resolved}
+                            onChange={handleChange}
+                            color="primary"
+                            name="resolved"
+                          />
+                        }
+                      />
+                    </Grid>
+                    <Grid item xs={10}>
                       <TextField
                         multiline={true}
                         rows="2"
@@ -156,7 +187,7 @@ const UpdateExpense = ({ expense, handleDeleteClick }) => {
                         variant="outlined"
                       />
                     </Grid>
-                    <Grid item xs={4} sm={2}>
+                    <Grid item xs={2} sm={2}>
                       <Button
                         color="primary"
                         onClick={() => {
@@ -168,16 +199,20 @@ const UpdateExpense = ({ expense, handleDeleteClick }) => {
                       </Button>
                     </Grid>
                     <Grid item xs={12}>
-                      {values.tags.map((tag, index) => (
-                        <Chip
-                          key={tag}
-                          label={tag}
-                          color="primary"
-                          onDelete={() => {
-                            remove(index)
-                          }}
-                        ></Chip>
-                      ))}
+                      {values.tags ? (
+                        values.tags.map((tag, index) => (
+                          <Chip
+                            key={tag}
+                            label={tag}
+                            color="primary"
+                            onDelete={() => {
+                              remove(index)
+                            }}
+                          ></Chip>
+                        ))
+                      ) : (
+                        <div></div>
+                      )}
                     </Grid>
 
                     <Grid item xs={12}>
@@ -188,6 +223,7 @@ const UpdateExpense = ({ expense, handleDeleteClick }) => {
                           size="large"
                           type="submit"
                           variant="contained"
+                          disabled={!dirty || isSubmitting}
                         >
                           Update expense
                         </Button>
