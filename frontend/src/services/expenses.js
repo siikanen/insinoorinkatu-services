@@ -5,10 +5,9 @@ import {
 } from '../utils/utils'
 const baseUrl = `${process.env.REACT_APP_SERVER_URL}/expenses`
 
-//Format the price, e.g 1010 = 10,10
 
 const getAllExpenses = async (searchParams = {}) => {
-  var queryString = formQueryString(searchParams)
+  const queryString = formQueryString(searchParams)
   const config = { headers: { Authorization: `Bearer ${getToken()}` } }
   return await axios.get(`${baseUrl}?${queryString}`, config)
 }
