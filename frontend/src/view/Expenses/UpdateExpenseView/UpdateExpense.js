@@ -21,6 +21,7 @@ import { updateExpense } from '../../../reducers/expensesReducer'
 import { setAlert } from '../../../reducers/alertReducer'
 import { Formik, FieldArray } from 'formik'
 import { priceToInt } from '../../../utils/utils'
+import {expenseValidationSchema} from '../../../utils/validators'
 const useStyles = makeStyles((theme) => ({
   root: {
     backgroundColor: theme.palette.background.dark,
@@ -29,6 +30,7 @@ const useStyles = makeStyles((theme) => ({
     paddingTop: theme.spacing(0)
   }
 }))
+
 
 const UpdateExpense = ({ expense, handleDeleteClick }) => {
   const navigate = useNavigate()
@@ -48,20 +50,23 @@ const UpdateExpense = ({ expense, handleDeleteClick }) => {
   const handleSubmit = async (values, setSubmitting) => {
     setSubmitting(true)
     const objectToSend = {
-      id,
       payee: {
         id: loggedInUser.id,
         username: loggedInUser.username
       }
     }
-    // Tag is not meant to be sent to backend
     for (let key of Object.keys(values)) {
-      if (values[key] !== intialExpense[key] && key != 'tag') {
+      // Tag is not meant to be sent to backend
+      if (
+        values[key] !== intialExpense[key] &&
+        values[key] !== '' &&
+        key != 'tag'
+      ) {
         objectToSend[key] = values[key]
         if (key === 'price') objectToSend[key] = priceToInt(values[key])
       }
     }
-    dispatch(updateExpense(objectToSend))
+    dispatch(updateExpense(objectToSend, id))
       .then(() => {
         setSubmitting(false)
         navigate('/app/expenses')
@@ -101,12 +106,17 @@ const UpdateExpense = ({ expense, handleDeleteClick }) => {
             description: expense.description,
             price: expense.price,
             tags: expense.tags,
-            resolved:expense.resolved,
+            resolved: expense.resolved,
             tag: ''
           }}
           onSubmit={(values, { setSubmitting }) => {
             handleSubmit(values, setSubmitting)
           }}
+          handleChange={(e) => {
+            console.log(e)
+          }}
+          validationSchema={expenseValidationSchema}
+          validateOnChange={true}
         >
           {({
             handleSubmit,
@@ -114,7 +124,8 @@ const UpdateExpense = ({ expense, handleDeleteClick }) => {
             handleChange,
             dirty,
             isSubmitting,
-            setFieldValue
+            setFieldValue,
+            errors
           }) => (
             <form onSubmit={handleSubmit}>
               <FieldArray name="tags">
@@ -127,6 +138,8 @@ const UpdateExpense = ({ expense, handleDeleteClick }) => {
                   >
                     <Grid item xs={10}>
                       <TextField
+                        error={!!errors.title}
+                        helperText={errors.title}
                         defaultValue={values.title}
                         onChange={handleChange}
                         fullWidth
@@ -155,6 +168,8 @@ const UpdateExpense = ({ expense, handleDeleteClick }) => {
                         multiline={true}
                         rows="2"
                         rowsMax="4"
+                        error={!!errors.description}
+                        helperText={errors.description}
                         defaultValue={values.description}
                         onChange={handleChange}
                         fullWidth
@@ -168,6 +183,8 @@ const UpdateExpense = ({ expense, handleDeleteClick }) => {
                       <TextField
                         fullWidth
                         inputProps={{ step: 0.01 }}
+                        error={!!errors.price}
+                        helperText={errors.price}
                         type="number"
                         defaultValue={expense.price}
                         label="Price"
@@ -178,6 +195,8 @@ const UpdateExpense = ({ expense, handleDeleteClick }) => {
                     <Grid item xs={8} sm={6}>
                       <TextField
                         placeholder="Tag"
+                        error={!!errors.tag}
+                        helperText={errors.tag}
                         onChange={handleChange}
                         label="Tag"
                         value={values.tag}
@@ -190,6 +209,7 @@ const UpdateExpense = ({ expense, handleDeleteClick }) => {
                     <Grid item xs={2} sm={2}>
                       <Button
                         color="primary"
+                        disabled={!!errors.tag}
                         onClick={() => {
                           push(values.tag)
                           setFieldValue('tag', '')
