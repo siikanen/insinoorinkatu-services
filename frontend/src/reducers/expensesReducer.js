@@ -17,9 +17,9 @@ export const getAllExpenses = (searchParams={}) => {
     })
   }
 }
-export const updateExpense = (expenseToUpdate) => {
+export const updateExpense = (expenseToUpdate,id) => {
   return async (dispatch) => {
-    const response= await expensesService.updateExpense(expenseToUpdate.id, expenseToUpdate)
+    const response= await expensesService.updateExpense(id, expenseToUpdate)
     const data=
       {
         ...response.data.data,
