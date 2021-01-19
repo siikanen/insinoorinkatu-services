@@ -1,4 +1,5 @@
 'use strict'
+const jwt = require('jsonwebtoken')
 const crypto = require('crypto')
 const passwordValidator = require('password-validator')
 const { Model, ValidationError } = require('sequelize')
@@ -87,6 +88,26 @@ module.exports = (sequelize, DataTypes) => {
               hash.toString('hex') === this.getDataValue('passwordHash')
             )
         })
+      })
+    }
+
+    async createToken() {
+      return new Promise((resolve, reject) => {
+        const tokenContent = {
+          username: this.username,
+          id: this.id
+        }
+        const jwtOptions = {
+          algorithm: 'HS256',
+          expiresIn: '24h'
+        }
+        jwt.sign(
+          tokenContent,
+          process.env.JWT_SECRET,
+          jwtOptions, (err, token) => {
+            !err ? resolve(token) : reject(err)
+          }
+        )
       })
     }
   }
