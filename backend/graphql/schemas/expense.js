@@ -1,5 +1,5 @@
 const { gql } = require('apollo-server-express')
-const expenseTypeDefs = gql`
+ exports.expenseTypeDefs = gql`
   scalar Date
 
   type Expense {
@@ -12,13 +12,24 @@ const expenseTypeDefs = gql`
     payee: User
     tags: [Tag]
   }
-  input ExpenseInput {
-    title: String!
+
+  input ExpenseUpdateInput {
+    id: ID!
+    title: String
+    price: Int
     description: String
-    price: Int!
+    payee: UserInput!
     resolved: Boolean
     date: Date
-    payee: PayeeInput!
+    tags: [String!]
+  }
+  input ExpenseCreateInput {
+    title: String!
+    price: Int!
+    description: String
+    resolved: Boolean
+    date: Date
+    payee: UserInput!
     tags: [String!]
   }
 
@@ -33,9 +44,9 @@ const expenseTypeDefs = gql`
   }
 
   extend type Mutation {
-    createExpenses(input: [ExpenseInput]): [Expense]
-    updateExpense(input: ExpenseInput, id:ID!): Expense
-    deleteExpense(input: ID!) : Expense
+    createExpenses(input: [ExpenseCreateInput]): [Expense]
+    updateExpense(input: ExpenseUpdateInput): Expense
+    deleteExpense(input: ID!): Expense
   }
 `
-module.exports = expenseTypeDefs
+

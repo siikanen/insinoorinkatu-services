@@ -1,12 +1,16 @@
 const { gql } = require('apollo-server-express')
-const userTypeDefs = gql`
+ exports.userTypeDefs = gql`
   type User {
     id: ID!
-    username: String!
+    username: String
+    createdAt: Date
+    updatedAt: Date
   }
-
-  input PayeeInput {
+  input UserInput {
     id: ID!
+    username: ID!
+  }
+  extend type Query {
+    getUsers(id: ID): [User]
   }
 `
-module.exports = userTypeDefs

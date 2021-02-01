@@ -1,8 +1,8 @@
 const { GraphQLDateTime } = require('graphql-iso-date')
-const expenseResolvers = require('./expense')
+const { expenseResolvers } = require('./expense')
 const _ = require('lodash')
+const { userResolvers } = require('./user')
 
-
-const resolvers = _.merge({}, expenseResolvers, { Date: GraphQLDateTime })
-
-module.exports = resolvers
+exports.resolvers = _.merge({}, expenseResolvers, userResolvers, {
+  Date: GraphQLDateTime
+})
