@@ -22,11 +22,13 @@
     "ext": "js,yaml"
   },
   "dependencies": {
+    "apollo-server-express": "^2.19.2",
     "cors": "^2.8.5",
     "debug": "~2.6.9",
     "express": "~4.16.1",
     "express-async-errors": "^3.1.1",
     "express-jwt": "^6.0.0",
+    "graphql-iso-date": "^3.6.1",
     "jsonwebtoken": "^8.5.1",
     "mocha": "^8.2.1",
     "morgan": "~1.9.1",
