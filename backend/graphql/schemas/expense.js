@@ -34,6 +34,8 @@ const expenseTypeDefs = gql`
 
   extend type Mutation {
     createExpenses(input: [ExpenseInput]): [Expense]
+    updateExpense(input: ExpenseInput, id:ID!): Expense
+    deleteExpense(input: ID!) : Expense
   }
 `
 module.exports = expenseTypeDefs

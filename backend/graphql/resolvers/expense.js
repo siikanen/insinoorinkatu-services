@@ -1,4 +1,4 @@
-const { Expense,User,Tag } = require('../../database/models')
+const { Expense, User, Tag } = require('../../database/models')
 const { NotFoundError } = require('../../utils/errors/userfacing')
 
 const expenseResolvers = {
@@ -83,6 +83,49 @@ const expenseResolvers = {
 
       const newExpenses = await Promise.all(expensePromises)
       return newExpenses
+    },
+    deleteExpense: async (_, args) => {
+      return await await Expense.destroy(
+        {
+          where: {
+            id: args.id
+          }
+        },
+        {
+          rejectOnEmpty: new NotFoundError('Expense not found')
+        }
+      )
+    },
+    updateExpense: async (_, args) => {
+      const expenseToUpdate = await Expense.findByPk(args.id, {
+        rejectOnEmpty: new NotFoundError('Expense not found')
+      })
+      // Check if we need to change the payee
+      console.log(expenseToUpdate)
+      const payee = await User.findByPk(args.input?.payee.id, {
+        rejectOnEmpty: new NotFoundError('Payee id not found')
+      })
+      payee.addExpense(expenseToUpdate)
+
+      const tagPromises = args.input?.tags.map((tag) => {
+        return Tag.findOrCreate({
+          where: {
+            name: tag
+          }
+        })
+      })
+      let tags = await Promise.all(tagPromises)
+      //tag[0] is the object, tag[1] is boolean, see findOrCreate
+      tags = tags.map((tag) => tag[0])
+      await expenseToUpdate.setTags(tags)
+
+      await expenseToUpdate.update(args.input, {
+        fields: ['title', 'description', 'price', 'date', 'resolved']
+      })
+
+      await expenseToUpdate.save()
+      await expenseToUpdate.reload()
+      return expenseToUpdate
     }
   }
 }
