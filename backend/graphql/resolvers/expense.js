@@ -1,8 +1,7 @@
-const { Expense } = require('../../database/models')
+const { Expense,User,Tag } = require('../../database/models')
 const { NotFoundError } = require('../../utils/errors/userfacing')
 
 const expenseResolvers = {
-
   Query: {
     getExpenses: async (_, args) => {
       if (!args.id) {
@@ -38,6 +37,52 @@ const expenseResolvers = {
           rejectOnEmpty: new NotFoundError('Expense not found')
         })
       ]
+    }
+  },
+  Mutation: {
+    createExpenses: async (_, args) => {
+      const expensePromises = args.input.map(async (data) => {
+        let payee = await User.findByPk(data.payee.id, {
+          rejectOnEmpty: new NotFoundError('User id not found')
+        })
+
+        let newExpense = await Expense.create(
+          {
+            title: data.title,
+            price: data.price,
+            description: data.description,
+            date: data.date,
+            resolved: data.resolved
+          },
+          {
+            // TODO: update this to only include below and get fields directly from object
+            // fields: ['title', 'description', 'price', 'date', 'resolved']
+          }
+        )
+
+        // Tag instances may or may not exist
+        let tagPromises = data.tags.map((tag) => {
+          return Tag.findOrCreate({
+            where: {
+              name: tag
+            }
+          })
+        })
+        let tags = await Promise.all(tagPromises)
+        //tag[0] is the object, tag[1] is boolean, see findOrCreate
+        tags = tags.map((tag) => tag[0])
+        await newExpense.addTags(tags)
+        await payee.addExpense(newExpense)
+        await newExpense.reload()
+        // Transform to object
+        newExpense = newExpense.toJSON()
+        // Remap tag objects to strings
+        newExpense.tags = newExpense.tags.map((tag) => tag.name)
+        return newExpense
+      })
+
+      const newExpenses = await Promise.all(expensePromises)
+      return newExpenses
     }
   }
 }
