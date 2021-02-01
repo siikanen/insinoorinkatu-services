@@ -1,6 +1,6 @@
 const { ApolloServer } = require('apollo-server-express')
-const typeDefs = require('./graphql/schemas/index')
-const resolvers = require('./graphql/resolvers/index')
+const { typeDefs } = require('./graphql/schemas/index')
+const { resolvers } = require('./graphql/resolvers/index')
 const express = require('express')
 
 require('express-async-errors')

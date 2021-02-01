@@ -1,7 +1,7 @@
 const { Expense, User, Tag } = require('../../database/models')
 const { NotFoundError } = require('../../utils/errors/userfacing')
 
-const expenseResolvers = {
+exports.expenseResolvers = {
   Query: {
     getExpenses: async (_, args) => {
       if (!args.id) {
@@ -97,7 +97,7 @@ const expenseResolvers = {
       )
     },
     updateExpense: async (_, args) => {
-      const expenseToUpdate = await Expense.findByPk(args.id, {
+      const expenseToUpdate = await Expense.findByPk(args.input?.id, {
         rejectOnEmpty: new NotFoundError('Expense not found')
       })
       // Check if we need to change the payee
@@ -129,4 +129,3 @@ const expenseResolvers = {
     }
   }
 }
-module.exports = expenseResolvers
