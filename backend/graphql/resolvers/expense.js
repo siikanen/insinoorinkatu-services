@@ -5,7 +5,7 @@ exports.expenseResolvers = {
   Query: {
     getExpenses: async (_, args) => {
       if (!args.id) {
-        const { skip, limit, month, year } = args
+        const { skip, limit, month, year, resolved } = args
         const query = {}
         if (month || year) {
           // (month, !year) => select current year,
@@ -24,6 +24,8 @@ exports.expenseResolvers = {
             [Op.lt]: dateEnd
           }
         }
+
+        if (resolved !== undefined) query['resolved'] = resolved
         return await Expense.findAll({
           where: query,
           limit: limit || 50,

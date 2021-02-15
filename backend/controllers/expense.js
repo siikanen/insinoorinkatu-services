@@ -7,7 +7,7 @@ const { Op } = require('sequelize')
  *
  */
 exports.index = async (req, res) => {
-  const { skip, limit, month, year } = req.query
+  const { skip, limit, month, year, resolved } = req.query
   const query = {}
 
   if (month || year) {
@@ -24,6 +24,8 @@ exports.index = async (req, res) => {
       [Op.lt]: dateEnd
     }
   }
+  if (resolved) query['resolved'] = resolved === 'true'
+
   let expenses = await Expense.findAll({
     where: query,
     limit: limit || 50,

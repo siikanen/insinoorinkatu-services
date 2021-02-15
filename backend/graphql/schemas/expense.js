@@ -40,6 +40,7 @@ const { gql } = require('apollo-server-express')
       limit: Int
       month: String
       year: String
+      resolved: Boolean
     ): [Expense]
   }
 
