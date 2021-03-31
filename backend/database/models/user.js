@@ -208,7 +208,6 @@ module.exports = (sequelize, DataTypes) => {
         value === 'passwordHash' || value === 'salt' ? false : true
       })
     }
-    console.log('OPTIONS HERE', options)
   })
   return User
 }

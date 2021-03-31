@@ -98,9 +98,6 @@ module.exports = (sequelize, DataTypes) => {
             args: [100000000],
             msg: 'Price must be less than one million'
           },
-          test(value) {
-            console.log(value)
-          }
         }
       },
       resolved: {
