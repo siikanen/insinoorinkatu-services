@@ -8,18 +8,23 @@ const models = require('../database/models')
 const { User } = models
 const chaiHttp = require('chai-http')
 chai.use(chaiHttp)
-const { generateRandomUsers, randomUserAmount } = require('./testHelper')
+const { generateRandomUsers, randomUserAmount, testUserPassword, userFields } = require('./testHelper')
 let testToken = 'NotYetInitalized'
 let testUser = {
   username: 'test',
-  password: 'test'
+  password: testUserPassword
+}
+let modifiedUser = {
+  password: `${testUserPassword}modified`,
+  username: 'testModified'
 }
 async function getToken() {
   await generateRandomUsers(randomUserAmount)
   let loginResponse = await api.post(`${usersURL}/login`).send({
     username: 'test0',
-    password: 'test'
+    password: testUserPassword
   })
+
 
   return loginResponse.body.token
 }
@@ -34,11 +39,12 @@ describe('Users', () => {
   describe('User: GET /api/v1/users', () => {
     before(async () => {
       await generateRandomUsers(2)
-      let loginResponse = await api.post(`${usersURL}/login`).send({
-        username: 'test0',
-        password: 'test'
-      })
-      testToken = loginResponse.body.token
+
+      // let loginResponse = await api.post(`${usersURL}/login`).send({
+      //   username: 'test0',
+      //   password: 'test'
+      // })
+      // testToken = loginResponse.body.token
     })
     describe('Authorization tests', () => {
       it('Should respond with 401 unauthorized when Authorization header is missing', async () => {
@@ -62,12 +68,7 @@ describe('Users', () => {
       expect(response.body.data).to.be.an('Array')
       expect(response.body.data).to.have.length(randomUserAmount)
       response.body.data.forEach((user) => {
-        expect(user).to.have.all.keys(
-          'id',
-          'username',
-          'createdAt',
-          'updatedAt'
-        )
+        expect(user).to.have.all.keys(userFields)
       })
     })
   })
@@ -116,7 +117,7 @@ describe('Users', () => {
         .set('Authorization', `Bearer ${testToken}`)
       expect(response).to.have.status(200)
       expect(response.body.data.id).to.equal(dbtestUser.id)
-      expect(response.body.data).to.have.all.keys('id', 'username')
+      expect(response.body.data).to.have.all.keys(userFields)
     })
   })
   describe('User: POST /api/v1/users', () => {
@@ -158,10 +159,7 @@ describe('Users', () => {
   describe('User: PUT /api/users/{id}', () => {
     let dbtestUser
     let singleUserURL
-    let modifiedUser = {
-      username: 'modfiedUsername',
-      password: 'modified'
-    }
+
     before(async () => {
       await User.destroy({
         where: {}
@@ -212,9 +210,9 @@ describe('Users', () => {
         .send(modifiedUser)
       expect(response).to.have.status(200)
       let UserInDB = await User.findOne({
-        where: { id: testUser.id }
+        where: { id: dbtestUser.id }
       })
-      expect(UserInDB.name).to.equal(modifiedUser.username)
+      expect(UserInDB.username).to.equal(modifiedUser.username)
     })
   })
   describe('User: DELETE /api/users/{id}', () => {
@@ -275,7 +273,7 @@ describe('Users', () => {
           id: dbtestUser.id
         }
       })
-      expect(deletedUser).to.be(null)
+      expect(deletedUser).to.equal(null)
     })
   })
   describe('Login POST /api/v1/users/login', async () => {
@@ -300,7 +298,7 @@ describe('Users', () => {
     it('Should return token when correct credentials are provided', async () => {
       const response = await api.post(loginURL).send({
         username: UserInDB.username,
-        password: 'test'
+        password: testUserPassword
       })
       expect(response).to.have.status(200)
       expect(response.body.token).to.be.a('String')
