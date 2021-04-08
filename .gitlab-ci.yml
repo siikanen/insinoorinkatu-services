@@ -1,4 +1,16 @@
-docker-build-backend:
+stages:
+  - test
+  - build
+
+Backend tests:
+  image: node:15
+  stage: test
+  script: 
+    - cd backend
+    - npm ci
+    - NODE_ENV=test npm run test
+
+Docker build backend:
   image:
     name: gcr.io/kaniko-project/executor:debug
     entrypoint: [""]
