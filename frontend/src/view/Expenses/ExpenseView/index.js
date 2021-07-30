@@ -47,7 +47,7 @@ const SingleExpenseView = () => {
         })
       })
       .catch((err) => {
-        dispatch(setAlert('Error',`${err?.response?.status}`))
+        dispatch(setAlert('SERVER_ERROR',err))
       })
   }, [id, navigate])
   if (!expense) {

@@ -38,8 +38,8 @@ const TopBar = ({ className, onMobileNavOpen, onLogOut, ...rest }) => {
         </RouterLink>
   */}
         <GenericAlert
-          alertOpen={alert.type !== 'Hidden'}
-          type={alert.type}
+          alertOpen={alert.alertDisplayType !== 'Hidden'}
+          alertDisplayType={alert.alertDisplayType}
           message={alert.message}
         ></GenericAlert>
         <Box flexGrow={1} />

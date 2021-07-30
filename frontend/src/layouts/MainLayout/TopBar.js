@@ -22,8 +22,8 @@ const TopBar = ({ className, ...rest }) => {
     <AppBar className={clsx(classes.root, className)} elevation={0} {...rest}>
       <Toolbar className={classes.toolbar}>
         <GenericAlert
-          alertOpen={alert.type !== 'Hidden'}
-          type={alert.type}
+          alertOpen={alert.alertDisplayType !== 'Hidden'}
+          alertDisplayType={alert.alertDisplayType}
           message={alert.message}
         ></GenericAlert>
       </Toolbar>

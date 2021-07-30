@@ -34,8 +34,8 @@ const LoginView = (props) => {
         console.log(error)
         dispatch(
           setAlert(
-            'Error',
-            `${error?.response.status}: ${error?.response?.data?.error?.message}`,
+            'SERVER_ERROR',
+            error
           )
         )
       })

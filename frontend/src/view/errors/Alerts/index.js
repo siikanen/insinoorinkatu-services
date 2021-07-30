@@ -13,9 +13,10 @@ const useStyles = makeStyles((theme) => ({
 
 const GenericAlert = (props) => {
   const classes = useStyles()
+  console.log(props)
   if(props.alertOpen){
-    switch (props.type) {
-    case 'Error':
+    switch (props.alertDisplayType) {
+    case 'ERROR':
       return (
         <div className={classes.root}>
           <Collapse in={props.alertOpen}>

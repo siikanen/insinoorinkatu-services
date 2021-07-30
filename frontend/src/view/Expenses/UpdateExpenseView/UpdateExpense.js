@@ -75,9 +75,8 @@ const UpdateExpense = ({ expense, handleDeleteClick }) => {
         setSubmitting(false)
         dispatch(
           setAlert(
-            'Error',
-            `${error.response.status}: ${error.response.data.error.message}`,
-            5000
+            'SERVER_ERROR',
+            error,
           )
         )
       })

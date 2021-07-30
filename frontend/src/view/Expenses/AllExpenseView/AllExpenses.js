@@ -35,9 +35,12 @@ const AllExpenses = ({ expenses, setSelectedExpense }) => {
     ).catch((error) => {
       if (error?.response?.status === 404) {
         //TODO: handle pagination end here!
-        dispatch(setAlert('Error', 'You have reached the end of the list!'))
+        dispatch(setAlert('INTERNAL_ERROR', 'You have reached the end of the list!'))
       }
-      dispatch(setAlert('Error', String(error), 5000))
+      else {
+        dispatch(setAlert('SERVER_ERROR', error))
+
+      }
     })
   }, [page, rowsPerPage, dispatch])
 

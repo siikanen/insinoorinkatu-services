@@ -43,7 +43,7 @@ const CreateExpenseView = () => {
       addNewExpense({
         title,
         description: description || null,
-        price:priceToInt(price),
+        price: priceToInt(price),
         payee: {
           id: loggedInUser.id,
           username: loggedInUser.username
@@ -57,9 +57,7 @@ const CreateExpenseView = () => {
       .catch((error) => {
         dispatch(
           setAlert(
-            'Error',
-            `${error.response.status}: ${error.response.data.error.message}`,
-            5000
+            'SERVER_ERROR', error
           )
         )
       })

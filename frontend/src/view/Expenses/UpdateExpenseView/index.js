@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react'
+import { setAlert } from '../../../reducers/alertReducer'
 import { useDispatch } from 'react-redux'
 import { Container, Grid, makeStyles } from '@material-ui/core'
 import Page from '../../../components/Page'
@@ -35,7 +36,7 @@ const UpdateExpenseView = () => {
         })
       })
       .catch((err) => {
-        console.error(err)
+        dispatch(setAlert('SERVER_ERROR',err))
         // navigate('/app/404')
       })
   }, [id, navigate])
