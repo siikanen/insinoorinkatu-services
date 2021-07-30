@@ -35,8 +35,7 @@ const LoginView = (props) => {
         dispatch(
           setAlert(
             'Error',
-            `${error.response.status}: ${error.response.data.error.message}`,
-            5000
+            `${error?.response.status}: ${error?.response?.data?.error?.message}`,
           )
         )
       })

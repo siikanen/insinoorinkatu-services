@@ -3,9 +3,19 @@ export const hideAlert = () => {
     type: 'HIDE_ALERT'
   }
 }
-export const setAlert = (type, message, timeout) => {
+/**
+ * 
+ * @param {*} type 
+ * @param {*} message 
+ * @param {*} timeout in ms. if -1, never hide alert, default 5000ms 
+ * @returns 
+ */
+export const setAlert = (type, message, timeout=5000) => {
+  if(!message){
+    message='Something went wrong with the request!'
+  }
   // Dont hide the message if no timeout
-  if (!timeout) {
+  if (timeout == -1) {
     return {
       type: 'SET_ALERT',
       data: {

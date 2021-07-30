@@ -33,6 +33,10 @@ const AllExpenses = ({ expenses, setSelectedExpense }) => {
     dispatch(
       getExpenses({ skip: page * rowsPerPage, limit: rowsPerPage })
     ).catch((error) => {
+      if (error?.response?.status === 404) {
+        //TODO: handle pagination end here!
+        dispatch(setAlert('Error', 'You have reached the end of the list!'))
+      }
       dispatch(setAlert('Error', String(error), 5000))
     })
   }, [page, rowsPerPage, dispatch])
@@ -113,7 +117,7 @@ const AllExpenses = ({ expenses, setSelectedExpense }) => {
           label={{ page }}
           onChangePage={handleChangePage}
           onChangeRowsPerPage={handleChangeRowsPerPage}
-          labelDisplayedRows={({from,to,count})=>{
+          labelDisplayedRows={({ from, to, count }) => {
             return `${from}-${to}`
           }}
           nextIconButtonProps={{ disabled: expenses.length < rowsPerPage }}

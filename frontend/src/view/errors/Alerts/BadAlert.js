@@ -4,7 +4,7 @@ import Alert from '@material-ui/lab/Alert'
 const BadAlert = (props) => {
   return (
     <Alert icon={<ErrorOutlineIcon fontSize="inherit" />} severity="error">
-      {props.message}
+     Error: {props.message}
     </Alert>
   )
 }

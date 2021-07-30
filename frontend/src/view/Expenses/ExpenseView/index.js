@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { useDispatch } from 'react-redux'
+import {setAlert} from '../../../reducers/alertReducer'
 import {
   Container,
   Grid,
@@ -46,8 +47,7 @@ const SingleExpenseView = () => {
         })
       })
       .catch((err) => {
-        console.error(err)
-        // navigate('/app/404')
+        dispatch(setAlert('Error',`${err?.response?.status}`))
       })
   }, [id, navigate])
   if (!expense) {
