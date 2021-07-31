@@ -28,13 +28,14 @@ const AllExpenses = ({ expenses, setSelectedExpense }) => {
   const classes = useStyles()
   const dispatch = useDispatch()
   const [page, setPage] = useState(0)
+  const [nextButtonDisabled, setNextButtonDisabled] = useState(false)
   const [rowsPerPage, setRowsPerPage] = useState(10)
   useEffect(() => {
     dispatch(
       getExpenses({ skip: page * rowsPerPage, limit: rowsPerPage })
     ).catch((error) => {
       if (error?.response?.status === 404) {
-        //TODO: handle pagination end here!
+        handleNextButtonEnabled(true)
         dispatch(setAlert('INTERNAL_ERROR', 'You have reached the end of the list!'))
       }
       else {
@@ -43,11 +44,19 @@ const AllExpenses = ({ expenses, setSelectedExpense }) => {
       }
     })
   }, [page, rowsPerPage, dispatch])
-
+  useEffect(() => {
+    handleNextButtonEnabled(false)
+  }, [expenses])
+  const handleNextButtonEnabled = (isEndOfList) => {
+    setNextButtonDisabled(expenses.length < rowsPerPage || isEndOfList)
+    if (isEndOfList) {
+      // Page number would keep increasing to pages that dont exist
+      setPage(page - 1)
+    }
+  }
   const handleChangePage = (event, newPage) => {
     setPage(newPage)
   }
-
   const handleChangeRowsPerPage = (event) => {
     setRowsPerPage(parseInt(event.target.value, 10))
     setPage(0)
@@ -123,7 +132,7 @@ const AllExpenses = ({ expenses, setSelectedExpense }) => {
           labelDisplayedRows={({ from, to, count }) => {
             return `${from}-${to}`
           }}
-          nextIconButtonProps={{ disabled: expenses.length < rowsPerPage }}
+          nextIconButtonProps={{ disabled: nextButtonDisabled }}
         />
       </PerfectScrollbar>
     </React.Fragment>
