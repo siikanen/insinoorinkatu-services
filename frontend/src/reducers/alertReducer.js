@@ -47,7 +47,6 @@ export const setAlert = (alertType, content, timeout = 5000) => {
       }
     }
   }
-  console.log(alertDisplayType)
 
   return async (dispatch) => {
     setTimeout(() => {

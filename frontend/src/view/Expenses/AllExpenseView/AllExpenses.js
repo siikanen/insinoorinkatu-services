@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import PerfectScrollbar from 'react-perfect-scrollbar'
+import EnhancedTableHeader from './EnhancedTableHeader'
 import { Typography } from '@material-ui/core'
 import { useDispatch } from 'react-redux'
 import { makeStyles } from '@material-ui/core/styles'
@@ -7,18 +8,59 @@ import {
   Table,
   TableBody,
   TableCell,
-  TableHead,
   TableRow,
-  TableSortLabel,
-  Tooltip,
-  TablePagination
+  TablePagination,
 } from '@material-ui/core'
 import DoneAllIcon from '@material-ui/icons/DoneAll'
 import CancelIcon from '@material-ui/icons/Cancel'
 import { getExpenses } from '../../../reducers/expensesReducer'
 import { setAlert } from '../../../reducers/alertReducer'
+
+//TODO: maybe move these to a comming utils file?
+function descendingComparator(a, b, orderBy) {
+  if (b[orderBy] < a[orderBy]) {
+    return -1
+  }
+  if (b[orderBy] > a[orderBy]) {
+    return 1
+  }
+  return 0
+}
+
+function getComparator(order, orderBy) {
+  return order === 'desc'
+    ? (a, b) => descendingComparator(a, b, orderBy)
+    : (a, b) => -descendingComparator(a, b, orderBy)
+}
+
+function stableSort(array, comparator) {
+  const stabilizedThis = array.map((el, index) => [el, index])
+  stabilizedThis.sort((a, b) => {
+    const order = comparator(a[0], b[0])
+    if (order !== 0) return order
+    return a[1] - b[1]
+  })
+  return stabilizedThis.map((el) => el[0])
+}
 const useStyles = makeStyles((theme) => ({
-  table: {
+  root: {
+    width: '100%',
+  },
+  paper: {
+    width: '100%',
+    marginBottom: theme.spacing(2),
+  },
+  visuallyHidden: {
+    border: 0,
+    clip: 'rect(0 0 0 0)',
+    height: 1,
+    margin: -1,
+    overflow: 'hidden',
+    padding: 0,
+    position: 'absolute',
+    top: 20,
+    width: 1,
+  }, table: {
     minWidth: 750,
     align: 'left'
   }
@@ -28,32 +70,24 @@ const AllExpenses = ({ expenses, setSelectedExpense }) => {
   const classes = useStyles()
   const dispatch = useDispatch()
   const [page, setPage] = useState(0)
-  const [nextButtonDisabled, setNextButtonDisabled] = useState(false)
+  const [order, setOrder] = useState('desc')
+  const [orderBy, setOrderBy] = useState('price')
   const [rowsPerPage, setRowsPerPage] = useState(10)
   useEffect(() => {
     dispatch(
       getExpenses({ skip: page * rowsPerPage, limit: rowsPerPage })
     ).catch((error) => {
       if (error?.response?.status === 404) {
-        handleNextButtonEnabled(true)
         dispatch(setAlert('INTERNAL_ERROR', 'You have reached the end of the list!'))
+        setPage(page - 1)
       }
       else {
         dispatch(setAlert('SERVER_ERROR', error))
-
       }
     })
   }, [page, rowsPerPage, dispatch])
-  useEffect(() => {
-    handleNextButtonEnabled(false)
-  }, [expenses])
-  const handleNextButtonEnabled = (isEndOfList) => {
-    setNextButtonDisabled(expenses.length < rowsPerPage || isEndOfList)
-    if (isEndOfList) {
-      // Page number would keep increasing to pages that dont exist
-      setPage(page - 1)
-    }
-  }
+
+ 
   const handleChangePage = (event, newPage) => {
     setPage(newPage)
   }
@@ -68,7 +102,11 @@ const AllExpenses = ({ expenses, setSelectedExpense }) => {
     event.preventDefault()
     setSelectedExpense(expense)
   }
-
+  const handleRequestSort = (event, property) => {
+    const isAsc = orderBy === property && order === 'asc'
+    setOrder(isAsc ? 'desc' : 'asc')
+    setOrderBy(property)
+  }
   if (!expenses) {
     return <div></div>
   }
@@ -76,54 +114,50 @@ const AllExpenses = ({ expenses, setSelectedExpense }) => {
     <React.Fragment>
       <PerfectScrollbar>
         <Table className={classes.table}>
-          <TableHead>
-            <TableRow>
-              <TableCell>Title</TableCell>
-              <TableCell>Payee</TableCell>
-              <TableCell sortDirection="desc">
-                <Tooltip enterDelay={300} title="Sort">
-                  <TableSortLabel active direction="desc">
-                    Price
-                  </TableSortLabel>
-                </Tooltip>
-              </TableCell>
-              <TableCell>Date</TableCell>
-              <TableCell>Resolved</TableCell>
-            </TableRow>
-          </TableHead>
+          <EnhancedTableHeader
+            classes={classes}
+            order={order}
+            orderBy={orderBy}
+            onRequestSort={handleRequestSort}
+          />
+
           <TableBody>
-            {expenses.map((expense) => (
-              <TableRow
-                hover={true}
-                key={expense.id}
-                onClick={(event) => handleRowClick(event, expense)}
-              >
-                <TableCell width="30%">
-                  <Typography>{expense.title}</Typography>
-                </TableCell>
-                {expense.payee ? (
-                  <TableCell width="20%">{expense.payee.username}</TableCell>
-                ) : (
-                  <TableCell></TableCell>
-                )}
-                <TableCell>{`${expense.price}€`}</TableCell>
-                <TableCell>{expense.date}</TableCell>
-                <TableCell width="10%">
-                  {expense.resolved ? (
-                    <DoneAllIcon></DoneAllIcon>
-                  ) : (
-                    <CancelIcon></CancelIcon>
-                  )}
-                </TableCell>
-              </TableRow>
-            ))}
+            {stableSort(expenses, getComparator(order, orderBy))
+              // .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+              .map((expense, index) => {
+                return (
+                  <TableRow
+                    hover={true}
+                    key={expense.id}
+                    onClick={(event) => handleRowClick(event, expense)}
+                  >
+                    <TableCell width="30%">
+                      <Typography>{expense.title}</Typography>
+                    </TableCell>
+                    {expense.payee ? (
+                      <TableCell width="20%">{expense.payee.username}</TableCell>
+                    ) : (
+                      <TableCell></TableCell>
+                    )}
+                    <TableCell>{`${expense.price}€`}</TableCell>
+                    <TableCell>{expense.date}</TableCell>
+                    <TableCell width="10%">
+                      {expense.resolved ? (
+                        <DoneAllIcon></DoneAllIcon>
+                      ) : (
+                        <CancelIcon></CancelIcon>
+                      )}
+                    </TableCell>
+                  </TableRow>
+                )
+              })}
           </TableBody>
         </Table>
         <TablePagination
           rowsPerPageOptions={[5, 10, 25]}
           component="div"
+          //??? -1 why?
           count={-1}
-          //TODO:Replace this
           rowsPerPage={rowsPerPage}
           page={page}
           label={{ page }}
@@ -132,7 +166,10 @@ const AllExpenses = ({ expenses, setSelectedExpense }) => {
           labelDisplayedRows={({ from, to, count }) => {
             return `${from}-${to}`
           }}
-          nextIconButtonProps={{ disabled: nextButtonDisabled }}
+          nextIconButtonProps={{
+            disabled:
+              expenses.length < rowsPerPage
+          }}
         />
       </PerfectScrollbar>
     </React.Fragment>

@@ -16,10 +16,6 @@ const useStyles = makeStyles((theme) => ({
 
 const AllExpensesView = () => {
   const classes = useStyles()
-  // Workaround to making a row a link.
-  // You cant add <a> to a <tr> in order to make the whole row a link
-  // Believe me, i've tried
-
   const [selectedExpense, setSelectedExpense] = useState()
   const expenses = useSelector(({ expenses }) => {
     return expenses
