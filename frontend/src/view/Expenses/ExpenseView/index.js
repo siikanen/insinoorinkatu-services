@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { useDispatch } from 'react-redux'
-import {setAlert} from '../../../reducers/alertReducer'
+import { setAlert } from '../../../reducers/alertReducer'
 import {
   Container,
   Grid,
@@ -18,7 +18,7 @@ import expensesService from '../../../services/expenses'
 import DeleteDialog from './DeleteExpense'
 import { deleteExpense } from '../../../reducers/expensesReducer'
 import ExpenseCard from './ExpenseCard'
-import {intToPrice,humanizeDate} from '../../../utils/utils'
+import { intToPrice, humanizeDate } from '../../../utils/utils'
 const useStyles = makeStyles((theme) => ({
   root: {
     backgroundColor: theme.palette.background.dark,
@@ -47,7 +47,7 @@ const SingleExpenseView = () => {
         })
       })
       .catch((err) => {
-        dispatch(setAlert('SERVER_ERROR',err))
+        dispatch(setAlert('SERVER_ERROR', err))
       })
   }, [id, navigate])
   if (!expense) {
@@ -60,10 +60,14 @@ const SingleExpenseView = () => {
     setDialogOpen(false)
   }
   const handleConfirmDelete = () => {
-    dispatch(deleteExpense(id))
-    setDialogOpen(false)
-    setExpense(null)
-    navigate('/app/expenses')
+    dispatch(deleteExpense(id)).then(() => {
+      setDialogOpen(false)
+      setExpense(null)
+      dispatch(setAlert('SUCCESS', `Deleted expense: ${expense.title}`)).then(() => {
+        navigate('/app/expenses')
+      })
+    })
+
   }
 
   return (

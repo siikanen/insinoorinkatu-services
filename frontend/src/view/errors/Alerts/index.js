@@ -2,6 +2,8 @@ import React from 'react'
 import { makeStyles } from '@material-ui/core/styles'
 import Collapse from '@material-ui/core/Collapse'
 import BadAlert from './BadAlert'
+import GoodAlert from './GoodAlert'
+import { LocalConvenienceStoreSharp } from '@material-ui/icons'
 const useStyles = makeStyles((theme) => ({
   root: {
     width: '100%',
@@ -13,7 +15,6 @@ const useStyles = makeStyles((theme) => ({
 
 const GenericAlert = (props) => {
   const classes = useStyles()
-  console.log(props)
   if(props.alertOpen){
     switch (props.alertDisplayType) {
     case 'ERROR':
@@ -21,6 +22,14 @@ const GenericAlert = (props) => {
         <div className={classes.root}>
           <Collapse in={props.alertOpen}>
             <BadAlert message={props.message}></BadAlert>
+          </Collapse>
+        </div>
+      )
+    case 'SUCCESS':
+      return(
+        <div className={classes.root}>
+          <Collapse in={props.alertOpen}>
+            <GoodAlert message={props.message}></GoodAlert>
           </Collapse>
         </div>
       )

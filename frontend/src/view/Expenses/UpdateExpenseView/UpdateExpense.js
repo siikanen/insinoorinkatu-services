@@ -21,7 +21,7 @@ import { updateExpense } from '../../../reducers/expensesReducer'
 import { setAlert } from '../../../reducers/alertReducer'
 import { Formik, FieldArray } from 'formik'
 import { priceToInt } from '../../../utils/utils'
-import {expenseValidationSchema} from '../../../utils/validators'
+import { expenseValidationSchema } from '../../../utils/validators'
 const useStyles = makeStyles((theme) => ({
   root: {
     backgroundColor: theme.palette.background.dark,
@@ -69,7 +69,9 @@ const UpdateExpense = ({ expense, handleDeleteClick }) => {
     dispatch(updateExpense(objectToSend, id))
       .then(() => {
         setSubmitting(false)
-        navigate('/app/expenses')
+        dispatch(setAlert('SUCCESS', `Updated expense: ${expense.title}`)).then(
+          navigate('/app/expenses')
+        )
       })
       .catch((error) => {
         setSubmitting(false)

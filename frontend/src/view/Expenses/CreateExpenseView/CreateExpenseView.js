@@ -52,7 +52,9 @@ const CreateExpenseView = () => {
       })
     )
       .then(() => {
-        navigate('/app/expenses')
+        dispatch(setAlert("SUCCESS",`Created expense: ${title}!`)).then(
+          navigate('/app/expenses')
+        )
       })
       .catch((error) => {
         dispatch(
