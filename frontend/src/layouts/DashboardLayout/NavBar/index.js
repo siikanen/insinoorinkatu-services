@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react'
-import { Link as RouterLink, useLocation } from 'react-router-dom'
+import { Link as RouterLink, useLocation, useNavigate } from 'react-router-dom'
+import { useUser } from '../../../utils/utils'
 import PropTypes from 'prop-types'
 import {
   Avatar,
@@ -73,7 +74,7 @@ const useStyles = makeStyles(() => ({
 const NavBar = ({ onMobileClose, openMobile }) => {
   const classes = useStyles()
   const location = useLocation()
-
+  const user = useUser()
   useEffect(() => {
     if (openMobile && onMobileClose) {
       onMobileClose()
@@ -87,14 +88,14 @@ const NavBar = ({ onMobileClose, openMobile }) => {
         <Avatar
           className={classes.avatar}
           component={RouterLink}
-          src={user.avatar}
+          src={user?.avatar}
           to="/app/account"
         />
         <Typography className={classes.name} color="textPrimary" variant="h5">
-          {user.name}
+          {user?.username}
         </Typography>
         <Typography color="textSecondary" variant="body2">
-          {user.jobTitle}
+          {user?.jobTitle}
         </Typography>
       </Box>
       <Divider />
@@ -147,7 +148,7 @@ NavBar.propTypes = {
 }
 
 NavBar.defaultProps = {
-  onMobileClose: () => {},
+  onMobileClose: () => { },
   openMobile: false
 }
 

@@ -10,6 +10,15 @@ export const logIn = (user) => {
     })
   }
 }
+export const logOut=()=>{
+  return async(dispatch) =>{
+    window.localStorage.clear()
+    dispatch({
+      type:'SET_LOGGED_USER',
+      data:{}
+    })
+  }
+}
 export const addUser = (userToAdd) => {
   return async (dispatch) => {
     const response = await usersService.register(userToAdd)
