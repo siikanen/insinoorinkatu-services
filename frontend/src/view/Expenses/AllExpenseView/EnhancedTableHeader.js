@@ -5,7 +5,7 @@ import TableRow from '@material-ui/core/TableRow'
 import TableSortLabel from '@material-ui/core/TableSortLabel'
 const EnhancedTableHeader = ({ classes, order, orderBy, onRequestSort }) => {
   const headCells = [
-    { id: 'title', numeric: false, disablePadding: true, label: 'Title' },
+    { id: 'title', numeric: false, disablePadding: false, label: 'Title' },
     { id: 'payee', numeric: false, disablePadding: false, label: 'Payee' },
     { id: 'price', numeric: true, disablePadding: false, label: 'Price (eur) ' },
     { id: 'date', numeric: false, disablePadding: false, label: 'Date' },
@@ -20,7 +20,6 @@ const EnhancedTableHeader = ({ classes, order, orderBy, onRequestSort }) => {
         {headCells.map((headCell) => (
           <TableCell
             key={headCell.id}
-            align={headCell.numeric ? 'right' : 'left'}
             padding={headCell.disablePadding ? 'none' : 'default'}
             sortDirection={orderBy === headCell.id ? order : false}
           >

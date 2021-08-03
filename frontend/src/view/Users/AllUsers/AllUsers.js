@@ -9,15 +9,20 @@ import {
   TableCell,
   TableHead,
   TableRow,
-  TablePagination
+  TablePagination,
+  Card
 } from '@material-ui/core'
 
+import clsx from 'clsx'
 import { getUsers } from '../../../reducers/usersReducer'
 import { setAlert } from '../../../reducers/alertReducer'
 const useStyles = makeStyles((theme) => ({
   table: {
     minWidth: 750,
     align: 'left'
+  },
+  root: {
+    width: '100%'
   }
 }))
 
@@ -54,44 +59,46 @@ const AllUsers = ({ users }) => {
   }
   return (
     <React.Fragment>
-      <PerfectScrollbar>
-        <Table className={classes.table}>
-          <TableHead>
-            <TableRow>
-              <TableCell>Username</TableCell>
+      <Card className={clsx(classes.root)} width="500">
+        <PerfectScrollbar>
+          <Table className={classes.table}>
+            <TableHead>
+              <TableRow>
+                <TableCell>Username</TableCell>
 
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {users.map((user) => (
-              <TableRow
-                hover={true}
-                key={user.id}
-                onClick={(event) => handleRowClick(event, user)}
-              >
-                <TableCell width="30%">
-                  <Typography>{user.username}</Typography>
-                </TableCell>
               </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-        <TablePagination
-          rowsPerPageOptions={[5, 10, 25]}
-          component="div"
-          count={-1}
-          //TODO:Replace this
-          rowsPerPage={rowsPerPage}
-          page={page}
-          label={{ page }}
-          onChangePage={handleChangePage}
-          onChangeRowsPerPage={handleChangeRowsPerPage}
-          labelDisplayedRows={({from,to,count})=>{
-            return `${from}-${to}`
-          }}
-          nextIconButtonProps={{ disabled: users.length < rowsPerPage }}
-        />
-      </PerfectScrollbar>
+            </TableHead>
+            <TableBody>
+              {users.map((user) => (
+                <TableRow
+                  hover={true}
+                  key={user.id}
+                  onClick={(event) => handleRowClick(event, user)}
+                >
+                  <TableCell width="30%">
+                    <Typography>{user.username}</Typography>
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+          <TablePagination
+            rowsPerPageOptions={[5, 10, 25]}
+            component="div"
+            count={-1}
+            //TODO:Replace this
+            rowsPerPage={rowsPerPage}
+            page={page}
+            label={{ page }}
+            onChangePage={handleChangePage}
+            onChangeRowsPerPage={handleChangeRowsPerPage}
+            labelDisplayedRows={({ from, to, count }) => {
+              return `${from}-${to}`
+            }}
+            nextIconButtonProps={{ disabled: users.length < rowsPerPage }}
+          />
+        </PerfectScrollbar>
+      </Card>
     </React.Fragment>
   )
 }

@@ -1,4 +1,4 @@
-import DoneOutlineIcon from '@material-ui/icons/DoneOutline';
+import DoneOutlineIcon from '@material-ui/icons/DoneOutline'
 import React from 'react'
 import Alert from '@material-ui/lab/Alert'
 const GoodAlert = (props) => {

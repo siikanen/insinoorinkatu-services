@@ -3,13 +3,23 @@ import PerfectScrollbar from 'react-perfect-scrollbar'
 import EnhancedTableHeader from './EnhancedTableHeader'
 import { Typography } from '@material-ui/core'
 import { useDispatch } from 'react-redux'
-import { makeStyles } from '@material-ui/core/styles'
+import PropTypes from 'prop-types'
+import clsx from 'clsx'
 import {
+  TablePagination,
+  Box,
+  Button,
+  Card,
+  CardHeader,
+  Divider,
   Table,
   TableBody,
   TableCell,
+  TableHead,
   TableRow,
-  TablePagination,
+  TableSortLabel,
+  Tooltip,
+  makeStyles
 } from '@material-ui/core'
 import DoneAllIcon from '@material-ui/icons/DoneAll'
 import CancelIcon from '@material-ui/icons/Cancel'
@@ -87,7 +97,7 @@ const AllExpenses = ({ expenses, setSelectedExpense }) => {
     })
   }, [page, rowsPerPage, dispatch])
 
- 
+
   const handleChangePage = (event, newPage) => {
     setPage(newPage)
   }
@@ -112,66 +122,68 @@ const AllExpenses = ({ expenses, setSelectedExpense }) => {
   }
   return (
     <React.Fragment>
-      <PerfectScrollbar>
-        <Table className={classes.table}>
-          <EnhancedTableHeader
-            classes={classes}
-            order={order}
-            orderBy={orderBy}
-            onRequestSort={handleRequestSort}
-          />
+      <Card className={clsx(classes.root)}>
+        <PerfectScrollbar>
+          <Table className={classes.table}>
+            <EnhancedTableHeader
+              classes={classes}
+              order={order}
+              orderBy={orderBy}
+              onRequestSort={handleRequestSort}
+            />
 
-          <TableBody>
-            {stableSort(expenses, getComparator(order, orderBy))
-              // .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-              .map((expense, index) => {
-                return (
-                  <TableRow
-                    hover={true}
-                    key={expense.id}
-                    onClick={(event) => handleRowClick(event, expense)}
-                  >
-                    <TableCell width="30%">
-                      <Typography>{expense.title}</Typography>
-                    </TableCell>
-                    {expense.payee ? (
-                      <TableCell width="20%">{expense.payee.username}</TableCell>
-                    ) : (
-                      <TableCell></TableCell>
-                    )}
-                    <TableCell>{`${expense.price}€`}</TableCell>
-                    <TableCell>{expense.date}</TableCell>
-                    <TableCell width="10%">
-                      {expense.resolved ? (
-                        <DoneAllIcon></DoneAllIcon>
+            <TableBody>
+              {stableSort(expenses, getComparator(order, orderBy))
+                // .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                .map((expense, index) => {
+                  return (
+                    <TableRow
+                      hover={true}
+                      key={expense.id}
+                      onClick={(event) => handleRowClick(event, expense)}
+                    >
+                      <TableCell width="30%">
+                        <Typography>{expense.title}</Typography>
+                      </TableCell>
+                      {expense.payee ? (
+                        <TableCell>{expense.payee.username}</TableCell>
                       ) : (
-                        <CancelIcon></CancelIcon>
+                        <TableCell></TableCell>
                       )}
-                    </TableCell>
-                  </TableRow>
-                )
-              })}
-          </TableBody>
-        </Table>
-        <TablePagination
-          rowsPerPageOptions={[5, 10, 25]}
-          component="div"
-          //??? -1 why?
-          count={-1}
-          rowsPerPage={rowsPerPage}
-          page={page}
-          label={{ page }}
-          onChangePage={handleChangePage}
-          onChangeRowsPerPage={handleChangeRowsPerPage}
-          labelDisplayedRows={({ from, to, count }) => {
-            return `${from}-${to}`
-          }}
-          nextIconButtonProps={{
-            disabled:
-              expenses.length < rowsPerPage
-          }}
-        />
-      </PerfectScrollbar>
+                      <TableCell>{`${expense.price}€`}</TableCell>
+                      <TableCell>{expense.date}</TableCell>
+                      <TableCell>
+                        {expense.resolved ? (
+                          <DoneAllIcon></DoneAllIcon>
+                        ) : (
+                          <CancelIcon></CancelIcon>
+                        )}
+                      </TableCell>
+                    </TableRow>
+                  )
+                })}
+            </TableBody>
+          </Table>
+          <TablePagination
+            rowsPerPageOptions={[5, 10, 25]}
+            component="div"
+            //??? -1 why?
+            count={-1}
+            rowsPerPage={rowsPerPage}
+            page={page}
+            label={{ page }}
+            onChangePage={handleChangePage}
+            onChangeRowsPerPage={handleChangeRowsPerPage}
+            labelDisplayedRows={({ from, to, count }) => {
+              return `${from}-${to}`
+            }}
+            nextIconButtonProps={{
+              disabled:
+                expenses.length < rowsPerPage
+            }}
+          />
+        </PerfectScrollbar>
+      </Card>
     </React.Fragment>
   )
 }

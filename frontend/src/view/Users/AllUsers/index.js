@@ -26,7 +26,7 @@ const AllUsersView = () => {
     <Page className={classes.root} title="AllUsers">
       <Container maxWidth={false}>
         <Grid container spacing={1}>
-          <Grid item sm={3}>
+          <Grid item sm={8}>
             <AllUsers users={users}></AllUsers>
           </Grid>
           <Grid item sm={4}></Grid>

@@ -15,13 +15,14 @@ import {
   Button
 } from '@material-ui/core'
 
+import clsx from 'clsx'
 import { NavLink as RouterLink } from 'react-router-dom'
 import ArrowRightIcon from '@material-ui/icons/ArrowRight'
 import { Divider, Card } from '@material-ui/core'
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    backgroundColor: theme.palette.background.dark
+    width: '100%'
   }
 }))
 const ExpenseCard = ({ expense }) => {
@@ -30,7 +31,7 @@ const ExpenseCard = ({ expense }) => {
     return <div></div>
   }
   return (
-    <Card className={classes.root}>
+    <Card className={clsx(classes.root)}>
       <Box display="flex" flexDirection="column" justifyContent="center">
         <Container maxWidth="sm">
           <CardHeader title={expense.title} subheader={expense.id}></CardHeader>
@@ -41,7 +42,7 @@ const ExpenseCard = ({ expense }) => {
               <TableBody>
                 <TableRow>
                   <TableCell>
-                    <Typography variant="h3">Title:</Typography>
+                    <Typography variant="h4">Title:</Typography>
                   </TableCell>
                   <TableCell>{expense.title}</TableCell>
                 </TableRow>
